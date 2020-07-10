@@ -1,0 +1,8 @@
+Package: verticallidarpaper
+Version: 0.0.0.9000
+Title: What the Package Does (One Line, Title Case)
+Description: What the package does (one paragraph).
+Authors@R: person("Etienne", "Racine", email = "etiennebr@gmail.com", role = c("aut", "cre"), comment = c(ORCID = "0000-0003-1109-894X"))
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
