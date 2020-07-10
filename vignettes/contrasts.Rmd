@@ -42,9 +42,9 @@ independent_factors <- wave %>%
   select(
     dominant_species, age_class, crown_closure
   ) %>% 
-  mutate_all(
-    factor
-  ) %>%
+  mutate(
+    dominant_species = factor(dominant_species)
+  ) %>% 
   as.data.frame()
 ```
 
