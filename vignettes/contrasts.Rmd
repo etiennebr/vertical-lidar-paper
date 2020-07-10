@@ -1,0 +1,190 @@
+---
+title: "contrasts"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{contrasts}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+devtools::load_all("~/workspace/vertical-lidar-paper")
+library(GET)
+library(patchwork)
+library(tibble)
+library(ggplot2)
+library(dplyr)
+
+ggplot2::theme_set(theme_pub())
+alpha <- 0.05 / 3  # (Bonferroni correction)
+nperm <- 100  # number of permutations
+```
+
+```{r}
+# wave can be create once with `source("data-raw/lidar_wave.R")`
+
+# Transform to the GET format
+mobs <-                         
+  wave %>% 
+  dplyr::select(starts_with("ss_")) %>% 
+  as.matrix()
+
+cset <- create_curve_set(list(r = seq_len(ncol(mobs)), obs = t(mobs)))
+
+independent_factors <- wave %>% 
+  select(
+    dominant_species, age_class, crown_closure
+  ) %>% 
+  mutate_all(
+    factor
+  ) %>%
+  as.data.frame()
+```
+
+## GLM
+
+The envelopes are created from `r nsim` permutations.
+
+```{r}
+functional_lm <- function(null_model, nsim = nperm) {
+  graph.flm(
+    nsim = nsim, 
+    formula.full = Y ~ dominant_species + age_class + crown_closure,
+    formula.reduced = null_model,
+    curve_sets = cset, 
+    factors = independent_factors,
+    contrasts = TRUE,
+    GET.args = list(alpha = alpha)
+  )
+}
+
+res_flm_sp <- functional_lm(Y ~ age_class + crown_closure)
+res_flm_cc <- functional_lm(Y ~ dominant_species + age_class)
+res_flm_age <- functional_lm(Y ~ dominant_species + crown_closure)
+```
+
+### Contrasts
+```{r}
+p <- my_plot_contrasts(res_flm_sp, 39, full = TRUE)
+u <- my_plot_contrasts(res_flm_cc, 39, full = TRUE)
+v <- my_plot_contrasts(res_flm_age, 39, full = TRUE, diag = TRUE) +
+  scale_y_continuous(breaks = c(-0.2, 0, 0.2))
+# we need to remove the diagonal manually after overriding the y scale
+v <- remove_diag_panels(v)
+
+(p + ggtitle("Species")) +
+  (u + ggtitle("Crown closure")) +
+  (v + ggtitle("Age"))
+
+# Save figures independently
+# device <- "png" # pdf
+# ggsave("figure/fig3-sp-contrasts.png", p, device = device, dpi = "retina", width = 234, height = 234, units = "mm")
+# ggsave("figure/fig5-cc-contrasts.png", u, device = device, dpi = "retina", width = 234, height = 234, units = "mm")
+# ggsave("figure/fig7-age-contrasts.png", v + scale_y_continuous("breaks = c(-0.2, 0, 0.2)"), device = device, dpi = "retina", width = 234, height = 234, units = "mm")
+```
+
+### Summary figure
+```{r}
+# Species variations ==========================================================
+direct_labels <- tribble(
+  ~label, ~r, ~curves,
+  "Aspen", 0.75, 0.12,
+  "Balsam fir", 0.56, 0.09,
+  "Paper birch", 0.4, 0.11,
+  "White spruce", 0.25, 0.14,
+  "Black spruce", 0.05, 0.19
+) %>% 
+  mutate(a = tolower(label))
+
+sp_v <- 
+  res_flm_sp %>% 
+  my_plot_data_combined_global_envelope(scale_r = 39) %>% 
+  .$ribbon %>% 
+  filter(
+    type == "Data function",
+  ) %>% 
+  fill_contrast_matrix() %>% 
+  group_by(a, r) %>% 
+  summarise(
+    curves = sum(abs(curves))
+  ) %>% 
+  ggplot(aes(x = r, y = curves)) + 
+  geom_line(aes(group = a, color = a), show.legend = FALSE) +
+  geom_line(data = . %>% group_by(r) %>% summarise(curves = sum(abs(curves)))) +
+  geom_text(data = direct_labels, aes(label = label, color = a), show.legend = FALSE, hjust = "left") +
+  xlab("Scaled Stand Height") +
+  ylab("Sum of absolute scaled density difference") +
+  scale_color_brewer("Species", type = "qual", palette = "Dark2") + 
+  coord_flip()
+
+# Crown closure variations ====================================================
+cc_v <- res_flm_cc %>% 
+  my_plot_data_combined_global_envelope(scale_r = 39) %>% 
+  .$ribbon %>% 
+  filter(
+    type == "Data function",
+  ) %>% 
+  fill_contrast_matrix() %>% 
+  group_by(a, r) %>% 
+  summarise(
+    curves = sum(curves)
+  ) %>% 
+  ggplot(aes(x = r, y = curves)) + 
+  geom_line(aes(group = interaction(a), color = a), show.legend = FALSE) +
+  geom_line(data = . %>% group_by(r) %>% summarise(curves = sum(abs(curves)))) +
+  xlab("Scaled Stand Height") +
+  ylab("Sum of scaled density difference") +
+  directlabels::geom_dl(aes(label = a, color = a), method = "last.bumpup") +
+  scale_color_manual(values = pal_cc) +
+  coord_flip()
+
+# Age variations ===============================================================
+age_v <- res_flm_age %>% 
+  my_plot_data_combined_global_envelope(scale_r = 39) %>% 
+  .$ribbon %>% 
+  filter(
+    type == "Data function",
+  ) %>% 
+  fill_contrast_matrix() %>% 
+  group_by(a, r) %>% 
+  summarise(
+    curves = sum(curves)
+  ) %>% 
+  ggplot(aes(x = r, y = curves)) + 
+  geom_line(aes(group = interaction(a), color = a), show.legend = FALSE) +
+  geom_line(data = . %>% group_by(r) %>% summarise(curves = sum(abs(curves)))) +
+  xlab("Scaled Stand Height") +
+  ylab("Sum of scaled density difference") +
+  scale_color_manual(values = pal_age) +
+  directlabels::geom_dl(aes(label = a, color = a), method = "last.bumpup") +
+  coord_flip()
+
+sp_v + cc_v + age_v
+
+res_flm_age %>% 
+  my_plot_data_combined_global_envelope(scale_r = 39) %>% 
+  .$ribbon %>% 
+  filter(
+    type == "Data function",
+  ) %>% 
+  fill_contrast_matrix() %>% 
+  mutate(
+    a = sort_num_factor(a),
+    b = sort_num_factor(b)
+  ) %>% 
+  ggplot(aes(x = r, y = curves, group = interaction(type, a, b))) + 
+  geom_ribbon(aes(x = r, ymin = lower, ymax = upper), fill = "black", alpha = 0.01) +
+  geom_segment(aes(xend = x_end, yend = y_end, color = ifelse(!inside & !inside_lead, "outside", NA)), show.legend = FALSE) +
+  xlab("Scaled Stand Height") +
+  ylab("Scaled density difference") +
+  facet_grid(~a)+
+  coord_flip()
+```
+

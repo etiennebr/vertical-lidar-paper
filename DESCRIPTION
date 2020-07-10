@@ -6,3 +6,16 @@ Authors@R: person("Etienne", "Racine", email = "etiennebr@gmail.com", role = c("
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
+Imports: 
+    renv,
+    devtools,
+    GET,
+    patchwork,
+    dplyr,
+    tibble,
+    readr,
+    tidyr
