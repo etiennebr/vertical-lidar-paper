@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup}
-devtools::load_all("~/workspace/vertical-lidar-paper")
+devtools::load_all(here::here("../vertical-lidar-paper"))
 library(GET)
 library(patchwork)
 library(tibble)
