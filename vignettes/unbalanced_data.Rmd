@@ -1,0 +1,185 @@
+---
+title: "contrasts"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{contrasts}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 8,
+  fig.height = 8
+)
+```
+
+```{r setup}
+devtools::load_all(here::here("../vertical-lidar-paper"))
+library(GET)
+library(patchwork)
+library(tibble)
+library(ggplot2)
+library(readr)
+library(dplyr)
+library(tidyr)
+library(purrr)
+
+ggplot2::theme_set(theme_pub())
+alpha <- 0.05 / 3  # (Bonferroni correction)
+nperm <- 100  # number of permutations
+```
+
+The observations are imbalanced. The most important imbalance is between 
+species, then age. The crown closures are more balanced, but still not 
+perfectly balanced. 
+
+## Diagnostic
+
+What's the magnitude of the problem and how are the differences between the age 
+and crown closure classes combined? Here I'll use the filtered data.
+```{r}
+# read data
+# wave can be create once with `source("data-raw/lidar_wave.R")`
+wave <- wave %>%
+    mutate(
+    age_class = sort_num_factor(age_class),
+    crown_closure = sort_num_factor(crown_closure)
+)
+```
+
+
+```{r}
+group_size <- wave  %>% 
+  group_by(dominant_species, age_class, crown_closure) %>% 
+  tally(name = "count") %>% 
+  group_by(dominant_species) %>% 
+  add_count(name = "total") 
+
+group_size %>% 
+  ggplot(aes(crown_closure, age_class, fill = count / total, label = count)) +
+  geom_tile() +
+  scale_fill_continuous(trans = "log") +
+  facet_wrap(~dominant_species) +
+  geom_text(color = "grey80", size = 3)
+```
+
+Aspen is the smallest category, with very little observations in each category. 
+Also balsam fir has substantially more observations than any other species. 
+Another imbalance is that some species are more represented in some classes. 
+Black and white spruces have lot of young stands, while paper birch stands are 
+mostly mature. I would expect the null model to account for these differences. 
+
+## Downsampling
+
+Downsample observations to mimic Aspen distribution for species comparison.
+```{r}
+set.seed(2020)
+ec_bf_down_aspen <- wave %>% 
+  group_by(dominant_species, age_class, crown_closure) %>% 
+  nest() %>% 
+  left_join(
+    group_size %>% 
+      ungroup() %>% 
+      filter(dominant_species == "aspen") %>% 
+      select(-dominant_species),
+    by = c("crown_closure", "age_class")
+  ) %>% 
+  mutate(
+    count = replace_na(count, 0),
+    data = map2(data, count, ~sample_n(.x, round(.y), replace = TRUE))
+  ) %>% 
+  unnest(data) %>% 
+  ungroup()
+
+# visualize results
+ec_bf_down_aspen  %>% 
+  group_by(dominant_species, age_class, crown_closure) %>% 
+  tally(name = "count") %>% 
+  group_by(dominant_species) %>% 
+  add_count(name = "total") %>% 
+  mutate(
+    count = ifelse(count < 1, NA, count)
+  ) %>% 
+  ggplot(aes(crown_closure, age_class, fill = count, label = count)) +
+  geom_tile() +
+  scale_fill_continuous(trans = "log") +
+  facet_wrap(~dominant_species) +
+  geom_text(color = "grey80", size = 3)
+```
+
+
+
+### Contrasts
+
+We setup the analysis
+```{r}
+mobs <- ec_bf_down_aspen %>% 
+  dplyr::select(starts_with("ss_")) %>% 
+  as.matrix()
+
+cset <- create_curve_set(list(r = 1:39, obs = t(mobs)))
+
+independent_factors <- ec_bf_down_aspen %>% 
+  select(
+    dominant_species, age_class, crown_closure
+  ) %>% 
+  as.data.frame()
+```
+
+```{r fig.width = 8, fig.height = 8}
+res_flm_sp <- graph.flm(
+  nsim = nperm, 
+  formula.full = Y ~ dominant_species + age_class + crown_closure,
+  formula.reduced = Y ~ age_class + crown_closure,
+  curve_sets = cset, 
+  factors = independent_factors,
+  contrasts = TRUE,
+  GET.args = list(alpha = alpha)
+)
+
+my_plot_contrasts(res_flm_sp, 39, full = TRUE)
+```
+
+My understanding is that I should balance the other factors for each analysis 
+(i.e. balance crown closure per cc class, balance age per age class), but let's 
+see what it does to other comparisons.
+```{r}
+# crown closure
+res_flm_cc <- graph.flm(
+  nsim = nperm, 
+  formula.full = Y ~ dominant_species + age_class + crown_closure,
+  formula.reduced = Y ~ dominant_species + age_class,
+  curve_sets = cset, 
+  factors = independent_factors,
+  contrasts = TRUE,
+  GET.args = list(alpha = alpha)
+)
+
+
+# age
+res_flm_age <- graph.flm(
+  nsim = nperm, 
+  formula.full = Y ~ dominant_species + age_class + crown_closure,
+  formula.reduced = Y ~ dominant_species + crown_closure,
+  curve_sets = cset, 
+  factors = independent_factors,
+  contrasts = TRUE,
+  GET.args = list(alpha = alpha)
+)
+
+```
+
+```{r fig.width = 8, fig.height = 8}
+my_plot_contrasts(res_flm_cc, 39, full = TRUE)
+my_plot_contrasts(res_flm_age, 39, full = TRUE)
+```
+
+It seems that age is very much affected because aspen only has three age classes 
+sufficently represented (30, 50, 70), crown closure is less affected  because it
+is better represented, but the differences are still smaller than with the 
+complete data.
