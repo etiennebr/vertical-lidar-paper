@@ -11,6 +11,29 @@ line_outside <- 0.6
 
 # custom plot -----------------------------------------------------------------
 
+my_plot_continuous <- function(x, scale_r) {
+  pd <- my_plot_data_combined_global_envelope(x, scale_r = scale_r) 
+  
+  ribbon <- pd$ribbon %>% 
+    filter(
+      type == "Data function"
+    ) 
+  
+  p <- 
+    ribbon %>% 
+    ggplot(aes(x = r, y = curves, group = interaction(type, a, b))) + 
+    geom_ribbon(aes(x = r, ymin = lower, ymax = upper), fill = envelope_grey, alpha = 1) +
+    geom_segment(aes(xend = x_end, yend = y_end, size = ifelse(!inside & !inside_lead, "outside", "inside")), show.legend = FALSE, color = "grey20") +
+    scale_color_manual(values = c("outside" = line_outside, "inside" = line_inside)) +
+    scale_size_manual(values = c("outside" = line_outside, "inside" = line_inside)) +
+    facet_grid(~b) +
+    xlab("Scaled Stand Height") +
+    ylab("Scaled density difference") +
+    coord_flip()
+  
+  return(p)
+}
+
 my_plot_contrasts <- function(x, scale_r, upper = !full, full = FALSE, diag = !full) {
   pd <- my_plot_data_combined_global_envelope(x, scale_r = scale_r) 
   

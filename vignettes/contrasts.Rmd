@@ -50,38 +50,35 @@ independent_factors <- wave %>%
 
 ## GLM
 
-The envelopes are created from `r nsim` permutations.
+The envelopes are created from `r nperm` permutations.
 
 ```{r}
-functional_lm <- function(null_model, nsim = nperm) {
+functional_lm <- function(null_model, nsim = nperm, contrasts = TRUE) {
   graph.flm(
-    nsim = nsim, 
+    nsim = nsim,
     formula.full = Y ~ dominant_species + age_class + crown_closure,
     formula.reduced = null_model,
-    curve_sets = cset, 
+    curve_sets = cset,
     factors = independent_factors,
-    contrasts = TRUE,
+    contrasts = contrasts,
     GET.args = list(alpha = alpha)
   )
 }
 
 res_flm_sp <- functional_lm(Y ~ age_class + crown_closure)
-res_flm_cc <- functional_lm(Y ~ dominant_species + age_class)
-res_flm_age <- functional_lm(Y ~ dominant_species + crown_closure)
+res_flm_cc <- functional_lm(Y ~ dominant_species + age_class, contrasts = FALSE)
+res_flm_age <- functional_lm(Y ~ dominant_species + crown_closure, contrasts = FALSE)
 ```
 
 ### Contrasts
 ```{r}
 p <- my_plot_contrasts(res_flm_sp, 39, full = TRUE)
-u <- my_plot_contrasts(res_flm_cc, 39, full = TRUE)
-v <- my_plot_contrasts(res_flm_age, 39, full = TRUE, diag = TRUE) +
-  scale_y_continuous(breaks = c(-0.2, 0, 0.2))
-# we need to remove the diagonal manually after overriding the y scale
-v <- remove_diag_panels(v)
+u <- my_plot_continuous(res_flm_cc, 39)  + scale_y_continuous("Scaled density difference (×10⁻³)", labels = function(x) paste0(x * 100))
+v <- my_plot_continuous(res_flm_age, 39) + scale_y_continuous("Scaled density difference (×10⁻³)", labels = function(x) paste0(x * 100))
 
 (p + ggtitle("Species")) +
-  (u + ggtitle("Crown closure")) +
-  (v + ggtitle("Age"))
+  ((u + ggtitle("Crown closure")) /
+  (v + ggtitle("Age")))
 
 # Save figures independently
 # device <- "png" # pdf
