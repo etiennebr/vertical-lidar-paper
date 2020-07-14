@@ -178,7 +178,7 @@ it is replaced by a random observation from the global data.
 
 ```{r}
 set.seed(2020)
-target_size <- 100
+target_size <- 30
 
 wave_upsample <- wave %>% 
   # pad empty classes
@@ -197,11 +197,10 @@ wave_upsample <- wave %>%
     
     # If sufficient observations, sample a fraction of the data
     # If missing observations, randomly pick observations from the pool
-    data = map2(data, count, ~sample_n_if_needed(.x, round(.y), fill = wave))
+    data = map2(data, count, ~sample_n_if_needed(.x %>% drop_na(), round(.y), fill = wave))
   ) %>% 
   unnest(data) %>% 
-  ungroup() %>% 
-  drop_na() 
+  ungroup()
 
 # visualize results
 wave_upsample  %>% 
@@ -244,6 +243,13 @@ my_plot_contrasts(res_flm_sp, 39, full = TRUE)
 ```
 
 ```{r fig.width = 8, fig.height = 4}
-my_plot_continuous(res_flm_cc, 39)  + scale_y_continuous("Scaled density difference (×10⁻³)", labels = function(x) paste0(x * 100))
-my_plot_continuous(res_flm_age, 39) + scale_y_continuous("Scaled density difference (×10⁻³)", labels = function(x) paste0(x * 100))
+(
+  my_plot_continuous(res_flm_cc, 39)  + 
+   scale_y_continuous("Scaled density difference (×10⁻³)", labels = function(x) paste0(x * 100)) + 
+    ggtitle("Crown closure")
+   ) / 
+(
+  my_plot_continuous(res_flm_age, 39) + 
+    scale_y_continuous("Scaled density difference (×10⁻³)", labels = function(x) paste0(x * 100)) +
+    ggtitle("Age"))
 ```
