@@ -43,7 +43,8 @@ independent_factors <- wave %>%
     dominant_species, age_class, crown_closure
   ) %>% 
   mutate(
-    dominant_species = factor(dominant_species)
+    dominant_species = factor(dominant_species),
+    age_class = factor(age_class)
   ) %>% 
   as.data.frame()
 ```
@@ -73,7 +74,7 @@ res_flm_age <- functional_lm(Y ~ dominant_species + crown_closure, contrasts = F
 ### Contrasts
 ```{r}
 p <- my_plot_contrasts(res_flm_sp, 39, full = TRUE)
-u <- my_plot_continuous(res_flm_cc, 39)  + scale_y_continuous("Scaled density difference (×10⁻³)", labels = function(x) paste0(x * 100))
+u <- my_plot_continuous(res_flm_cc, 39, main = "my main")  + scale_y_continuous("Scaled density difference (×10⁻⁴)", labels = function(x) paste0(x * 1000))
 v <- my_plot_continuous(res_flm_age, 39) + scale_y_continuous("Scaled density difference (×10⁻³)", labels = function(x) paste0(x * 100))
 
 (p + ggtitle("Species")) +
@@ -123,7 +124,7 @@ sp_v <-
 
 # Crown closure variations ====================================================
 cc_v <- res_flm_cc %>% 
-  my_plot_data_combined_global_envelope(scale_r = 39) %>% 
+  my_plot_data_combined_global_envelope(scale_r = 39, main = "main") %>% 
   .$ribbon %>% 
   filter(
     type == "Data function",

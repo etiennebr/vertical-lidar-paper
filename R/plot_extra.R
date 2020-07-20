@@ -11,8 +11,8 @@ line_outside <- 0.6
 
 # custom plot -----------------------------------------------------------------
 
-my_plot_continuous <- function(x, scale_r) {
-  pd <- my_plot_data_combined_global_envelope(x, scale_r = scale_r) 
+my_plot_continuous <- function(x, scale_r, ...) {
+  pd <- my_plot_data_combined_global_envelope(x, scale_r = scale_r, ...) 
   
   ribbon <- pd$ribbon %>% 
     filter(
