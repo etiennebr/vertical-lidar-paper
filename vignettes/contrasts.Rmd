@@ -55,9 +55,12 @@ independent_factors <- wave %>%
 
 ```{r}
 wave_long <- wave %>% 
-  pivot_longer(cols = matches("ss_"), names_prefix = "ss_", names_to = "height", names_ptypes = list("height" = integer(0)), values_to = "ss") %>% 
-  mutate(
-    ss_trans = box_cox(ss + 1e-6)
+  pivot_longer(
+    cols = matches("ss_"), 
+    names_prefix = "ss_", 
+    names_to = "height", 
+    names_transform = list(height = as.integer),
+    values_to = "ss"
   )
 ```
 
@@ -103,7 +106,7 @@ minimum_variance_ratio <- function(x, group, at) {
   
   vars <- x %>% 
     group_by({{group}}) %>% 
-    summarise(var = var({{at}}, na.rm = TRUE))
+    summarise(var = var({{at}}, na.rm = TRUE), .groups = "drop_last")
   
   max(vars$var) / min(vars$var)
 }
@@ -133,19 +136,6 @@ by_height <- by_height %>%
     data = map2(data, sp_model, modelr::add_residuals, var = "resid_sqrt"),
     data = map2(data, sp_model, modelr::add_predictions, var = "pred_sqrt")
   )
-  
-
-
-by_height$sp_bptest[[1]]
-by_height$sp_ols_bptest[[1]]
-
-by_height %>% 
-  ggplot(aes(sp_bptest_statistic, sp_bptest_p_value)) +
-  geom_point()
-
-by_height %>% 
-  ggplot(aes(sp_kurtosis, sp_shapiro_test_statistic)) +
-  geom_point()
 ```
 ```{r}
 by_height %>%
