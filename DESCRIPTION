@@ -18,4 +18,5 @@ Imports:
     dplyr,
     tibble,
     readr,
-    tidyr
+    tidyr,
+    ggplotify
