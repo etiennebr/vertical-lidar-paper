@@ -76,7 +76,10 @@ independent_factors <- wave %>%
   ) %>% 
   as.data.frame()
 
+# Successively equalize variance for each group
 cset_trans <- corrUnequalVar(cset, groups=with(independent_factors, crown_closure))
+cset_trans <- corrUnequalVar(cset_trans, groups=with(independent_factors, dominant_species))
+cset_trans <- corrUnequalVar(cset_trans, groups=with(independent_factors, age_class))
 ```
 
 ## GLM
@@ -87,6 +90,7 @@ trans_ss <- cset_trans[["funcs"]] %>% t() %>%
   set_names(~paste0("trans_", .x))
 
 wave_long <- wave %>% 
+  # remove untransformed Y
   select(-matches("ss_")) %>%
   bind_cols(trans_ss) %>%
   pivot_longer(
@@ -171,7 +175,7 @@ by_height <- by_height %>%
 ```{r}
 # The maximum variance ration should 4
 qplot(sp_mvr_res, height, data = by_height) + geom_path() + geom_vline(xintercept = 4) +
-# kurtosis should 0
+# kurtosis should be 0
 #qplot(sp_kurtosis, height, data = by_height) + geom_path() + geom_vline(xintercept = 0) 
 
 qplot(sp_bptest_statistic, height, data = by_height) + geom_path() +
@@ -275,30 +279,49 @@ ggsave("res_wls_cc.pdf", plot = q, width = 12*2, height = 8*2, units = "in")
 ```{r}
 # The maximum variance ration should 4
 ggplot(data = by_height) + 
-  geom_path(aes(sp_wls_mvr_res, height), color = "blue") + 
-  geom_path(aes(sp_mvr_res, height)) + 
-  geom_path(aes(sp_mvr, height), color = "red") + 
+  geom_path(aes(sp_wls_mvr_res, height/40), color = "blue") + 
+  geom_path(aes(sp_mvr_res, height/40)) + 
+  geom_path(aes(sp_mvr, height/40), color = "red") + 
   geom_vline(xintercept = 4) +
+  scale_y_continuous("Scaled height") +
 # kurtosis should 0
 #qplot(sp_kurtosis, height, data = by_height) + geom_path() + geom_vline(xintercept = 0) 
 ggplot(data = by_height) + 
-  geom_path(aes(sp_wls_bptest_statistic, height), color = "blue") +
-  geom_path(aes(sp_bptest_statistic, height))
-qplot(sp_wls_bptest_p_value, height, data = by_height) + geom_path()
+  geom_path(aes(sp_wls_bptest_statistic, height/40), color = "blue") +
+  geom_path(aes(sp_bptest_statistic, height/40)) +
+  scale_y_continuous("") +
+qplot(sp_wls_bptest_p_value, height/40, data = by_height) + geom_path() +
+  scale_y_continuous("") 
 ```
 
 The envelopes are created from `r nperm` permutations.
 
+To complete the correction for heteroscedasticity, we're going to use weight observations based on 
+
 ```{r}
-functional_anova <- function(g, nsim = nperm, contrasts = TRUE) {
-  graph.fanova(
+weights <- by_height %>% 
+  unnest(data) %>% 
+  group_by(stand_id) %>% 
+  summarise(weight = median(weight), .groups = "drop") 
+
+weights %>% 
+  ggplot(aes(weight)) +
+  geom_histogram()
+```
+
+
+```{r}
+# test variance equality
+functional_anova <- function(g, nsim = nperm, contrasts = TRUE, curve_set = cset_trans, ...) {
+  GET::graph.fanova(
     nsim = nsim,
-    curve_set = cset_trans,
+    curve_set = curve_set,
     groups = g,
     variances = "unequal",
     test.equality = "var",
     contrasts = contrasts,
     alpha = alpha
+    #lm.args = list(weights = weights$weight)
   )
 }
 
@@ -317,10 +340,19 @@ res_flm_sp <- functional_lm(Y ~ age_class + crown_closure)
 res_flm_cc <- functional_lm(Y ~ dominant_species + age_class, contrasts = FALSE)
 res_flm_age <- functional_lm(Y ~ dominant_species + crown_closure, contrasts = FALSE)
 
-res_fanova_sp <- functional_anova(independent_factors$dominant_species)
-res_fanova_cc <- functional_anova(independent_factors$crown_closure, contrasts = FALSE)
+res_fanova_sp <- functional_anova(independent_factors$dominant_species, contrasts = FALSE, curve_set = cset)
+res_fanova_sp_trans <- functional_anova(independent_factors$dominant_species, contrasts = FALSE, curve_set = cset_trans)
+res_fanova_cc <- functional_anova(factor(independent_factors$crown_closure), contrasts = FALSE, curve_set = cset)
+res_fanova_cc_trans <- functional_anova(factor(independent_factors$crown_closure), contrasts = FALSE, curve_set = cset_trans)
 res_fanova_age <- functional_anova(independent_factors$age_class, contrasts = FALSE)
 ```
+
+Check variance homogeneity
+```{r}
+plot(res_fanova_sp) + coord_flip() + plot(res_fanova_sp_trans) + coord_flip()
+plot(res_fanova_cc) + coord_flip() + plot(res_fanova_cc_trans) + coord_flip()
+```
+
 
 ### Contrasts
 ```{r}
