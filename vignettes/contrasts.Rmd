@@ -90,26 +90,13 @@ my_plot_contrasts(res_fanova_sp, m)
 cset_trans <- corrUnequalVar(cset, groups=with(independent_factors, crown_closure))
 res_fanova_sp <- functional_anova(independent_factors$dominant_species, contrasts = FALSE, curve_set = cset_trans)
 plot(res_fanova_sp) + coord_flip()
+
 cset_trans <- corrUnequalVar(cset_trans, groups=with(independent_factors, dominant_species))
 res_fanova_sp <- functional_anova(independent_factors$dominant_species, contrasts = FALSE, curve_set = cset_trans)
 plot(res_fanova_sp) + coord_flip()
-cset_trans <- corrUnequalVar(cset_trans, groups=with(independent_factors, age_class))
-res_fanova_sp <- functional_anova(independent_factors$dominant_species, contrasts = FALSE, curve_set = cset_trans)
-plot(res_fanova_sp) + coord_flip()
 ```
-
-It seems that the last transformation only moves heterogeneity to other areas of the curve. 
-
-We can apply the transformation jointly (there aren't sufficient observations to apply to all variables combined), but it works for dominant species and crown closure, and then age in a second step.
-```{r}
-cset_trans <- corrUnequalVar(cset, groups=with(independent_factors, interaction(dominant_species, crown_closure)))
-res_fanova_sp <- functional_anova(independent_factors$dominant_species, contrasts = FALSE, curve_set = cset_trans)
-plot(res_fanova_sp) + coord_flip()
-cset_trans <- corrUnequalVar(cset_trans, groups=with(independent_factors, age_class))
-res_fanova_sp <- functional_anova(independent_factors$dominant_species, contrasts = FALSE, curve_set = cset_trans)
-plot(res_fanova_sp) + coord_flip()
-```
-Applying the transformation by age group in the second step does not seem to improve the results.
+After testing it, it seems that the third transformation is ineffective. 
+The areas that are heterogenuous are generally not fixed.
 
 ## GLM
 
@@ -212,7 +199,7 @@ by_height <- by_height %>%
 ```
 
 ```{r}
-# The maximum variance ration should 4
+# The maximum variance ratio should 4
 qplot(sp_mvr_res, height, data = by_height) + geom_path() + geom_vline(xintercept = 4) +
 # kurtosis should be 0
 #qplot(sp_kurtosis, height, data = by_height) + geom_path() + geom_vline(xintercept = 0) 
