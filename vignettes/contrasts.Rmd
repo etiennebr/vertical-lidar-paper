@@ -89,13 +89,26 @@ my_plot_contrasts(res_fanova_sp, m)
 # Successively equalize variance for each group
 cset_trans <- corrUnequalVar(cset, groups=with(independent_factors, crown_closure))
 res_fanova_sp <- functional_anova(independent_factors$dominant_species, contrasts = FALSE, curve_set = cset_trans)
-plot(res_fanova_sp) + coord_flip()
+pa <- plot(res_fanova_sp) + coord_flip()
 cset_trans <- corrUnequalVar(cset_trans, groups=with(independent_factors, dominant_species))
 res_fanova_sp <- functional_anova(independent_factors$dominant_species, contrasts = FALSE, curve_set = cset_trans)
-plot(res_fanova_sp) + coord_flip()
-cset_trans <- corrUnequalVar(cset_trans, groups=with(independent_factors, age_class))
+pb <- plot(res_fanova_sp) + coord_flip()
+
+cset_trans_age <- corrUnequalVar(cset_trans, groups=with(independent_factors, age_class))
+# transform only if heteroscedastic
+pd <- my_plot_data_combined_global_envelope(res_fanova_sp)
+height_inside <- pd$ribbon %>% 
+  filter(
+    type == "Data function"
+  ) %>% 
+  group_by(r) %>% 
+  summarise(inside = all(inside), .groups = "drop_last") 
+
+cset_trans$funcs[!height_inside$inside] <- cset_trans_age$funcs[!height_inside$inside,]
+
 res_fanova_sp <- functional_anova(independent_factors$dominant_species, contrasts = FALSE, curve_set = cset_trans)
-plot(res_fanova_sp) + coord_flip()
+pc <- plot(res_fanova_sp) + coord_flip()
+pa + pb + pc
 ```
 
 It seems that the last transformation only moves heterogeneity to other areas of the curve. 
@@ -105,7 +118,19 @@ We can apply the transformation jointly (there aren't sufficient observations to
 cset_trans <- corrUnequalVar(cset, groups=with(independent_factors, interaction(dominant_species, crown_closure)))
 res_fanova_sp <- functional_anova(independent_factors$dominant_species, contrasts = FALSE, curve_set = cset_trans)
 plot(res_fanova_sp) + coord_flip()
-cset_trans <- corrUnequalVar(cset_trans, groups=with(independent_factors, age_class))
+cset_trans_age <- corrUnequalVar(cset_trans, groups=with(independent_factors, age_class))
+
+# transform only if heteroscedastic
+pd <- my_plot_data_combined_global_envelope(res_fanova_sp)
+height_inside <- pd$ribbon %>% 
+  filter(
+    type == "Data function"
+  ) %>% 
+  group_by(r) %>% 
+  summarise(inside = all(inside), .groups = "drop_last") 
+
+cset_trans$funcs[!height_inside$inside] <- cset_trans_age$funcs[!height_inside$inside,]
+
 res_fanova_sp <- functional_anova(independent_factors$dominant_species, contrasts = FALSE, curve_set = cset_trans)
 plot(res_fanova_sp) + coord_flip()
 ```
