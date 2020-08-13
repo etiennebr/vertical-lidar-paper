@@ -74,13 +74,15 @@ corrUnequalVar <- function(curve_set, groups, n.aver = 1L, mirror = FALSE) {
 First, we need to test for variance homogeneity at every height.
 ```{r}
 # wave can be create once with `source("data-raw/lidar_wave.R")`
+w <- wave %>% 
+  sample_n(200)
 
 # Transform to the GET format
-mobs <- wave %>% 
+mobs <- w %>% 
   dplyr::select(starts_with("ss_")) %>% 
   as.matrix()
 
-independent_factors <- wave %>% 
+independent_factors <- w %>% 
   select(
     dominant_species, age_class, crown_closure
   ) %>% 
