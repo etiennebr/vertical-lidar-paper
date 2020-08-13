@@ -76,35 +76,10 @@ First, we need to test for variance homogeneity at every height.
 # wave can be create once with `source("data-raw/lidar_wave.R")`
 
 # Transform to the GET format
-mobs <-                         
-  wave %>% 
+mobs <- wave %>% 
   dplyr::select(starts_with("ss_")) %>% 
   as.matrix()
 
-cset <- create_curve_set(list(r = seq_len(ncol(mobs)), obs = t(mobs)))
-
-res_fanova_sp <- functional_anova(independent_factors$dominant_species, contrasts = FALSE, curve_set = cset)
-my_plot_contrasts(res_fanova_sp, m)
-
-# Successively equalize variance for each group
-cset_trans <- corrUnequalVar(cset, groups=with(independent_factors, crown_closure))
-res_fanova_sp <- functional_anova(independent_factors$dominant_species, contrasts = FALSE, curve_set = cset_trans)
-plot(res_fanova_sp) + coord_flip()
-
-cset_trans <- corrUnequalVar(cset_trans, groups=with(independent_factors, age_class))
-res_fanova_sp <- functional_anova(independent_factors$dominant_species, contrasts = FALSE, curve_set = cset_trans)
-plot(res_fanova_sp) + coord_flip()
-
-cset_trans <- corrUnequalVar(cset_trans, groups=with(independent_factors, dominant_species))
-res_fanova_sp <- functional_anova(independent_factors$dominant_species, contrasts = FALSE, curve_set = cset_trans)
-plot(res_fanova_sp) + coord_flip()
-```
-After testing it, it seems that the third transformation is ineffective. 
-The areas that are heterogenuous are generally not fixed.
-
-## GLM
-
-```{r}
 independent_factors <- wave %>% 
   select(
     dominant_species, age_class, crown_closure
@@ -115,10 +90,32 @@ independent_factors <- wave %>%
   ) %>% 
   as.data.frame()
 
-trans_ss <- cset_trans[["funcs"]] %>% t() %>% 
-  as_tibble() %>% 
-  set_names(~paste0("trans_", .x))
+cset <- create_curve_set(list(r = seq_len(ncol(mobs)), obs = t(mobs)))
 
+res_fanova_sp <- functional_anova(independent_factors$dominant_species, contrasts = FALSE, curve_set = cset)
+my_plot_contrasts(res_fanova_sp, m)
+
+# Successively equalize variance for each group
+cset_trans <- corrUnequalVar(cset, groups=with(independent_factors, crown_closure))
+res_fanova_sp <- functional_anova(independent_factors$dominant_species, contrasts = FALSE, curve_set = cset_trans)
+pa <- plot(res_fanova_sp) + coord_flip()
+
+cset_trans <- corrUnequalVar(cset_trans, groups=with(independent_factors, age_class))
+res_fanova_sp <- functional_anova(independent_factors$dominant_species, contrasts = FALSE, curve_set = cset_trans)
+pb <- plot(res_fanova_sp) + coord_flip()
+
+cset_trans <- corrUnequalVar(cset_trans, groups=with(independent_factors, dominant_species))
+res_fanova_sp <- functional_anova(independent_factors$dominant_species, contrasts = FALSE, curve_set = cset_trans)
+pc <- plot(res_fanova_sp) + coord_flip()
+
+pa + pb + pc
+```
+After testing it, it seems that the third transformation is ineffective. 
+The areas that are heterogenuous are generally not fixed.
+
+## GLM
+
+```{r}
 wave_long <- wave %>% 
   # remove untransformed Y
   select(-matches("ss_")) %>%
