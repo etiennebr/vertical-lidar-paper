@@ -91,6 +91,10 @@ cset_trans <- corrUnequalVar(cset, groups=with(independent_factors, crown_closur
 res_fanova_sp <- functional_anova(independent_factors$dominant_species, contrasts = FALSE, curve_set = cset_trans)
 plot(res_fanova_sp) + coord_flip()
 
+cset_trans <- corrUnequalVar(cset_trans, groups=with(independent_factors, age_class))
+res_fanova_sp <- functional_anova(independent_factors$dominant_species, contrasts = FALSE, curve_set = cset_trans)
+plot(res_fanova_sp) + coord_flip()
+
 cset_trans <- corrUnequalVar(cset_trans, groups=with(independent_factors, dominant_species))
 res_fanova_sp <- functional_anova(independent_factors$dominant_species, contrasts = FALSE, curve_set = cset_trans)
 plot(res_fanova_sp) + coord_flip()
