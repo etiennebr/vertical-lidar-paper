@@ -27,18 +27,21 @@ library(purrr)
 ggplot2::theme_set(theme_pub())
 alpha <- 0.05 / 3  # (Bonferroni correction)
 nperm <- 100  # number of permutations
-```
+m <- 40-1  # number of discrete points per functions
 
-```{r}
-# wave can be create once with `source("data-raw/lidar_wave.R")`
-
-# Transform to the GET format
-mobs <-                         
-  wave %>% 
-  dplyr::select(starts_with("ss_")) %>% 
-  as.matrix()
-
-cset <- create_curve_set(list(r = seq_len(ncol(mobs)), obs = t(mobs)))
+# test variance equality
+functional_anova <- function(g, nsim = nperm, contrasts = TRUE, curve_set = cset_trans, ...) {
+  GET::graph.fanova(
+    nsim = nsim,
+    curve_set = curve_set,
+    groups = g,
+    variances = "unequal",
+    test.equality = "var",
+    contrasts = contrasts,
+    alpha = alpha
+    #lm.args = list(weights = weights$weight)
+  )
+}
 
 # Transformation to equalize variances in groups
 corrUnequalVar <- function(curve_set, groups, n.aver = 1L, mirror = FALSE) {
@@ -64,7 +67,53 @@ corrUnequalVar <- function(curve_set, groups, n.aver = 1L, mirror = FALSE) {
   curve_set$funcs <- t(x)
   curve_set
 }
+```
 
+## Homogeneity
+
+First, we need to test for variance homogeneity at every height.
+```{r}
+# wave can be create once with `source("data-raw/lidar_wave.R")`
+
+# Transform to the GET format
+mobs <-                         
+  wave %>% 
+  dplyr::select(starts_with("ss_")) %>% 
+  as.matrix()
+
+cset <- create_curve_set(list(r = seq_len(ncol(mobs)), obs = t(mobs)))
+
+res_fanova_sp <- functional_anova(independent_factors$dominant_species, contrasts = FALSE, curve_set = cset)
+my_plot_contrasts(res_fanova_sp, m)
+
+# Successively equalize variance for each group
+cset_trans <- corrUnequalVar(cset, groups=with(independent_factors, crown_closure))
+res_fanova_sp <- functional_anova(independent_factors$dominant_species, contrasts = FALSE, curve_set = cset_trans)
+plot(res_fanova_sp) + coord_flip()
+cset_trans <- corrUnequalVar(cset_trans, groups=with(independent_factors, dominant_species))
+res_fanova_sp <- functional_anova(independent_factors$dominant_species, contrasts = FALSE, curve_set = cset_trans)
+plot(res_fanova_sp) + coord_flip()
+cset_trans <- corrUnequalVar(cset_trans, groups=with(independent_factors, age_class))
+res_fanova_sp <- functional_anova(independent_factors$dominant_species, contrasts = FALSE, curve_set = cset_trans)
+plot(res_fanova_sp) + coord_flip()
+```
+
+It seems that the last transformation only moves heterogeneity to other areas of the curve. 
+
+We can apply the transformation jointly (there aren't sufficient observations to apply to all variables combined), but it works for dominant species and crown closure, and then age in a second step.
+```{r}
+cset_trans <- corrUnequalVar(cset, groups=with(independent_factors, interaction(dominant_species, crown_closure)))
+res_fanova_sp <- functional_anova(independent_factors$dominant_species, contrasts = FALSE, curve_set = cset_trans)
+plot(res_fanova_sp) + coord_flip()
+cset_trans <- corrUnequalVar(cset_trans, groups=with(independent_factors, age_class))
+res_fanova_sp <- functional_anova(independent_factors$dominant_species, contrasts = FALSE, curve_set = cset_trans)
+plot(res_fanova_sp) + coord_flip()
+```
+Applying the transformation by age group in the second step does not seem to improve the results.
+
+## GLM
+
+```{r}
 independent_factors <- wave %>% 
   select(
     dominant_species, age_class, crown_closure
@@ -75,15 +124,6 @@ independent_factors <- wave %>%
   ) %>% 
   as.data.frame()
 
-# Successively equalize variance for each group
-cset_trans <- corrUnequalVar(cset, groups=with(independent_factors, crown_closure))
-cset_trans <- corrUnequalVar(cset_trans, groups=with(independent_factors, dominant_species))
-cset_trans <- corrUnequalVar(cset_trans, groups=with(independent_factors, age_class))
-```
-
-## GLM
-
-```{r}
 trans_ss <- cset_trans[["funcs"]] %>% t() %>% 
   as_tibble() %>% 
   set_names(~paste0("trans_", .x))
@@ -310,19 +350,6 @@ weights %>%
 
 
 ```{r}
-# test variance equality
-functional_anova <- function(g, nsim = nperm, contrasts = TRUE, curve_set = cset_trans, ...) {
-  GET::graph.fanova(
-    nsim = nsim,
-    curve_set = curve_set,
-    groups = g,
-    variances = "unequal",
-    test.equality = "var",
-    contrasts = contrasts,
-    alpha = alpha
-    #lm.args = list(weights = weights$weight)
-  )
-}
 
 functional_lm <- function(null_model, nsim = nperm, contrasts = TRUE) {
   graph.flm(
