@@ -41,7 +41,7 @@ mobs <-
 cset <- create_curve_set(list(r = seq_len(ncol(mobs)), obs = t(mobs)))
 
 # Transformation to equalize variances in groups
-corrUnequalVar <- function(curve_set, groups, ...) {
+corrUnequalVar <- function(curve_set, groups, n.aver = 1L, mirror = FALSE) {
   if (!is.factor(groups)) {
     groups <- factor(groups)
   }
@@ -53,10 +53,9 @@ corrUnequalVar <- function(curve_set, groups, ...) {
   # Variances in the groups, Var(T_j(r))
   v <- GET:::groupvar(x, groups)
   # Moving average
-  averargs <- list(...)
-  if(length(averargs) > 0){
-    v <- t(apply(v, 1, maverage, ...))
-    varT <- maverage(varT, ...)
+  if(n.aver>1){
+    v <- t(apply(v, 1, GET:::maverage, n.aver=n.aver, mirror=mirror))
+    varT <- GET:::maverage(varT, n.aver=n.aver, mirror=mirror)
   }
   # Take S_ij(r) = (T_ij(r) - \bar{T}_j(r)) / \sqrt( Var(T_j(r)) ) * Var(T(r)) + \bar{T}_j(r)
   for(i in 1:nrow(x)) {
