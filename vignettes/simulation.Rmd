@@ -1,0 +1,161 @@
+---
+title: "simulation"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{simulation}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+devtools::load_all(here::here("../vertical-lidar-paper"))
+library(tidyverse)
+library(GET)
+```
+
+# Simulate functional data for contrasts
+
+## Basic functions
+
+Create "basic" functions for `obs` group
+```{r}
+fn <- tibble(
+  x = c(1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L, 1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L), 
+  y = c(1, 13, 224, 699, 620, 471, 174, 77, 15, 2, 5, 4, 8, 6, 13, 305, 458, 272, 176, 2) / 1000,
+  obs = c(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2)
+)
+
+#' Create the age function
+fn_covariate <- tibble(
+  x = 1:10,
+  age_fn = c(1, 1, 5, 8, 12, 8, 6, 2, 1, 1) / 10
+)
+
+#' ## Simulation
+#' Create 100 samples
+set.seed(2020)
+N <- 100
+probs_obs <- c(1, 2)
+probs_age <- c(1, 2)
+  
+covariates <- tibble(
+  id = seq_len(N),
+  obs = sample(c(1, 2), N, replace = TRUE, prob = probs_obs),
+  age = sample(0:1, N, replace = TRUE, prob = probs_age)
+)
+
+Y <- covariates %>% 
+  left_join(fn) %>% 
+  left_join(fn_covariate) %>% 
+  mutate(
+    # determinist formula ---------------------
+    y_det = y + age * age_fn,
+    # add lognormal error ---------------------
+    y_sto = y_det + rnorm(length(y_det), 0, sd = 0.2)
+    )
+
+Y %>% 
+  ggplot(aes(x, y_sto, group = id, color = interaction(obs, age))) +
+  geom_path() +
+  coord_flip() + 
+  facet_wrap(~id) +
+  theme_void()
+#' Figure. Just to give an idea of the resulting functions
+```
+
+
+```{r}
+#' ## Deterministic contrasts
+#' For reference, I create the contrasts from the "basic" functions
+detcon <- bind_rows(
+  fn %>% mutate(
+    effect = paste("obs", obs)
+  ) %>% 
+    select(-obs),
+  fn_covariate %>% mutate(
+    y = age_fn,
+    effect = paste("age", 1)
+  ) %>% 
+    select(-age_fn)
+)
+
+#' The three determinist functions:
+ggplot(detcon, aes(x, y, color = effect)) +
+  geom_path() +
+  coord_flip()
+
+contrasts_det <- detcon %>% 
+  pivot_wider(names_from = effect, values_from = y) %>% 
+  mutate(
+    `age 0` = 0,
+    `obs 1-obs 2` = `obs 1` - `obs 2`,
+    `obs 1-age 0` = `obs 1` - `age 0`,
+    `obs 1-age 1` = `obs 1` - `age 1`,
+    `obs 2-age 0` = `obs 2` - `age 0`,
+    `obs 2-age 1` = `obs 2` - `age 1`,
+    `age 0-age 1` = `age 0` - `age 1`
+  ) %>% 
+  select(-`obs 1`, -`obs 2`, -`age 1`, -`age 0`) %>% 
+  pivot_longer(
+    -x,
+    names_to = "effect",
+    values_to = "y"
+  ) %>% 
+  mutate(
+    effect = factor(effect, 
+                    levels = c(
+                      "obs 1-obs 2", 
+                      "obs 1-age 0", 
+                      "obs 1-age 1", 
+                      "obs 2-age 0", 
+                      "obs 2-age 1", 
+                      "age 0-age 1")
+    )
+  )
+
+contrasts_det %>% 
+  ggplot(aes(x, y)) +
+  geom_path() +
+  facet_wrap(~effect) +
+  geom_hline(aes(yintercept = 0), linetype = "dashed", size = 0.2) +
+  coord_flip()
+
+#' ## Functional glm
+Y_pivot <- Y %>% 
+  pivot_wider(
+    c(id, obs, age), 
+    values_from = y_sto, 
+    names_from = x, 
+    names_prefix = "n"
+  ) %>% 
+  mutate(
+    obs = factor(obs),
+    age = factor(age)
+  ) 
+
+Y_matrix <- Y_pivot %>% 
+  select(-(id:age)) %>% 
+  as.matrix
+
+cset <- create_curve_set(list(r = 1:10, obs = t(Y_matrix)))
+
+res <- graph.flm(
+  nsim = 2999, 
+  formula.full = Y ~ obs + age,
+  formula.reduced = Y ~ 1,
+  curve_sets = cset, 
+  factors = Y_pivot %>% as.data.frame(),
+  contrasts = TRUE
+)
+
+#+ fig.height = 10, warning = FALSE
+plot(res) + coord_flip()
+```
+
