@@ -126,8 +126,13 @@ Y_matrix <- Y_pivot %>%
 
 cset <- create_curve_set(list(r = 1:10, obs = t(Y_matrix)))
 
-res_var <- functional_anova(independent_factors$sp, contrasts = FALSE, curve_set = cset)
-my_plot_contrasts(res_var, 10)
+res_var <-list(
+  sp = functional_anova(independent_factors$sp, contrasts = FALSE, curve_set = cset),
+  age = functional_anova(independent_factors$age, contrasts = FALSE, curve_set = cset)
+)
+
+(my_plot_contrasts(res_var$sp, 10) + labs(title = "sp")) + 
+  (my_plot_contrasts(res_var$age, 10) + labs(title = "age"))
 
 res_sp <- graph.flm(
   nsim = nperm, 
@@ -202,5 +207,17 @@ res_age_trans <- graph.flm(
 
 plot(res_sp_trans) + coord_flip()
 plot(res_age_trans) + coord_flip()
+```
+
+## Apply joint transformation
+```{r}
+cset_trans_3 <- corrUnequalVar(cset_trans, groups=with(independent_factors, interaction(sp, age)))
+res_var_trans_3 <-list(
+  sp = functional_anova(independent_factors$sp, contrasts = FALSE, curve_set = cset_trans_3),
+  age = functional_anova(independent_factors$age, contrasts = FALSE, curve_set = cset_trans_3)
+)
+
+(my_plot_contrasts(res_var_trans_3$sp, 10) + labs(title = "sp")) + 
+  (my_plot_contrasts(res_var_trans_3$age, 10) + labs(title = "age"))
 ```
 
