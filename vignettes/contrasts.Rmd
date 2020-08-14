@@ -28,45 +28,6 @@ ggplot2::theme_set(theme_pub())
 alpha <- 0.05 / 3  # (Bonferroni correction)
 nperm <- 100  # number of permutations
 m <- 40-1  # number of discrete points per functions
-
-# test variance equality
-functional_anova <- function(g, nsim = nperm, contrasts = TRUE, curve_set = cset_trans, ...) {
-  GET::graph.fanova(
-    nsim = nsim,
-    curve_set = curve_set,
-    groups = g,
-    variances = "unequal",
-    test.equality = "var",
-    contrasts = contrasts,
-    alpha = alpha
-    #lm.args = list(weights = weights$weight)
-  )
-}
-
-# Transformation to equalize variances in groups
-corrUnequalVar <- function(curve_set, groups, n.aver = 1L, mirror = FALSE) {
-  if (!is.factor(groups)) {
-    groups <- factor(groups)
-  }
-  x <- GET:::data_and_sim_curves(curve_set)
-  # Group means, (bar{T}_j(r))
-  m <- GET:::groupmeans(x, groups)
-  # Sample variance over all functions, Var(T(r))
-  varT <- GET:::vvar(x)
-  # Variances in the groups, Var(T_j(r))
-  v <- GET:::groupvar(x, groups)
-  # Moving average
-  if(n.aver>1){
-    v <- t(apply(v, 1, GET:::maverage, n.aver=n.aver, mirror=mirror))
-    varT <- GET:::maverage(varT, n.aver=n.aver, mirror=mirror)
-  }
-  # Take S_ij(r) = (T_ij(r) - \bar{T}_j(r)) / \sqrt( Var(T_j(r)) ) * Var(T(r)) + \bar{T}_j(r)
-  for(i in 1:nrow(x)) {
-    x[i,] <- (x[i,] - m[which(rownames(m) == groups[i]),]) / sqrt(v[which(rownames(v) == groups[i]),]) * sqrt(varT) + m[which(rownames(m) == groups[i]),]
-  }
-  curve_set$funcs <- t(x)
-  curve_set
-}
 ```
 
 ## Homogeneity
@@ -244,18 +205,6 @@ ggsave("res.pdf", plot = q, width = 12*2, height = 8*2, units = "in")
 
 The envelopes are created from `r nperm` permutations.
 ```{r}
-
-functional_lm <- function(null_model, nsim = nperm, contrasts = TRUE) {
-  graph.flm(
-    nsim = nsim,
-    formula.full = Y ~ dominant_species + age_class + crown_closure,
-    formula.reduced = null_model,
-    curve_sets = cset_trans,
-    factors = independent_factors,
-    contrasts = contrasts,
-    GET.args = list(alpha = alpha)
-  )
-}
 res_flm_sp <- functional_lm(Y ~ age_class + crown_closure)
 res_flm_cc <- functional_lm(Y ~ dominant_species + age_class, contrasts = FALSE)
 res_flm_age <- functional_lm(Y ~ dominant_species + crown_closure, contrasts = FALSE)
