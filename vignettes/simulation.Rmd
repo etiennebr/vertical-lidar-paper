@@ -24,12 +24,12 @@ library(GET)
 
 ## Basic functions
 
-Create "basic" functions for `obs` group
+Create "basic" functions for `sp` group
 ```{r}
 fn <- tibble(
   x = c(1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L, 1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L), 
   y = c(1, 13, 224, 699, 620, 471, 174, 77, 15, 2, 5, 4, 8, 6, 13, 305, 458, 272, 176, 2) / 1000,
-  obs = c(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2)
+  sp = c(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2)
 )
 
 #' Create the age function
@@ -41,44 +41,52 @@ fn_covariate <- tibble(
 #' ## Simulation
 #' Create 100 samples
 set.seed(2020)
-N <- 100
-probs_obs <- c(1, 2)
+N <- 5000
+probs_sp <- c(1, 2)
 probs_age <- c(1, 2)
+nperm <- 1000  # number of permutations
+alpha <- 0.05
   
 covariates <- tibble(
   id = seq_len(N),
-  obs = sample(c(1, 2), N, replace = TRUE, prob = probs_obs),
+  sp = sample(c(1, 2), N, replace = TRUE, prob = probs_sp),
   age = sample(0:1, N, replace = TRUE, prob = probs_age)
 )
 
 Y <- covariates %>% 
-  left_join(fn) %>% 
-  left_join(fn_covariate) %>% 
+  left_join(fn, by = "sp") %>% 
+  left_join(fn_covariate, by = "x") %>% 
   mutate(
     # determinist formula ---------------------
     y_det = y + age * age_fn,
     # add lognormal error ---------------------
-    y_sto = y_det + rnorm(length(y_det), 0, sd = 0.2)
+    y_sto = y_det + rnorm(length(y_det), 0, sd = 0.2 + 0.3 * age + 0.2 * sp)
     )
+```
 
+Have a look at a subsample of the simulated data:
+```{r}
 Y %>% 
-  ggplot(aes(x, y_sto, group = id, color = interaction(obs, age))) +
+  # sample_by_group
+  group_by(id) %>% 
+  nest() %>% 
+  ungroup() %>% 
+  slice_sample(n = 20) %>% 
+  unnest(data) %>% 
+  ggplot(aes(x, y_sto, group = id, color = interaction(sp, age))) +
   geom_path() +
   coord_flip() + 
   facet_wrap(~id) +
   theme_void()
-#' Figure. Just to give an idea of the resulting functions
 ```
 
-
+The deterministic basis for the functions
 ```{r}
-#' ## Deterministic contrasts
-#' For reference, I create the contrasts from the "basic" functions
 detcon <- bind_rows(
   fn %>% mutate(
-    effect = paste("obs", obs)
+    effect = paste("sp", sp)
   ) %>% 
-    select(-obs),
+    select(-sp),
   fn_covariate %>% mutate(
     y = age_fn,
     effect = paste("age", 1)
@@ -86,59 +94,31 @@ detcon <- bind_rows(
     select(-age_fn)
 )
 
-#' The three determinist functions:
+```
+
+The three deterministic functions for reference
+```{r}
 ggplot(detcon, aes(x, y, color = effect)) +
   geom_path() +
   coord_flip()
+```
 
-contrasts_det <- detcon %>% 
-  pivot_wider(names_from = effect, values_from = y) %>% 
-  mutate(
-    `age 0` = 0,
-    `obs 1-obs 2` = `obs 1` - `obs 2`,
-    `obs 1-age 0` = `obs 1` - `age 0`,
-    `obs 1-age 1` = `obs 1` - `age 1`,
-    `obs 2-age 0` = `obs 2` - `age 0`,
-    `obs 2-age 1` = `obs 2` - `age 1`,
-    `age 0-age 1` = `age 0` - `age 1`
-  ) %>% 
-  select(-`obs 1`, -`obs 2`, -`age 1`, -`age 0`) %>% 
-  pivot_longer(
-    -x,
-    names_to = "effect",
-    values_to = "y"
-  ) %>% 
-  mutate(
-    effect = factor(effect, 
-                    levels = c(
-                      "obs 1-obs 2", 
-                      "obs 1-age 0", 
-                      "obs 1-age 1", 
-                      "obs 2-age 0", 
-                      "obs 2-age 1", 
-                      "age 0-age 1")
-    )
-  )
 
-contrasts_det %>% 
-  ggplot(aes(x, y)) +
-  geom_path() +
-  facet_wrap(~effect) +
-  geom_hline(aes(yintercept = 0), linetype = "dashed", size = 0.2) +
-  coord_flip()
-
+```{r}
 #' ## Functional glm
 Y_pivot <- Y %>% 
   pivot_wider(
-    c(id, obs, age), 
+    c(id, sp, age), 
     values_from = y_sto, 
     names_from = x, 
     names_prefix = "n"
   ) %>% 
   mutate(
-    obs = factor(obs),
+    sp = factor(sp),
     age = factor(age)
   ) 
+
+independent_factors <- Y_pivot %>% as.data.frame()
 
 Y_matrix <- Y_pivot %>% 
   select(-(id:age)) %>% 
@@ -146,16 +126,81 @@ Y_matrix <- Y_pivot %>%
 
 cset <- create_curve_set(list(r = 1:10, obs = t(Y_matrix)))
 
-res <- graph.flm(
-  nsim = 2999, 
-  formula.full = Y ~ obs + age,
-  formula.reduced = Y ~ 1,
+res_var <- functional_anova(independent_factors$sp, contrasts = FALSE, curve_set = cset)
+my_plot_contrasts(res_var, 10)
+
+res_sp <- graph.flm(
+  nsim = nperm, 
+  formula.full = Y ~ sp + age,
+  formula.reduced = Y ~ sp,
   curve_sets = cset, 
-  factors = Y_pivot %>% as.data.frame(),
+  factors = independent_factors,
   contrasts = TRUE
 )
 
-#+ fig.height = 10, warning = FALSE
-plot(res) + coord_flip()
+res_age <- graph.flm(
+  nsim = nperm, 
+  formula.full = Y ~ sp + age,
+  formula.reduced = Y ~ age,
+  curve_sets = cset, 
+  factors = independent_factors,
+  contrasts = TRUE
+)
+
+plot(res_sp) + coord_flip()
+plot(res_age) + coord_flip()
+```
+
+# Apply transformation
+```{r}
+cset_trans <- corrUnequalVar(cset, groups=with(independent_factors, sp))
+res_var_trans <-list(
+  sp = functional_anova(independent_factors$sp, contrasts = FALSE, curve_set = cset_trans),
+  age = functional_anova(independent_factors$age, contrasts = FALSE, curve_set = cset_trans)
+)
+
+(my_plot_contrasts(res_var_trans$sp, 10) + labs(title = "sp")) + 
+  (my_plot_contrasts(res_var_trans$age, 10) + labs(title = "age"))
+```
+
+The first transformation removes the heteroscedasticity by species, but
+heteroscedasticity remains by age.
+
+```{r}
+cset_trans_2 <- corrUnequalVar(cset_trans, groups=with(independent_factors, age))
+res_var_trans_2 <-list(
+  sp = functional_anova(independent_factors$sp, contrasts = FALSE, curve_set = cset_trans_2),
+  age = functional_anova(independent_factors$age, contrasts = FALSE, curve_set = cset_trans_2)
+)
+
+(my_plot_contrasts(res_var_trans_2$sp, 10) + labs(title = "sp")) + 
+  (my_plot_contrasts(res_var_trans_2$age, 10) + labs(title = "age"))
+```
+
+Applying the second transformation introduces heterogeneity back in the `sp`,
+but removes what was remaining in `age`.
+
+What happens when we compare the functions
+```{r}
+res_sp_trans <- graph.flm(
+  nsim = nperm, 
+  formula.full = Y ~ sp + age,
+  formula.reduced = Y ~ sp,
+  curve_sets = cset_trans_2, 
+  factors = independent_factors,
+  contrasts = TRUE
+)
+
+res_age_trans <- graph.flm(
+  nsim = nperm, 
+  formula.full = Y ~ sp + age,
+  formula.reduced = Y ~ age,
+  curve_sets = cset_trans_2, 
+  factors = independent_factors,
+  contrasts = TRUE
+)
+
+plot(res_sp_trans) + coord_flip()
+plot(res_age_trans) + coord_flip()
 ```
 
