@@ -156,17 +156,11 @@ wave_long <- wave %>%
     values_to = "ss"
   )
 
-by_height <- wave_long %>%
-  group_by(height) %>%
-  nest()
-
-weights <- by_height %>% 
-  mutate(
-    data = map(data, ~group_by(.x, dominant_species, crown_closure, age_class) %>% mutate(weight = 1/var(ss)))
-  ) %>% 
-  unnest(data) %>% 
+weights <- wave_long %>%
   group_by(stand_id) %>% 
-  summarise(weight = median(weight), .groups = "drop") 
+  summarise(inv_var = 1 / var(ss), .groups = "drop_last") %>% 
+  ungroup() %>% 
+  mutate(weight = inv_var / sum(inv_var))
 
 weights %>% 
   ggplot(aes(weight)) +
@@ -209,9 +203,6 @@ res_flm_age <- functional_lm(Y ~ dominant_species + crown_closure, contrasts = F
 ### Contrasts
 ```{r}
 p <- my_plot_contrasts(res_flm_sp, 39, full = TRUE)
-pa <- my_plot_contrasts(res_fanova_sp, 39, full = TRUE)
-# compare both results (fanova and flm)
-p + pa
 
 u <- my_plot_continuous(res_flm_cc, 39, main = "my main")  + scale_y_continuous("Scaled density difference (×10⁻⁴)", labels = function(x) paste0(x * 1000))
 v <- my_plot_continuous(res_flm_age, 39) + scale_y_continuous("Scaled density difference (×10⁻³)", labels = function(x) paste0(x * 100))
