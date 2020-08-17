@@ -30,7 +30,7 @@ nperm <- 100  # number of permutations
 m <- 40-1  # number of discrete points per functions
 
 # test variance equality
-functional_anova <- function(g, nsim = nperm, contrasts = TRUE, curve_set = cset_trans, ...) {
+functional_anova_homogeneity <- function(g, nsim = nperm, contrasts = FALSE, curve_set = cset_trans, ...) {
   GET::graph.fanova(
     nsim = nsim,
     curve_set = curve_set,
@@ -38,8 +38,8 @@ functional_anova <- function(g, nsim = nperm, contrasts = TRUE, curve_set = cset
     variances = "unequal",
     test.equality = "var",
     contrasts = contrasts,
-    alpha = alpha
-    #lm.args = list(weights = weights$weight)
+    alpha = alpha,
+    ...
   )
 }
 
@@ -69,9 +69,10 @@ corrUnequalVar <- function(curve_set, groups, n.aver = 1L, mirror = FALSE) {
 }
 ```
 
-## Homogeneity
+## Homogeneity of variance
 
-First, we need to test for variance homogeneity at every height.
+First, we need to test for variance homogeneity. If there is heteroscedasticity, 
+then we apply a transformation, and check that heteroscedasticity decreased.
 ```{r}
 # wave can be create once with `source("data-raw/lidar_wave.R")`
 
@@ -92,160 +93,102 @@ independent_factors <- wave %>%
 
 cset <- create_curve_set(list(r = seq_len(ncol(mobs)), obs = t(mobs)))
 
-res_fanova_sp <- functional_anova(independent_factors$dominant_species, contrasts = FALSE, curve_set = cset)
-my_plot_contrasts(res_fanova_sp, m)
+res_fanova_sp <- functional_anova_homogeneity(independent_factors$dominant_species, curve_set = cset)
+plot(res_fanova_sp) + coord_flip()
 
-# Successively equalize variance for each group
+# Successively equalize variance for each group, then test
 cset_trans <- corrUnequalVar(cset, groups=with(independent_factors, crown_closure))
-res_fanova_sp <- functional_anova(independent_factors$dominant_species, contrasts = FALSE, curve_set = cset_trans)
+res_fanova_sp <- functional_anova_homogeneity(independent_factors$dominant_species, contrasts = FALSE, curve_set = cset_trans)
 pa <- plot(res_fanova_sp) + coord_flip()
 
 cset_trans <- corrUnequalVar(cset_trans, groups=with(independent_factors, age_class))
-res_fanova_sp <- functional_anova(independent_factors$dominant_species, contrasts = FALSE, curve_set = cset_trans)
+res_fanova_sp <- functional_anova_homogeneity(independent_factors$dominant_species, contrasts = FALSE, curve_set = cset_trans)
 pb <- plot(res_fanova_sp) + coord_flip()
 
-cset_trans <- corrUnequalVar(cset_trans, groups=with(independent_factors, dominant_species))
-res_fanova_sp <- functional_anova(independent_factors$dominant_species, contrasts = FALSE, curve_set = cset_trans)
+#cset_trans <- corrUnequalVar(cset_trans, groups=with(independent_factors, dominant_species))
+res_fanova_sp <- functional_anova_homogeneity(independent_factors$dominant_species, contrasts = FALSE, curve_set = cset_trans)
 pc <- plot(res_fanova_sp) + coord_flip()
 
+# This figure shows the successive effect of the transformations
 pa + pb + pc
 ```
-After testing it, it seems that the third transformation is ineffective. 
-The areas that are heterogenuous are generally not fixed.
+The order of transformation is important here. From experimentation, we found
+that cc>age>sp gives the best results. By using simulated data, we observed that
+applying the transformations at once (with e.g. `interaction()`) gives the best
+correction because it generally completely removes the heteroscedasticity, while
+successive transformations can reintroduce heteroscedasticity in other areas of
+the curve. Given our unbalanced data, with missing combinations of predictors,
+we could not apply the transformation at once. However, the remaining areas of
+heteroscedasticity did not seem to affect the final results of simulated data,
+especially with datasets with the same number of observations. The test of
+heteroscedasticity ($Z_{ij}(r) = T_{ij}(r) - \bar{T}_j(r)$) appeared to be more
+conservative for larger datasets (i.e. 5000 observations), than with smaller
+datasets (e.g. 200 observations). For example, the test would not indicate
+heterogenuous variance on a dataset downsampled from a large dataset in which 
+the test found heteroscedasticity.
+
+Check variance homogeneity
+```{r}
+res_fanova_sp <- functional_anova_homogeneity(independent_factors$dominant_species, contrasts = FALSE, curve_set = cset)
+res_fanova_sp_trans <- functional_anova_homogeneity(independent_factors$dominant_species, contrasts = FALSE, curve_set = cset_trans)
+res_fanova_cc <- functional_anova_homogeneity(factor(independent_factors$crown_closure), contrasts = FALSE, curve_set = cset)
+res_fanova_cc_trans <- functional_anova_homogeneity(factor(independent_factors$crown_closure), contrasts = FALSE, curve_set = cset_trans)
+res_fanova_age <- functional_anova_homogeneity(independent_factors$age_class, contrasts = FALSE, curve_set = cset)
+res_fanova_age_trans <- functional_anova_homogeneity(factor(independent_factors$age_class), contrasts = FALSE, curve_set = cset_trans)
+
+plot(res_fanova_sp) + coord_flip() + plot(res_fanova_sp_trans) + coord_flip() 
+plot(res_fanova_cc) + coord_flip() + plot(res_fanova_cc_trans) + coord_flip()
+plot(res_fanova_age) + coord_flip() + plot(res_fanova_age_trans) + coord_flip()
+```
 
 ## GLM
 
+The envelopes are created from `r nperm` permutations. We'll use weighted least 
+squares to remove any potential remaining heteroscedasticity. We use inverse 
+variance weights (`1/var(Y)`).
 ```{r}
-wave_long <- wave %>% 
-  # remove untransformed Y
-  select(-matches("ss_")) %>%
-  bind_cols(trans_ss) %>%
+wave_long <- wave %>%
   pivot_longer(
-    cols = matches("ss_"), 
-    names_prefix = "(trans_)?ss_", 
-    names_to = "height", 
+    cols = matches("ss_"),
+    names_prefix = "(trans_)?ss_",
+    names_to = "height",
     names_transform = list(height = as.integer),
     values_to = "ss"
   )
-```
 
-### Diagnose
-
-It seems that issues with residuals could be due to the abundance of near-zero
-predictors in some areas of the curve. 
-```{r}
-wave_long %>% 
-  group_by(height, dominant_species) %>% 
-  filter(ss < 1e-3) %>% 
-  count() %>% 
-  ggplot(aes(height / 40 * 100, n / nrow(wave) * 100, fill = dominant_species)) + 
-  geom_col() + 
-  ylab("Proportion of Y near zero (%)") +
-  xlab("Relative height (%)") +
-  coord_flip() 
-```
-
-# check residuals
-```{r}
-by_height <- wave_long %>% 
-  group_by(height) %>% 
+by_height <- wave_long %>%
+  group_by(height) %>%
   nest()
 
-box_cox <- function(x) {
-  predict(caret::BoxCoxTrans(x + 1e-6), x)
-}
-
-sp_mod <- function(x) {
-  lm(ss ~ dominant_species + age_class + crown_closure, data = x)
-}
-
-sp_mod_sqrt <- function(x) {
-  lm(ss_sqrt ~ dominant_species + age_class + crown_closure, data = x)
-}
-
-minimum_variance_ratio <- function(x, group, at) {
-  # "A rule of thumb is that linear models are fairly robust to heterogeneity
-  # of variance so long as the maximum variance is no more than 4× greater
-  # than the minimum variance"
-  # ---https://stats.stackexchange.com/questions/91872/alternatives-to-one-way-anova-for-heteroskedastic-data/91881#91881
-  
-  vars <- x %>% 
-    group_by({{group}}) %>% 
-    summarise(var = var({{at}}, na.rm = TRUE), .groups = "drop_last")
-  
-  max(vars$var) / min(vars$var)
-}
-
-by_height <- by_height %>% 
+weights <- by_height %>% 
   mutate(
-    sp_model = map(data, sp_mod),
-    sp_bptest = map(sp_model, lmtest::bptest),
-    sp_bptest_statistic = map_dbl(sp_bptest, "statistic"),
-    sp_bptest_p_value   = map_dbl(sp_bptest, "p.value"),  # p<0.05 with large BP >~ 10?
-    # sp_ols_bptest = map(sp_model, olsrr::ols_test_breusch_pagan),
-    # #sp_levene_test = map(sp_model, ~car::leveneTest(residuals(.x), groups = )),
-    # sp_shapiro_test = map(sp_model, ~shapiro.test(sample(residuals(.x), size = 5e3))),
-    # sp_shapiro_test_statistic = map_dbl(sp_shapiro_test, "statistic"),
-    # sp_shapiro_test_p_value   = map_dbl(sp_shapiro_test, "p.value"),
-    # sp_ols_test_f = map(sp_model, ols_test_f),
+    data = map(data, ~group_by(.x, dominant_species, crown_closure, age_class) %>% mutate(weight = 1/var(ss)))
+  ) %>% 
+  unnest(data) %>% 
+  group_by(stand_id) %>% 
+  summarise(weight = median(weight), .groups = "drop") 
 
-    sp_mvr = map_dbl(data, ~minimum_variance_ratio(.x, dominant_species, ss)),
+weights %>% 
+  ggplot(aes(weight)) +
+  geom_histogram()
+```
 
-    sp_kurtosis = map_dbl(sp_model, ~e1071::kurtosis(residuals(.x))),
-    data = map2(data, sp_model, modelr::add_residuals, var = "resid"),
-    data = map2(data, sp_model, modelr::add_predictions, var = "pred"),
-    
-    sp_mvr_res = map_dbl(data, ~minimum_variance_ratio(.x, dominant_species, pred))
+
+```{r}
+functional_anova <- function(g, nsim = nperm, contrasts = TRUE, curve_set = cset_trans, ...) {
+  GET::graph.fanova(
+    nsim = nsim,
+    curve_set = curve_set,
+    groups = g,
+    variances = "unequal",
+    test.equality = "mean",
+    contrasts = contrasts,
+    alpha = alpha,
+    ...
   )
-```
+}
 
-```{r}
-# The maximum variance ratio should 4
-qplot(sp_mvr_res, height, data = by_height) + geom_path() + geom_vline(xintercept = 4) +
-# kurtosis should be 0
-#qplot(sp_kurtosis, height, data = by_height) + geom_path() + geom_vline(xintercept = 0) 
-
-qplot(sp_bptest_statistic, height, data = by_height) + geom_path() +
-qplot(sp_bptest_p_value, height, data = by_height) + geom_path()
-```
-
-```{r}
-# View residuals by group
-p <- by_height %>% 
-  select(height, data) %>% 
-  unnest(data) %>% 
-  ggplot(aes(x = height / 40, y = resid, group = stand_id, color = dominant_species)) +
-  coord_flip() +
-  geom_line(show.legend = FALSE, alpha = 0.5) +
-  scale_y_continuous("Scaled lidar return") +
-  scale_x_continuous("Scaled height") +
-  facet_grid(dominant_species + age_class ~crown_closure)
-
-ggsave("res_fn.pdf", plot = p, width = 12, height = 44, units = "in")
-
-by_height %>% 
-  select(height, data) %>% 
-  unnest(data) %>% 
-  ggplot(aes(x = height / 40, y = resid, group = stand_id, color = dominant_species)) +
-  coord_flip() +
-  geom_line(show.legend = FALSE, alpha = 0.2)
-
-# View residuals by model (height)
-q <- by_height %>% 
-  select(height, data) %>% 
-  unnest(data) %>% 
-  ggplot(aes(x = pred, y = resid %>% abs() %>% sqrt(), group = NA)) +
-  geom_point(show.legend = FALSE, size = 0.5, alpha = 0.5) +
-  facet_wrap(~I(round(height/40*100)), scales = "free") +
-  geom_smooth(se = FALSE)
-
-ggsave("res.pdf", plot = q, width = 12*2, height = 8*2, units = "in")
-```
-
-The envelopes are created from `r nperm` permutations.
-```{r}
-
-functional_lm <- function(null_model, nsim = nperm, contrasts = TRUE) {
+functional_lm <- function(null_model, nsim = nperm, contrasts = TRUE, ...) {
   graph.flm(
     nsim = nsim,
     formula.full = Y ~ dominant_species + age_class + crown_closure,
@@ -253,26 +196,15 @@ functional_lm <- function(null_model, nsim = nperm, contrasts = TRUE) {
     curve_sets = cset_trans,
     factors = independent_factors,
     contrasts = contrasts,
-    GET.args = list(alpha = alpha)
+    GET.args = list(alpha = alpha),
+    ...
   )
 }
-res_flm_sp <- functional_lm(Y ~ age_class + crown_closure)
-res_flm_cc <- functional_lm(Y ~ dominant_species + age_class, contrasts = FALSE)
-res_flm_age <- functional_lm(Y ~ dominant_species + crown_closure, contrasts = FALSE)
 
-res_fanova_sp <- functional_anova(independent_factors$dominant_species, contrasts = FALSE, curve_set = cset)
-res_fanova_sp_trans <- functional_anova(independent_factors$dominant_species, contrasts = FALSE, curve_set = cset_trans)
-res_fanova_cc <- functional_anova(factor(independent_factors$crown_closure), contrasts = FALSE, curve_set = cset)
-res_fanova_cc_trans <- functional_anova(factor(independent_factors$crown_closure), contrasts = FALSE, curve_set = cset_trans)
-res_fanova_age <- functional_anova(independent_factors$age_class, contrasts = FALSE)
+res_flm_sp <- functional_lm(Y ~ age_class + crown_closure, lm.args = list(weights = weights$weight))
+res_flm_cc <- functional_lm(Y ~ dominant_species + age_class, contrasts = FALSE, lm.args = list(weights = weights$weight))
+res_flm_age <- functional_lm(Y ~ dominant_species + crown_closure, contrasts = FALSE, lm.args = list(weights = weights$weight))
 ```
-
-Check variance homogeneity
-```{r}
-plot(res_fanova_sp) + coord_flip() + plot(res_fanova_sp_trans) + coord_flip()
-plot(res_fanova_cc) + coord_flip() + plot(res_fanova_cc_trans) + coord_flip()
-```
-
 
 ### Contrasts
 ```{r}
