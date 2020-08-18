@@ -60,7 +60,7 @@ corrUnequalVar <- function(curve_set, groups, n.aver = 1L, mirror = FALSE) {
     v <- t(apply(v, 1, GET:::maverage, n.aver=n.aver, mirror=mirror))
     varT <- GET:::maverage(varT, n.aver=n.aver, mirror=mirror)
   }
-  # Take S_ij(r) = (T_ij(r) - \bar{T}_j(r)) / \sqrt( Var(T_j(r)) ) * Var(T(r)) + \bar{T}_j(r)
+  # Take S_ij(r) = (T_ij(r) - \bar{T}_j(r)) / \sqrt( Var(T_j(r)) ) * \sqrt{Var(T(r))} + \bar{T}_j(r)
   for(i in 1:nrow(x)) {
     x[i,] <- (x[i,] - m[which(rownames(m) == groups[i]),]) / sqrt(v[which(rownames(v) == groups[i]),]) * sqrt(varT) + m[which(rownames(m) == groups[i]),]
   }
