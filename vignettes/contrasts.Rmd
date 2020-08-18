@@ -238,8 +238,8 @@ cc_v <- res_flm_cc %>%
   geom_line(data = . %>% group_by(r) %>% summarise(curves = sum(abs(curves)))) +
   xlab("Scaled Stand Height") +
   ylab("Sum of scaled density difference") +
-  directlabels::geom_dl(aes(label = a, color = a), method = "last.bumpup") +
-  scale_color_manual(values = pal_cc) +
+  #directlabels::geom_dl(aes(label = a, color = a), method = "last.bumpup") +
+  scale_color_manual(values = pal_cc[4]) +
   coord_flip()
 
 # Age variations ===============================================================
@@ -249,7 +249,7 @@ age_v <- res_flm_age %>%
   filter(
     type == "Data function",
   ) %>% 
-  fill_contrast_matrix() %>% 
+  mutate(a = b) %>%  # move age class to column a
   group_by(a, r) %>% 
   summarise(
     curves = sum(curves)
@@ -284,4 +284,3 @@ res_flm_age %>%
   facet_grid(~a)+
   coord_flip()
 ```
-
