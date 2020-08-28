@@ -289,3 +289,10 @@ flip_contrast_matrix <- function(x) {
 split_labels <- function(x, col) tidyr::separate(x, {{col}}, c("what_a", "a", "what_b", "b"), sep = "[\\.-]", remove = FALSE)
 
 sort_num_factor <- function(x, levels = stringr::str_sort(unique(x), numeric = TRUE)) factor(x, levels = levels)
+
+p_value <- function(x) {
+  if (!inherits(x, "global_envelope")) {
+    x <- attr(x, "level2_ge")
+  }
+  attr(x, "p")
+}

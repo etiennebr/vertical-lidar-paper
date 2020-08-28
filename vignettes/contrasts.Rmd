@@ -187,6 +187,13 @@ v <- my_plot_continuous(res_flm_age, 39) + scale_y_continuous("Scaled density di
 # ggsave("figure/fig7-age-contrasts.png", v + scale_y_continuous("breaks = c(-0.2, 0, 0.2)"), device = device, dpi = "retina", width = 234, height = 234, units = "mm")
 ```
 
+### p-values
+```{r}
+p_value(res_flm_sp)
+p_value(res_flm_age)
+p_value(res_flm_cc)
+```
+
 ### Summary figure
 ```{r}
 # Species variations ==========================================================
