@@ -169,22 +169,25 @@ res_flm_age <- functional_lm(Y ~ dominant_species + crown_closure, contrasts = F
 ### Contrasts
 ```{r}
 p <- my_plot_contrasts(res_flm_sp, 39, full = TRUE)
-pa <- my_plot_contrasts(res_fanova_sp, 39, full = TRUE)
-# compare both results (fanova and flm)
-p + pa
 
-u <- my_plot_continuous(res_flm_cc, 39, main = "my main")  + scale_y_continuous("Scaled density difference (×10⁻⁴)", labels = function(x) paste0(x * 1000))
-v <- my_plot_continuous(res_flm_age, 39) + scale_y_continuous("Scaled density difference (×10⁻³)", labels = function(x) paste0(x * 100))
+u <- my_plot_continuous(res_flm_cc, 39, main = "my main")  + 
+  #scale_y_continuous("Scaled density difference (×10⁻⁴)", labels = function(x) paste0(x * 1000)) +
+  NULL
+v <- my_plot_continuous(res_flm_age, 39) + 
+  #scale_y_continuous("Scaled density difference (×10⁻³)", labels = function(x) paste0(x * 100)) +
+  NULL
 
-(p + ggtitle("Species")) +
-  ((u + ggtitle("Crown closure")) /
-  (v + ggtitle("Age")))
+(p + ggtitle("Species")) / 
+(u + ggtitle("Crown closure")) / 
+(v + ggtitle("Age")) +
+  plot_layout(heights = c(2, 2, 1))
 
 # Save figures independently
 # device <- "png" # pdf
-# ggsave("figure/fig3-sp-contrasts.png", p, device = device, dpi = "retina", width = 234, height = 234, units = "mm")
-# ggsave("figure/fig5-cc-contrasts.png", u, device = device, dpi = "retina", width = 234, height = 234, units = "mm")
-# ggsave("figure/fig7-age-contrasts.png", v + scale_y_continuous("breaks = c(-0.2, 0, 0.2)"), device = device, dpi = "retina", width = 234, height = 234, units = "mm")
+device <- "pdf"
+ggsave("figure/fig3-sp-contrasts.pdf", p, device = device, dpi = "retina", width = 234, height = 234, units = "mm")
+ggsave("figure/fig5-cc-contrasts.pdf", u, device = device, dpi = "retina", width = 234/2, height = 234/2, units = "mm")
+ggsave("figure/fig7-age-contrasts.pdf", v, device = device, dpi = "retina", width = 234, height = 234/2, units = "mm")
 ```
 
 ### p-values

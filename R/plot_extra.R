@@ -19,6 +19,11 @@ my_plot_continuous <- function(x, scale_r, ...) {
       type == "Data function"
     ) 
   
+  facet <- NULL
+  if (length(unique(ribbon$b)) > 1) {
+    facet <- list(facet_grid(~b))
+  }
+  
   p <- 
     ribbon %>% 
     ggplot(aes(x = r, y = curves, group = interaction(type, a, b))) + 
@@ -26,7 +31,7 @@ my_plot_continuous <- function(x, scale_r, ...) {
     geom_segment(aes(xend = x_end, yend = y_end, size = ifelse(!inside & !inside_lead, "outside", "inside")), show.legend = FALSE, color = "grey20") +
     scale_color_manual(values = c("outside" = line_outside, "inside" = line_inside)) +
     scale_size_manual(values = c("outside" = line_outside, "inside" = line_inside)) +
-    facet_grid(~b) +
+    facet +
     xlab("Scaled Stand Height") +
     ylab("Scaled density difference") +
     coord_flip()
