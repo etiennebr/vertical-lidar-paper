@@ -26,7 +26,7 @@ library(purrr)
 
 ggplot2::theme_set(theme_pub())
 alpha <- 0.05 / 3  # (Bonferroni correction)
-nperm <- 100  # number of permutations
+nperm <- 3000  # number of permutations
 m <- 40-1  # number of discrete points per functions
 
 # test variance equality
@@ -293,4 +293,61 @@ res_flm_age %>%
   ylab("Scaled density difference") +
   facet_grid(~a)+
   coord_flip()
+```
+
+# Appendix
+```{r}
+trans_ss <- cset_trans[["funcs"]] %>% 
+  t() %>%
+  as_tibble() %>%
+  set_names(~paste0("trans_", .x))
+
+wave_long <- wave %>%
+  # remove untransformed Y
+  select(-matches("ss_")) %>%
+  bind_cols(trans_ss) %>%
+  pivot_longer(
+    cols = matches("ss_"),
+    names_prefix = "(trans_)?ss_",
+    names_to = "height",
+    names_transform = list(height = as.integer),
+    values_to = "ss"
+  )
+
+cap <- paste(
+  "Appendix figure 1.",
+  "Vertical distribution of lidar returns. ",
+  "The functions are transformed to correct for heteroscedasticity.",
+  "Each line is an observation, the bold line is the median function",
+  "of the group, the grey ribbon displays the 95 and 50% intervals."
+)
+
+wrapper <- function(x, ...) 
+{
+  paste(strwrap(x, ...), collapse = "\n")
+}
+
+pap <- wave_long %>%
+  group_by(dominant_species, crown_closure, age_class, height) %>% 
+  summarise(
+    n = n(),
+    median = median(ss),
+    q25 = quantile(ss, probs = 25/100),
+    q75 = quantile(ss, probs = 75/100),
+    q025 = quantile(ss, probs = 2.5/100),
+    q0975 = quantile(ss, probs = 97.5/100)
+    ) %>% 
+  ggplot(aes(x = height / 40, y = median, group = interaction(dominant_species, crown_closure, age_class))) +
+  coord_flip(ylim = c(0, 0.25)) +
+  geom_line(data = wave_long, aes(y = ss, color = dominant_species, group = stand_id), show.legend = FALSE, size = 0.1, alpha = 0.4) +
+  geom_line(aes(color = dominant_species), show.legend = FALSE) +
+  geom_ribbon(aes(ymin = q025, ymax = q0975), fill = "#000000", alpha = 0.2) +
+  geom_ribbon(aes(ymin = q25, ymax = q75), fill = "#000000", alpha = 0.2) +
+  scale_y_continuous("Scaled lidar return density (transformed)", breaks = c(0:2) / 10, expand = c(0, 0)) +
+  scale_x_continuous("Scaled height", limits = c(0, 1), breaks = 1:2/2) +
+  geom_text(data = wave %>% count(dominant_species, crown_closure, age_class), aes(label = n), x = Inf, y = Inf, hjust = 1, vjust = 1, size = 3) +
+  facet_grid(dominant_species + age_class ~crown_closure) +
+  labs(caption = wrapper(cap, 80))
+
+ggsave("figure/appendix.pdf", pap + theme_pub(10), width = 6, height = 22, units = "in")
 ```
