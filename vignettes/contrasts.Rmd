@@ -3,8 +3,10 @@ title: "contrasts"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{contrasts}
-  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r, include = FALSE}
@@ -28,6 +30,8 @@ ggplot2::theme_set(theme_pub())
 alpha <- 0.05 / 3  # (Bonferroni correction)
 nperm <- 3000  # number of permutations
 m <- 40-1  # number of discrete points per functions
+device <- "pdf"
+plot_use_trans <- TRUE  # use transformed data for plots
 
 # test variance equality
 functional_anova <- function(g, nsim = nperm, contrasts = TRUE, curve_set = cset_trans, ...) {
@@ -166,29 +170,6 @@ res_flm_cc <- functional_lm(Y ~ dominant_species + age_class, contrasts = FALSE)
 res_flm_age <- functional_lm(Y ~ dominant_species + crown_closure, contrasts = FALSE)
 ```
 
-### Contrasts
-```{r}
-p <- my_plot_contrasts(res_flm_sp, 39, full = TRUE)
-
-u <- my_plot_continuous(res_flm_cc, 39, main = "my main")  + 
-  #scale_y_continuous("Scaled density difference (×10⁻⁴)", labels = function(x) paste0(x * 1000)) +
-  NULL
-v <- my_plot_continuous(res_flm_age, 39) + 
-  #scale_y_continuous("Scaled density difference (×10⁻³)", labels = function(x) paste0(x * 100)) +
-  NULL
-
-(p + ggtitle("Species")) / 
-(u + ggtitle("Crown closure")) / 
-(v + ggtitle("Age")) +
-  plot_layout(heights = c(2, 2, 1))
-
-# Save figures independently
-# device <- "png" # pdf
-device <- "pdf"
-ggsave("figure/fig3-sp-contrasts.pdf", p, device = device, dpi = "retina", width = 234, height = 234, units = "mm")
-ggsave("figure/fig5-cc-contrasts.pdf", u, device = device, dpi = "retina", width = 234/2, height = 234/2, units = "mm")
-ggsave("figure/fig7-age-contrasts.pdf", v, device = device, dpi = "retina", width = 234, height = 234/2, units = "mm")
-```
 
 ### p-values
 ```{r}
@@ -197,105 +178,9 @@ p_value(res_flm_age)
 p_value(res_flm_cc)
 ```
 
-### Summary figure
-```{r}
-# Species variations ==========================================================
-direct_labels <- tribble(
-  ~label, ~r, ~curves,
-  "Aspen", 0.75, 0.12,
-  "Balsam fir", 0.56, 0.09,
-  "Paper birch", 0.4, 0.11,
-  "White spruce", 0.25, 0.14,
-  "Black spruce", 0.05, 0.19
-) %>% 
-  mutate(a = tolower(label))
+# Figures
 
-sp_v <- 
-  res_flm_sp %>% 
-  my_plot_data_combined_global_envelope(scale_r = 39) %>% 
-  .$ribbon %>% 
-  filter(
-    type == "Data function",
-  ) %>% 
-  fill_contrast_matrix() %>% 
-  group_by(a, r) %>% 
-  summarise(
-    curves = sum(abs(curves))
-  ) %>% 
-  ggplot(aes(x = r, y = curves)) + 
-  geom_line(aes(group = a, color = a), show.legend = FALSE) +
-  geom_line(data = . %>% group_by(r) %>% summarise(curves = sum(abs(curves)))) +
-  geom_text(data = direct_labels, aes(label = label, color = a), show.legend = FALSE, hjust = "left") +
-  xlab("Scaled Stand Height") +
-  ylab("Sum of absolute scaled density difference") +
-  scale_color_brewer("Species", type = "qual", palette = "Dark2") + 
-  coord_flip()
-
-# Crown closure variations ====================================================
-cc_v <- res_flm_cc %>% 
-  my_plot_data_combined_global_envelope(scale_r = 39, main = "main") %>% 
-  .$ribbon %>% 
-  filter(
-    type == "Data function",
-  ) %>% 
-  fill_contrast_matrix() %>% 
-  group_by(a, r) %>% 
-  summarise(
-    curves = sum(curves)
-  ) %>% 
-  ggplot(aes(x = r, y = curves)) + 
-  geom_line(aes(group = interaction(a), color = a), show.legend = FALSE) +
-  geom_line(data = . %>% group_by(r) %>% summarise(curves = sum(abs(curves)))) +
-  xlab("Scaled Stand Height") +
-  ylab("Sum of scaled density difference") +
-  #directlabels::geom_dl(aes(label = a, color = a), method = "last.bumpup") +
-  scale_color_manual(values = pal_cc[4]) +
-  coord_flip()
-
-# Age variations ===============================================================
-age_v <- res_flm_age %>% 
-  my_plot_data_combined_global_envelope(scale_r = 39) %>% 
-  .$ribbon %>% 
-  filter(
-    type == "Data function",
-  ) %>% 
-  mutate(a = b) %>%  # move age class to column a
-  group_by(a, r) %>% 
-  summarise(
-    curves = sum(curves)
-  ) %>% 
-  ggplot(aes(x = r, y = curves)) + 
-  geom_line(aes(group = interaction(a), color = a), show.legend = FALSE) +
-  geom_line(data = . %>% group_by(r) %>% summarise(curves = sum(abs(curves)))) +
-  xlab("Scaled Stand Height") +
-  ylab("Sum of scaled density difference") +
-  scale_color_manual(values = pal_age) +
-  directlabels::geom_dl(aes(label = a, color = a), method = "last.bumpup") +
-  coord_flip()
-
-sp_v + cc_v + age_v
-
-res_flm_age %>% 
-  my_plot_data_combined_global_envelope(scale_r = 39) %>% 
-  .$ribbon %>% 
-  filter(
-    type == "Data function",
-  ) %>% 
-  fill_contrast_matrix() %>% 
-  mutate(
-    a = sort_num_factor(a),
-    b = sort_num_factor(b)
-  ) %>% 
-  ggplot(aes(x = r, y = curves, group = interaction(type, a, b))) + 
-  geom_ribbon(aes(x = r, ymin = lower, ymax = upper), fill = "black", alpha = 0.01) +
-  geom_segment(aes(xend = x_end, yend = y_end, color = ifelse(!inside & !inside_lead, "outside", NA)), show.legend = FALSE) +
-  xlab("Scaled Stand Height") +
-  ylab("Scaled density difference") +
-  facet_grid(~a)+
-  coord_flip()
-```
-
-# Appendix
+Create a transformed set of data with both transformed and untransformed data.
 ```{r}
 trans_ss <- cset_trans[["funcs"]] %>% 
   t() %>%
@@ -303,31 +188,133 @@ trans_ss <- cset_trans[["funcs"]] %>%
   set_names(~paste0("trans_", .x))
 
 wave_long <- wave %>%
-  # remove untransformed Y
-  select(-matches("ss_")) %>%
   bind_cols(trans_ss) %>%
   pivot_longer(
     cols = matches("ss_"),
-    names_prefix = "(trans_)?ss_",
-    names_to = "height",
-    names_transform = list(height = as.integer),
+    names_pattern = "(trans_)?ss_(\\d+)",
+    names_to = c("trans", "height"),
     values_to = "ss"
+  ) %>% 
+  mutate(
+        trans = !is.na(trans), 
+        height = as.integer(height)
   )
+```
 
-cap <- paste(
-  "Appendix figure 1.",
-  "Vertical distribution of lidar returns. ",
-  "The functions are transformed to correct for heteroscedasticity.",
-  "Each line is an observation, the bold line is the median function",
-  "of the group, the grey ribbon displays the 95 and 50% intervals."
-)
+## Species
+Figure 2. Contrasts from the nonparametric graphical tests of significance for
+species. The species in columns are subtracted from the species in rows (e.g.
+first column, second row is the aspen - balsam fir contrast). The grey envelope
+displays the area of acceptance of the null hypothesis (no differences between
+species, p<0.001) from the permutation of the residuals of the null model (eq.
+2), the black curve is the average parameter difference (bolder when outside the
+envelope). The diagonal displays the `r ifelse(plot_use_trans, "transformed ", "")`
+vertical lidar return distribution of each species (on a different scale than
+the contrasts): black lines represent the median species distribution, shaded
+areas represent 95% and 50% variation envelopes.
 
-wrapper <- function(x, ...) 
-{
-  paste(strwrap(x, ...), collapse = "\n")
+```{r species_contrasts}
+# adapted from: https://www.tidyverse.org/blog/2020/03/dplyr-1-0-0-summarise/
+quibble_wide <- function(x, q = c(0.025, 0.25, 0.5, 0.75, 0.975)) {
+  tibble(x = quantile(x, q), q = q) %>% 
+    pivot_wider(1, names_from = q, values_from = x)
 }
 
-pap <- wave_long %>%
+# Create species figure
+psp <- wave_long %>% 
+  filter(trans == plot_use_trans) %>% 
+  group_by(dominant_species, height) %>% 
+  summarise(quibble_wide(ss)) %>% 
+  mutate(height = height / m) %>% 
+  ggplot(aes(x = height, group = dominant_species)) + 
+  geom_ribbon(aes(ymin = `0.025`, ymax = `0.975`), fill = light_grey) + 
+  geom_ribbon(aes(ymin = `0.25`, ymax = `0.75`), fill = dark_grey) +
+  geom_line(aes(y = `0.5`), colour = "grey20") +
+  scale_y_continuous("Scaled lidar return density (transformed)", breaks = c(0:2) / 10, expand = c(0, 0)) +
+  scale_x_continuous("Scaled stand height", limits = c(0, 1), breaks = 1:2/2, expand = c(0, 0)) +
+  facet_grid(~dominant_species) + 
+  coord_flip(ylim = c(0, 0.30), xlim = c(0, 1))
+
+# Create species contrasts and add species on the diagonal
+pcsp <- my_plot_contrasts(res_flm_sp, m, full = TRUE, diag = TRUE, add = psp)
+
+ggsave("figure/fig2-sp-combined.pdf", pcsp, device = device, dpi = "retina", width = 234, height = 234, units = "mm")
+```
+
+## Crown closure
+
+Figure 3. Coefficients of the transformed vertical distribution of lidar returns
+for crown closure. Black lines represent the median distribution, shaded areas
+represent 95% and 50% variation envelope. Top right numbers in the panels
+indicate the number of observations (stands).
+```{r crown_closure}
+pc_cc <- my_plot_continuous(res_flm_cc, m, main = "my main") + scale_y_continuous("Scaled density effect")
+
+ggsave("figure/fig3-glm-cc.pdf", pc_cc, device = device, dpi = "retina", width = 234 / 2, height = 234 / 2, units = "mm")
+```
+
+Figure 4. `r ifelse(plot_use_trans, "Transformed v", "V")`ertical distribution 
+of lidar returns as a function of crown closure and species. Black lines
+represent the median distribution, shaded areas represent 95% and 50% variation
+envelope. Top right numbers in the panels indicate the number of observations
+(stands).
+```{r crown_closure_contrasts}
+label_cc <- function(d) paste0(d, "%")
+
+pcc <- wave_long %>% 
+  filter(trans == plot_use_trans) %>% 
+  group_by(dominant_species, height, crown_closure) %>% 
+  summarise(quibble_wide(ss), .groups = "drop_last") %>% 
+  mutate(height = height / m) %>% 
+  ggplot(aes(x = height, group = interaction(dominant_species, crown_closure))) + 
+  geom_ribbon(aes(ymin = `0.025`, ymax = `0.975`), fill = light_grey) + 
+  geom_ribbon(aes(ymin = `0.25`, ymax = `0.75`), fill = dark_grey) +
+  geom_line(aes(y = `0.5`), colour = "grey20") +
+  geom_vline(aes(xintercept = 0)) +
+  scale_x_continuous("Scaled height", limits = c(0, 1), breaks = 1:2/2, expand = c(0, 0)) +
+  scale_y_continuous("Scaled lidar return density", breaks = c(0:2) / 10, expand = c(0, 0)) +
+  facet_grid(dominant_species~label_cc(crown_closure)) +
+  coord_flip(ylim = c(0, 0.25), xlim = c(0, 1)) +
+  ( if(plot_use_trans) 
+    # transformed data
+    list(
+      coord_flip(ylim = c(-0.1, 0.2), xlim = c(0, 1)),
+      scale_y_continuous("Scaled lidar return density (transformed)", breaks = c(-2, 0, 2, 4, 6) / 10, expand = c(0, 0))
+      )
+  )
+pcc
+
+ggsave("figure/fig4-cc.pdf", pcc, device = device, dpi = "retina", width = 234, height = 234, units = "mm")
+```
+
+## Age
+Figure 5. `r ifelse(plot_use_trans, "Transformed v", "V")`ertical distribution 
+of lidar returns as a function of stand density and species. Black lines
+represent the median distribution, shaded areas represent 95% and 50% variation
+envelope. Top right numbers in the panels indicate the number of observations
+(stands).
+```{r age}
+label_age <- function(x) paste(x, "yr")
+# upgrade labels
+attr(res_flm_age, "labels") <- label_age(attr(res_flm_age, "labels"))
+page <- my_plot_continuous(res_flm_age, m) +
+  coord_flip(ylim = c(-0.05, 0.15), expand = c(0, 0)) +
+  scale_y_continuous("Scaled density difference", labels = c(-5, 0, 5, 10) / 100, breaks = c(-5, 0, 5, 10) / 100)
+
+ggsave("figure/fig5-cc.pdf", page, device = device, dpi = "retina", width = 234, height = 234 / 2, units = "mm")
+```
+
+
+# Appendix
+
+```{r}
+cap <- paste(
+  "Each line is an observation, the bold line is the median function",
+  "of the group, the grey ribbon displays the 95% and 50% intervals."
+)
+
+papu <- wave_long %>%
+  filter(!trans) %>%  # use untransformed data
   group_by(dominant_species, crown_closure, age_class, height) %>% 
   summarise(
     n = n(),
@@ -337,7 +324,7 @@ pap <- wave_long %>%
     q025 = quantile(ss, probs = 2.5/100),
     q0975 = quantile(ss, probs = 97.5/100)
     ) %>% 
-  ggplot(aes(x = height / 40, y = median, group = interaction(dominant_species, crown_closure, age_class))) +
+  ggplot(aes(x = height / m, y = median, group = interaction(dominant_species, crown_closure, age_class))) +
   coord_flip(ylim = c(0, 0.25)) +
   geom_line(data = wave_long, aes(y = ss, color = dominant_species, group = stand_id), show.legend = FALSE, size = 0.1, alpha = 0.4) +
   geom_line(aes(color = dominant_species), show.legend = FALSE) +
@@ -347,7 +334,43 @@ pap <- wave_long %>%
   scale_x_continuous("Scaled height", limits = c(0, 1), breaks = 1:2/2) +
   geom_text(data = wave %>% count(dominant_species, crown_closure, age_class), aes(label = n), x = Inf, y = Inf, hjust = 1, vjust = 1, size = 3) +
   facet_grid(dominant_species + age_class ~crown_closure) +
-  labs(caption = wrapper(cap, 80))
+    labs(
+    title = "Vertical distribution of lidar returns (untransformed)",
+    subtitle = "Figure A-1", 
+    caption = wrapper(cap, 80)
+    )
 
-ggsave("figure/appendix.pdf", pap + theme_pub(10), width = 6, height = 22, units = "in")
+papt <- wave_long %>%
+  filter(trans) %>%  # use transformed data
+  group_by(dominant_species, crown_closure, age_class, height) %>% 
+  summarise(
+    n = n(),
+    median = median(ss),
+    q25 = quantile(ss, probs = 25/100),
+    q75 = quantile(ss, probs = 75/100),
+    q025 = quantile(ss, probs = 2.5/100),
+    q0975 = quantile(ss, probs = 97.5/100)
+    ) %>% 
+  ggplot(aes(x = height / m, y = median, group = interaction(dominant_species, crown_closure, age_class))) +
+  coord_flip(ylim = c(0, 0.25)) +
+  geom_line(data = wave_long, aes(y = ss, color = dominant_species, group = stand_id), show.legend = FALSE, size = 0.1, alpha = 0.4) +
+  geom_line(aes(color = dominant_species), show.legend = FALSE) +
+  geom_ribbon(aes(ymin = q025, ymax = q0975), fill = "#000000", alpha = 0.2) +
+  geom_ribbon(aes(ymin = q25, ymax = q75), fill = "#000000", alpha = 0.2) +
+  scale_y_continuous("Scaled lidar return density (transformed)", breaks = c(0:2) / 10, expand = c(0, 0)) +
+  scale_x_continuous("Scaled height", limits = c(0, 1), breaks = 1:2/2) +
+  geom_text(data = wave %>% count(dominant_species, crown_closure, age_class), aes(label = n), x = Inf, y = Inf, hjust = 1, vjust = 1, size = 3) +
+  facet_grid(dominant_species + age_class ~crown_closure) +
+  labs(
+    title = "Vertical distribution of lidar returns (transformed)",
+    subtitle = "Figure A-2", 
+    caption = wrapper(cap, 80)
+    )
+pap <- list(
+  papu + theme_pub(10), 
+  papt + theme_pub(10)
+  )
+
+ggsave("figure/appendix.pdf", pap , width = 6, height = 22, units = "in")
 ```
+

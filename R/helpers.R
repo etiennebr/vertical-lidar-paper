@@ -84,3 +84,7 @@ get_type <- function(data, type, id = c("pee_no_acq")){
   f <- grep(type, names(data), value = TRUE)
   x <- data[, c(id, f)]
 }
+
+wrapper <- function(x, ...) {
+  paste(strwrap(x, ...), collapse = "\n")
+}

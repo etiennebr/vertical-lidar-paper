@@ -39,7 +39,7 @@ my_plot_continuous <- function(x, scale_r, ...) {
   return(p)
 }
 
-my_plot_contrasts <- function(x, scale_r, upper = !full, full = FALSE, diag = !full) {
+my_plot_contrasts <- function(x, scale_r, upper = !full, full = FALSE, diag = !full, add) {
   pd <- my_plot_data_combined_global_envelope(x, scale_r = scale_r) 
   
   ribbon <- pd$ribbon %>% 
@@ -70,6 +70,10 @@ my_plot_contrasts <- function(x, scale_r, upper = !full, full = FALSE, diag = !f
     xlab("Scaled Stand Height") +
     ylab("Scaled density difference") +
     coord_flip()
+  
+  if (!missing(add)) {
+    p <- add_diag_panels(p, add)
+  }
   
   if (upper) {
     p <- remove_upper_panels(p)
@@ -151,4 +155,32 @@ my_plot_contrasts_single <- function(x, scale_r, remove_diag = TRUE) {
     xlab("Scaled Stand Height") +
     ylab("Scaled density difference") +
     coord_flip()
+}
+
+
+add_diag_panels <- function(x, y) {
+  # Remove empty panels
+  # Adapted from: https://en.it1352.com/article/d0a0d77cc54e4a2ea01ec2085831c390.html
+  gx <- ggplotGrob(x)
+  # gx$layout
+  # gtable::gtable_show_layout(gx) # Might also be useful
+  
+  
+  gy <- ggplotGrob(y)
+  y_lyt <- gy$layout
+  
+  lyt <- gx$layout
+  lyt <- lyt %>% 
+    tidyr::separate(name, sep = "-", into = c("panel", "row", "col"), remove = FALSE)
+  
+  panels <- grepl("^panel", lyt$name)
+  diago <- grepl("^panel", y_lyt$name)
+  
+  # replace lower matrix triangle
+  gx$grobs[!is.na(lyt$row) & !is.na(lyt$col) & lyt$row == lyt$col] <- gy$grobs[diago]
+  
+  # # Draw
+  # grid::grid.newpage()
+  #grid::grid.draw(g)
+  ggplotify::as.ggplot(gx)
 }
