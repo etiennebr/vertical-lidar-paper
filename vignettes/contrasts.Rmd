@@ -28,7 +28,7 @@ library(purrr)
 
 ggplot2::theme_set(theme_pub())
 alpha <- 0.05 / 3  # (Bonferroni correction)
-nperm <- 3000  # number of permutations
+nperm <- 3000-1  # number of permutations
 m <- 40-1  # number of discrete points per functions
 device <- "pdf"
 plot_use_trans <- TRUE  # use transformed data for plots
