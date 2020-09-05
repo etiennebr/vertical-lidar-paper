@@ -3,13 +3,20 @@ title: "Species, crown closure, and age as determinants of the vertical distribu
 author: "Etienne Racine^1,\\*^, Nicholas C. Coops, Jean Bégin, Mari Myllymäki"
 date: "^1^:Département des sciences du bois et de la forêt, 2405 rue de la Terrasse, Université Laval, Québec, QC G1V 0A6, Canada; ^2^:Department of Forest Resources Management, 2424 Main Mall, University of British Columbia, Vancouver, BC V6T 1Z4, Canada; ^3^:Natural Resources Institute Finland (Luke), Latokartanonkaari 9, FI-00790 Helsinki, Finland"
 output:
+  bookdown::html_document2: default
+  bookdown::pdf_document2: default
+  bookdown::word_document2: default
+  html_document:
+    df_print: paged
   word_document:
     reference_docx: templates/StylesTemplate.docx
     keep_md: true
-csl: templates/trees.csl
+csl: "templates/trees.csl"
 bibliography: "`r rbbt::bbt_write_bib('biblio.json', overwrite = TRUE)`"
+link-citations: yes
 ---
 
+See Figure \@ref(fig:fig_loc).
 
 Etienne B. Racine\*
 
