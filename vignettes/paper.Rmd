@@ -94,13 +94,13 @@ Availability of data and material
 
 The original data was shared and is available upon request to the
 Gouvernement du Québec. The processed data is available in our
-repository &lt;URL&gt;
+repository https://github.com/etiennebr/vertical-lidar-paper
 
 Code availability
 ----------------------
 
 The code to perform the analysis is available in a git repository at
-&lt;URL&gt;
+https://github.com/etiennebr/vertical-lidar-paper
 
 ### Author contribution statement
 
