@@ -1,0 +1,9 @@
+Name: Convert citation
+Description: Convert author date citations (Racine et al. 2020) to @racine_etal20
+Binding: addin_convert_reference_selection
+Interactive: false
+
+Name: Convert citation wrap
+Description: Convert author citations and wrap lines (to force the citation)
+Binding: addin_convert_reference_selection_wrap
+Interactive: false
