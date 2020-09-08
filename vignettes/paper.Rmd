@@ -642,9 +642,7 @@ fig_age2_short_caption <- "Coefficients from the nonparametric graphical test of
 
 ```{r fig-age2, fig.cap=fig_age2_caption, fig.scap=fig_age2_short_caption, echo = FALSE}
 
-plot(0, 0, type = 'n')
-text(0, 0, "figure unavailable")
-#knitr::include_graphics("../figure/fig6-age.svg")
+knitr::include_graphics("../figure/fig6-age2.svg")
 ```
 
 Discussion
