@@ -249,6 +249,7 @@ for crown closure. Black lines represent the median distribution, shaded areas
 represent 95% and 50% variation envelope. Top right numbers in the panels
 indicate the number of observations (stands).
 ```{r crown_closure}
+label_cc <- function(d) paste0(d, "%")
 pc_cc <- my_plot_continuous(res_flm_cc, m, main = "my main") + scale_y_continuous("Scaled density effect")
 
 ggsave("figure/fig3-glm-cc.pdf", pc_cc, device = "pdf", dpi = "retina", width = 234 / 2, height = 234 / 2, units = "mm")
@@ -261,8 +262,6 @@ represent the median distribution, shaded areas represent 95% and 50% variation
 envelope. Top right numbers in the panels indicate the number of observations
 (stands).
 ```{r crown_closure_contrasts}
-label_cc <- function(d) paste0(d, "%")
-
 pcc <- wave_long %>% 
   filter(trans == plot_use_trans) %>% 
   group_by(dominant_species, height, crown_closure) %>% 
@@ -307,6 +306,41 @@ page <- my_plot_continuous(res_flm_age, m) +
 ggsave("figure/fig5-age.pdf", page, device = "pdf", dpi = "retina", width = 234, height = 234 / 2, units = "mm")
 ggsave("figure/fig5-age.svg", page, device = "svg", dpi = "retina", width = 234, height = 234 / 2, units = "mm")
 ```
+
+Figure 6. `r ifelse(plot_use_trans, "Transformed v", "V")`ertical distribution 
+of lidar returns as a function of age groups and species. Black lines
+represent the median distribution, shaded areas represent 95% and 50% variation
+envelope. Top right numbers in the panels indicate the number of observations
+(stands).
+```{r crown_closure_contrasts}
+page2 <- wave_long %>% 
+  filter(trans == plot_use_trans) %>% 
+  group_by(dominant_species, height, age_class) %>% 
+  summarise(quibble_wide(ss), .groups = "drop_last") %>% 
+  mutate(height = height / m) %>% 
+  ggplot(aes(x = height, group = interaction(dominant_species, age_class))) + 
+  geom_ribbon(aes(ymin = `0.025`, ymax = `0.975`), fill = light_grey) + 
+  geom_ribbon(aes(ymin = `0.25`, ymax = `0.75`), fill = dark_grey) +
+  geom_line(aes(y = `0.5`), colour = "grey20") +
+  geom_vline(aes(xintercept = 0)) +
+  facet_grid(dominant_species~label_age(age_class)) +
+  # scale_x_continuous("Scaled height", limits = c(0, 1), breaks = 1:2/2, expand = c(0, 0)) +
+  # scale_y_continuous("Scaled lidar return density", breaks = c(0:2) / 10, expand = c(0, 0)) +
+  coord_flip(ylim = c(0, 0.25), xlim = c(0, 1)) +
+  # ( if(plot_use_trans) 
+  #   # transformed data
+  #   list(
+  #     coord_flip(ylim = c(-0.1, 0.2), xlim = c(0, 1)),
+  #     scale_y_continuous("Scaled lidar return density (transformed)", breaks = c(-2, 0, 2, 4, 6) / 10, expand = c(0, 0))
+  #     )
+  # )
+  NULL
+page2
+
+ggsave("figure/fig6-age2.pdf", page2, device = "pdf", dpi = "retina", width = 234, height = 234, units = "mm")
+ggsave("figure/fig6-age2.svg", page2, device = "svg", dpi = "retina", width = 234, height = 234, units = "mm")
+```
+
 
 # Appendix
 
