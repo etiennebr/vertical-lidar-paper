@@ -196,7 +196,7 @@ wave_long <- wave %>%
     values_to = "ss"
   ) %>% 
   mutate(
-        trans = !is.na(trans), 
+        trans = trans != "", 
         height = as.integer(height)
   )
 ```
@@ -296,7 +296,7 @@ represent the median distribution, shaded areas represent 95% and 50% variation
 envelope. Top right numbers in the panels indicate the number of observations
 (stands).
 ```{r age}
-label_age <- function(x) paste(x, "yr")
+label_age <- function(x) sort_num_factor(paste(x, "yr"))
 # upgrade labels
 attr(res_flm_age, "labels") <- label_age(attr(res_flm_age, "labels"))
 page <- my_plot_continuous(res_flm_age, m) +
@@ -312,7 +312,7 @@ of lidar returns as a function of age groups and species. Black lines
 represent the median distribution, shaded areas represent 95% and 50% variation
 envelope. Top right numbers in the panels indicate the number of observations
 (stands).
-```{r crown_closure_contrasts}
+```{r age_sp}
 page2 <- wave_long %>% 
   filter(trans == plot_use_trans) %>% 
   group_by(dominant_species, height, age_class) %>% 
@@ -322,19 +322,18 @@ page2 <- wave_long %>%
   geom_ribbon(aes(ymin = `0.025`, ymax = `0.975`), fill = light_grey) + 
   geom_ribbon(aes(ymin = `0.25`, ymax = `0.75`), fill = dark_grey) +
   geom_line(aes(y = `0.5`), colour = "grey20") +
-  geom_vline(aes(xintercept = 0)) +
+  geom_hline(aes(yintercept = 0), color = "grey50", size = 0.1) +
   facet_grid(dominant_species~label_age(age_class)) +
-  # scale_x_continuous("Scaled height", limits = c(0, 1), breaks = 1:2/2, expand = c(0, 0)) +
-  # scale_y_continuous("Scaled lidar return density", breaks = c(0:2) / 10, expand = c(0, 0)) +
-  coord_flip(ylim = c(0, 0.25), xlim = c(0, 1)) +
-  # ( if(plot_use_trans) 
-  #   # transformed data
-  #   list(
-  #     coord_flip(ylim = c(-0.1, 0.2), xlim = c(0, 1)),
-  #     scale_y_continuous("Scaled lidar return density (transformed)", breaks = c(-2, 0, 2, 4, 6) / 10, expand = c(0, 0))
-  #     )
-  # )
-  NULL
+  scale_x_continuous("Scaled height", limits = c(0, 1), breaks = 1:2/2, expand = c(0, 0)) +
+  scale_y_continuous("Scaled lidar return density", breaks = c(0:2) / 10, expand = c(0, 0)) +
+  coord_flip(ylim = c(-0, 0.25), xlim = c(0, 1)) +
+  ( if(plot_use_trans)
+    # transformed data
+    list(
+      coord_flip(ylim = c(-0.1, 0.25), xlim = c(0, 1)),
+      scale_y_continuous("Scaled lidar return density (transformed)", breaks = c(0, 10, 20) / 100, expand = c(0, 0))
+      )
+  )
 page2
 
 ggsave("figure/fig6-age2.pdf", page2, device = "pdf", dpi = "retina", width = 234, height = 234, units = "mm")
