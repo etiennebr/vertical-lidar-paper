@@ -238,7 +238,8 @@ psp <- wave_long %>%
 # Create species contrasts and add species on the diagonal
 pcsp <- my_plot_contrasts(res_flm_sp, m, full = TRUE, diag = TRUE, add = psp)
 
-ggsave("figure/fig2-sp-combined.pdf", pcsp, device = device, dpi = "retina", width = 234, height = 234, units = "mm")
+ggsave("figure/fig2-sp-combined.pdf", pcsp, device = "pdf", dpi = "retina", width = 234, height = 234, units = "mm")
+ggsave("figure/fig2-sp-combined.svg", pcsp, device = "svg", dpi = "retina", width = 234, height = 234, units = "mm")
 ```
 
 ## Crown closure
@@ -250,7 +251,8 @@ indicate the number of observations (stands).
 ```{r crown_closure}
 pc_cc <- my_plot_continuous(res_flm_cc, m, main = "my main") + scale_y_continuous("Scaled density effect")
 
-ggsave("figure/fig3-glm-cc.pdf", pc_cc, device = device, dpi = "retina", width = 234 / 2, height = 234 / 2, units = "mm")
+ggsave("figure/fig3-glm-cc.pdf", pc_cc, device = "pdf", dpi = "retina", width = 234 / 2, height = 234 / 2, units = "mm")
+ggsave("figure/fig3-glm-cc.svg", pc_cc, device = "svg", dpi = "retina", width = 234 / 2, height = 234 / 2, units = "mm")
 ```
 
 Figure 4. `r ifelse(plot_use_trans, "Transformed v", "V")`ertical distribution 
@@ -284,7 +286,8 @@ pcc <- wave_long %>%
   )
 pcc
 
-ggsave("figure/fig4-cc.pdf", pcc, device = device, dpi = "retina", width = 234, height = 234, units = "mm")
+ggsave("figure/fig4-cc.pdf", pcc, device = "pdf", dpi = "retina", width = 234, height = 234, units = "mm")
+ggsave("figure/fig4-cc.svg", pcc, device = "svg", dpi = "retina", width = 234, height = 234, units = "mm")
 ```
 
 ## Age
@@ -301,20 +304,21 @@ page <- my_plot_continuous(res_flm_age, m) +
   coord_flip(ylim = c(-0.05, 0.15), expand = c(0, 0)) +
   scale_y_continuous("Scaled density difference", labels = c(-5, 0, 5, 10) / 100, breaks = c(-5, 0, 5, 10) / 100)
 
-ggsave("figure/fig5-cc.pdf", page, device = device, dpi = "retina", width = 234, height = 234 / 2, units = "mm")
+ggsave("figure/fig5-age.pdf", page, device = "pdf", dpi = "retina", width = 234, height = 234 / 2, units = "mm")
+ggsave("figure/fig5-age.svg", page, device = "svg", dpi = "retina", width = 234, height = 234 / 2, units = "mm")
 ```
-
 
 # Appendix
 
 ```{r}
 cap <- paste(
   "Each line is an observation, the bold line is the median function",
-  "of the group, the grey ribbon displays the 95% and 50% intervals."
+  "of the group, the grey ribbon displays the 95% and 50% intervals.",
+  "The number in the top right corner is the number of observations."
 )
 
-papu <- wave_long %>%
-  filter(!trans) %>%  # use untransformed data
+wl <- wave_long %>% filter(!trans) # use untransformed data
+papu <- wl %>% 
   group_by(dominant_species, crown_closure, age_class, height) %>% 
   summarise(
     n = n(),
@@ -326,22 +330,25 @@ papu <- wave_long %>%
     ) %>% 
   ggplot(aes(x = height / m, y = median, group = interaction(dominant_species, crown_closure, age_class))) +
   coord_flip(ylim = c(0, 0.25)) +
-  geom_line(data = wave_long, aes(y = ss, color = dominant_species, group = stand_id), show.legend = FALSE, size = 0.1, alpha = 0.4) +
+  geom_line(data = wl, aes(y = ss, color = dominant_species, group = stand_id), show.legend = FALSE, size = 0.1, alpha = 0.4) +
   geom_line(aes(color = dominant_species), show.legend = FALSE) +
   geom_ribbon(aes(ymin = q025, ymax = q0975), fill = "#000000", alpha = 0.2) +
   geom_ribbon(aes(ymin = q25, ymax = q75), fill = "#000000", alpha = 0.2) +
-  scale_y_continuous("Scaled lidar return density (transformed)", breaks = c(0:2) / 10, expand = c(0, 0)) +
+  scale_y_continuous("Scaled lidar return density", breaks = c(0:2) / 10, expand = c(0, 0)) +
   scale_x_continuous("Scaled height", limits = c(0, 1), breaks = 1:2/2) +
-  geom_text(data = wave %>% count(dominant_species, crown_closure, age_class), aes(label = n), x = Inf, y = Inf, hjust = 1, vjust = 1, size = 3) +
-  facet_grid(dominant_species + age_class ~crown_closure) +
+  geom_text(data = wl %>% 
+              distinct(dominant_species, crown_closure, age_class, stand_id) %>% 
+              count(dominant_species, crown_closure, age_class), 
+            aes(label = n), x = Inf, y = Inf, hjust = 1.5, vjust = 1.5, size = 2.5) +
+  facet_grid(dominant_species + age_class ~ crown_closure) +
     labs(
-    title = "Vertical distribution of lidar returns (untransformed)",
+    title = "Vertical distribution of lidar returns",
     subtitle = "Figure A-1", 
     caption = wrapper(cap, 80)
     )
 
-papt <- wave_long %>%
-  filter(trans) %>%  # use transformed data
+wlt <- wave_long %>% filter(trans) # use untransformed data
+papt <- wlt %>% 
   group_by(dominant_species, crown_closure, age_class, height) %>% 
   summarise(
     n = n(),
@@ -353,24 +360,24 @@ papt <- wave_long %>%
     ) %>% 
   ggplot(aes(x = height / m, y = median, group = interaction(dominant_species, crown_closure, age_class))) +
   coord_flip(ylim = c(0, 0.25)) +
-  geom_line(data = wave_long, aes(y = ss, color = dominant_species, group = stand_id), show.legend = FALSE, size = 0.1, alpha = 0.4) +
+  geom_line(data = wlt, aes(y = ss, color = dominant_species, group = stand_id), show.legend = FALSE, size = 0.1, alpha = 0.4) +
   geom_line(aes(color = dominant_species), show.legend = FALSE) +
   geom_ribbon(aes(ymin = q025, ymax = q0975), fill = "#000000", alpha = 0.2) +
   geom_ribbon(aes(ymin = q25, ymax = q75), fill = "#000000", alpha = 0.2) +
   scale_y_continuous("Scaled lidar return density (transformed)", breaks = c(0:2) / 10, expand = c(0, 0)) +
   scale_x_continuous("Scaled height", limits = c(0, 1), breaks = 1:2/2) +
-  geom_text(data = wave %>% count(dominant_species, crown_closure, age_class), aes(label = n), x = Inf, y = Inf, hjust = 1, vjust = 1, size = 3) +
+  geom_text(data = wlt %>% 
+              distinct(dominant_species, crown_closure, age_class, stand_id) %>% 
+              count(dominant_species, crown_closure, age_class), 
+            aes(label = n), x = Inf, y = Inf, hjust = 1.5, vjust = 1.5, size = 2.5) +
   facet_grid(dominant_species + age_class ~crown_closure) +
   labs(
     title = "Vertical distribution of lidar returns (transformed)",
     subtitle = "Figure A-2", 
     caption = wrapper(cap, 80)
     )
-pap <- list(
-  papu + theme_pub(10), 
-  papt + theme_pub(10)
-  )
 
-ggsave("figure/appendix.pdf", pap , width = 6, height = 22, units = "in")
+ggsave("figure/appendix-1.pdf", papu + theme_pub(10), width = 6, height = 22, units = "in")
+ggsave("figure/appendix-2.pdf", papt + theme_pub(10), width = 6, height = 22, units = "in")
 ```
 
