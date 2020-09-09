@@ -341,11 +341,9 @@ Finally, the interpretation relied on the ground-control points and the
 ecological knowledge of the photo-interpreter. We used this forest map
 as our reference data for species, crown closure, and age.
 
-
-
 ```{r species, echo = FALSE}
 tibble::tribble(
-    ~Species, ~Silhouette, ~"Interpretation description\\*", ~"Associated species\\*",
+    ~Species, ~Silhouette, ~"Interpretation description^1,2^", ~"Associated species^2^",
     
     "*Abies balsamea*", 
     "![](pictures/abies_balsamea.png){width='1.469cm' height='4.001cm'}", 
@@ -370,12 +368,13 @@ tibble::tribble(
     "![](pictures/populus_tremuloides.png){width='1.191cm' height='4.001cm'}", 
     "All sites except poorly drained. Short, rounded, light bulb-shaped crown usually taller than surroundings when mixed. Crown surface looks blurred and smooth because of the small leaves. Orange-tinted pink.",
     "White spruce, black spruce, balsam fir, white birch, balsam poplar and jack pine") %>% 
-  knitr::kable(
-    caption = "Description of tree shapes and associated species. Interpretation description colors are based on (NIR+G+B mapped to R, G,B channels).") %>% 
-   kable_styling() %>%
-   add_footnote("From @farrar95a and @leboeuf_vaillancourt13 .", notation="symbol")
+  knitr::kable(caption = "Description of tree shapes and associated species")
 ```
+Footnote Table \@ref(tab:species) :
 
+1: Colors are based on (NIR+G+B mapped to R, G, B channels).
+
+2: Adapted from @farrar95a and @leboeuf_vaillancourt13 .
 
 Processing
 ------------------------
@@ -800,12 +799,6 @@ between distributions occurred below 80% of the stand height, and the
 area between 35–60% of height appeared as the most promising for
 discriminating species, crown closure, and age based on the vertical
 distribution of LiDAR returns.
-
-# Notes
-
-Add missing references from tables:
-- @farrar95a 
-- @leboeuf_vaillancourt13
 
 `r if (!knitr::is_latex_output()) '
 # References {-}
