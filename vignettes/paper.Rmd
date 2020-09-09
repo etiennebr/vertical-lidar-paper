@@ -161,11 +161,11 @@ allometry and competition strategies, leading to variations in canopy
 structure and ultimately in environmental conditions
 [@pretzsch_dieler12; @purves_etal07; @thorpe_etal10]. Species‑specific canopy 
 structures create different
-microhabitats, light conditions and microclimates which in turn
+microhabitats, light conditions, and microclimates which in turn
 influence rates at which stands sequester carbon. Species have different
 carbon allocation strategies that evolve during the growth season
 relative to above and below ground carbon allocation such as growing
-fruit, deploying leaves or root access to nutrients and water
+fruit, deploying leaves, or root access to nutrients and water
 [@depury_farquhar97; @lacointe00; @stark_etal12]. Biomass is a feedback loop: 
 more biomass generally allows for
 increased production of biomass. These growth and allocation strategies
@@ -177,7 +177,7 @@ Traditionally, characterization of stand above-ground biomass vertical
 distribution required either on-site estimation of biomass per vertical
 layer using scaffolding, tree climbing, or destructive measurements that
 are time-consuming and limited to small areas. Scaling these
-observations to the landscape is very difficult using traditional
+techniques to a large area is very difficult using traditional
 techniques [@macarthur_horn69; @aber79; @bassow_bazzaz97; @tackenberg07].
 
 Forest remote sensing
@@ -190,78 +190,79 @@ Among these sensors, light detection and ranging
 (LiDAR) has the ability to penetrate the canopy and provide information
 on the spatial location of reflective material. LiDAR is increasingly
 used to perform both extensive and highly detailed imaging of the
-forest. It uses a laser which location and orientation are precisely
-known to record a 3D scene. When penetrating the canopy, a LiDAR pulse
-hits vegetative material which is reflected back to the sensor and
-recorded. LiDAR can be used from the ground, and from an aircraft to
-provide different perspectives on the forest. Terrestrial LiDAR provides
-highly detailed structural information of individual trees, but its
+forest. It uses a laser whose location and orientation are precisely
+known to record a 3D scene. A Discrete LiDAR pulse is reflected by the
+vegetation as it penetrates the canopy. The sensor then records the energy
+returned by the pulse and the total travel time to deduce the distance from the
+sensor to the point of reflection. LiDAR can be used from the ground, and from
+an aircraft to provide different perspectives on the forest. Terrestrial LiDAR
+provides highly detailed structural information of individual trees, but its
 extent is limited to hundreds of meters [@beland_etal19;
-@crespo-peremarch_etal20]. Airborne LiDAR on the other hand, is generally used
+@crespo-peremarch_etal20]. Airborne LiDAR, on the other hand, is generally used
 for extensive landscape measurements that are generally less detailed than
 terrestrial LiDAR.
 
 Airborne LiDAR has been used to characterize vertical canopy structure, crown
 shape, and ecosystem's above-ground biomass [@ellsworth_reich93;
 @harding_etal01; @lefsky_etal02; @parker_etal04; @coops_etal07; @stark_etal12;
-@cao_etal14; @papa_etal20], to identify tree species [@heinzel_koch11; @heinzel_koch12;
-@vaughn_etal12; @hovi_etal16; @fassnacht_etal16; @budei_etal18;
+@cao_etal14; @papa_etal20], to identify tree species [@heinzel_koch11;
+@heinzel_koch12; @vaughn_etal12; @hovi_etal16; @fassnacht_etal16; @budei_etal18;
 @axelsson_etal18; @fedrigo_etal18], and to study stand characteristics such as
-age, crown closure and basal area [@korhonen_etal11; @white_etal13;
+age, crown closure, and basal area [@korhonen_etal11; @white_etal13;
 @racine_etal14]. Airborne LiDAR is an important tool to quantify biomass and
 offers many opportunities to explore large-scale phenomena that could only be
 observed on the field, such as large-scale habitat characterization
 [@vierling_etal08; @vierling_etal10; @seavy_etal09].
 
-One of the limitations of the conventional small footprint LiDAR sensors is its
-inability to distinguish differences in foliage condition or species spectral
-variations because it lacks spectral information commonly used to classify
-species (such as variations in color or near infrared). In response, the most
-common strategy to distinguish species with LiDAR has been to rely on individual
-tree shapes and texture [@holmgren_persson04; @kim_etal11; @fassnacht_etal16],
-add spectral information by supplementing it with spectral imagery, and more recently
-using a multispectral LiDAR [@budei_etal18; @budei_st-onge18].
+One of the limitations of the small footprint LiDAR sensor is its inability to
+distinguish differences in foliage condition or species spectral variations
+because it lacks spectral information commonly used to classify species (such as
+variations in color or near-infrared). In response, the most common strategy to
+distinguish species with LiDAR has been to rely on individual tree shapes and
+texture [@holmgren_persson04; @kim_etal11; @fassnacht_etal16], add spectral
+information by supplementing it with spectral imagery, and more recently using a
+multispectral LiDAR [@budei_etal18; @budei_st-onge18].
 
-Most species classification studies using aerial LiDAR have focused on
+Most studies on species classification using aerial LiDAR have focused on
 individual tree-crown species identification. Tree crown delineation requires a
 high number of LiDAR returns and very accurate registration of ground
-observations [@orka_etal09; @muss_etal11]. Furthermore, using such a small
-observation area, the number of LiDAR returns decreases and the vertical
-distribution increasingly becomes a collection of random deviates and loses the
-general distribution shape. For that reason, accuracy in species identification
-is improved by increasing point density up to 10 pt/m² [@fassnacht_etal16].
+observations [@orka_etal09; @muss_etal11]. Furthermore, a small observation area 
+such as an individual tree crown loses the shape of the vertical distribution of
+LiDAR returns because the number of LiDAR returns decreases and the distribution
+increasingly becomes a collection of random deviates. For that reason, accuracy
+in species identification is improved by increasing point density up to 10 pt/m²
+[@fassnacht_etal16].
 
-Aerial LiDAR is also used in area-based approaches (see e.g. @white_etal13 for 
-an exhaustive description). This approach generally uses a stand or a pixel on which
-LiDAR returns are aggregated and from which predictors are derived and then used
-in a model to predict forest attributes. LiDAR metrics often derive predictors
-from the vertical distribution of LiDAR returns: the number or LiDAR returns
-per height slice. The vertical distribution of LiDAR returns is often presented
-as quantiles, projections of quantiles (such as principal component analysis),
-or parametric functions (such as a Fourier, beta or Weibull function), which
-are used to predict stand attributes [@magnussen_etal99; @maltamo_etal05;
-@mehtatalo06; @coops_etal07; @riggins_etal09; @falkowski_etal09; @racine_etal14;
-@palace_etal15]. The area-based method can be effective with point density
-as low as 1 pt/m², which reduces cost and processing compared to tree-crown
-approaches [@white_etal13].
+Aerial LiDAR is also used in area-based approaches (see e.g. @white_etal13 for
+an exhaustive description). This approach generally uses a stand or a pixel on
+which LiDAR returns are aggregated and from which predictors are derived and
+then used in a model to predict forest attributes. LiDAR metrics often derive
+predictors from the vertical distribution of LiDAR returns: the number or LiDAR
+returns per height slice. The vertical distribution of LiDAR returns is often
+presented as quantiles, projections of quantiles (such as principal component
+analysis), or parametric functions (such as a Fourier, beta or Weibull
+function), which are used to predict stand attributes [@magnussen_etal99;
+@maltamo_etal05; @mehtatalo06; @coops_etal07; @riggins_etal09; @falkowski_etal09; 
+@racine_etal14; @palace_etal15]. The area-based method can be effective with
+point density as low as 1 pt/m², which reduces cost and processing compared to
+tree-crown approaches [@white_etal13].
 
-Some studies explicitly mentioned that species vertical distribution of LiDAR
-returns were different. For example, @orka_etal09 found that first and last
-returns were more dispersed in Birch (*Betula* spp.) than in Norway spruce
-(*Picea abies* (L.) Karst.), which also had a vertical distribution of first
-returns skewed toward the superior canopy, and that increased stand height
-modified the overall return distribution.
+Some studies explicitly compared vertical the distribution of LiDAR returns between
+species. For example, @orka_etal09 found that first and last returns were more
+dispersed in Birch (*Betula* spp.) than in Norway spruce (*Picea abies* (L.)
+Karst.), which also had a vertical distribution of first returns skewed toward
+the superior canopy, and that increased stand height modified the overall return
+distribution.
 
 Objectives
 ----------
 
 In this paper, we combined ideas from the tree-crown approach to species
-identification, the vertical biomass distribution, and the large scale
-area-based method to compare vertical distribution of LiDAR returns of different
-species, ages and crown closure, which are known to affect the stand structure.
-We speculate that intraspecific variations of LiDAR distribution patterns are
-smaller than interspecific variations after accounting for stand crown closure
-and age.
+identification, the vertical biomass distribution, and the area-based method to
+compare the vertical distribution of LiDAR returns of different species, crown
+closure, and ages, which are known to affect the stand structure. We speculate
+that intraspecific variations of LiDAR distribution patterns are smaller than
+interspecific variations after accounting for stand crown closure and age.
 
 Method
 ====================
@@ -272,11 +273,11 @@ Study area
 The study was conducted in Matane Wildlife Reserve (Quebec, Canada,
 48°41’N, -66°58’E) covering 1600 km² (Figure \@ref(fig:fig-loc)). The Reserve is a mixed
 forest mostly dominated by balsam fir (*Abies balsamea* (L.) Mill.),
-paper birch (*Betula papyrifera* Marsh) and black spruce (*Picea
+paper birch (*Betula papyrifera* Marsh), and black spruce (*Picea
 mariana* (Mill.) BSP), but other species are present such as white
 spruce (*Picea glauca* Moench), aspen (*Populus tremuloides *Michx.),
-norway spruce (*Picea abies* (L.) Karst.), jack pine (*Pinus banksiana*
-Lamb.) and other noncommercial deciduous species. Most of the Reserve is
+Norway spruce (*Picea abies* (L.) Karst.), jack pine (*Pinus banksiana*
+Lamb.), and other non-commercial deciduous species. Most of the Reserve is
 under active commercial logging, which was documented since 1962: 27% of
 the area had been harvested (mostly total harvesting) of which half of
 the areas had been replanted. Other natural origins (e.g. windthrow,
@@ -310,21 +311,21 @@ flight overlap of 30% and maximal scan angle of 15° from nadir with a
 nominal footprint diameter of 25 cm.
 
 Airborne photography was acquired with a Leica ADS–40 pushbroom camera
-at 0.2 and 0.5 m resolution for panchromatic and near-infrared, green
-and blue bands (NIR, G, B respectively centered on 860, 560 and 460 nm);
+at 0.2 and 0.5 m resolution for panchromatic and near-infrared, green,
+and blue bands (NIR, G, B respectively centered on 860, 560, and 460 nm);
 side overlap was 40% to ensure complete coverage of the area. This
 imagery was interpreted into stands following provincial guidelines
 (MRNQ 2007) by expert photo-interpreters. Using digital
 stereopsis (virtual 3D vision from stereo images) from the forward and
 nadir-facing ADS–40 sensor, the expert photo-interpreter discriminate
 many species by integrating information on landscape position, crown
-shapes, texture and color. Every photo was segmented into homogenous
-stands using species, crown closure, height and geomorphic criteria.
+shapes, texture, and color. Every photo was segmented into homogenous
+stands using species, crown closure, height, and geomorphic criteria.
 Each stand was classified regarding species composition, crown closure,
-age, height and other ecological parameters using a combination of
-photography, ground-control points and historical data as reference.
+age, height, and other ecological parameters using a combination of
+photography, ground-control points and historical data as a reference.
 Stand age is estimated using ground control plots where trees were
-cored, this information is then combined with available archives, height
+cored, this information is then combined with available archives, height,
 and ecology to judge age from aerial photography. Forest age is
 interpreted in 7 broad age classes: (10 [0–20], 30 [21–40], 50
 [41–60], 70 [61–80], 90 [81–100], 120 [101, ∞[, and irregular).
@@ -334,11 +335,11 @@ estimated in 9 classes: 10 [5–14], 20 [15–24], 30 [25–34], 40
 [35–44], 50 [45–54], 60 [55–64], 70 [65–74], 80 [75–84], and
 90 [85–100]. Species are identified by their distinctive spectral
 response based on composite near-infrared image, green and blue
-(NIR+G+B) images respectively mapped to red, green and blue (R, G, B)
+(NIR+G+B) images respectively mapped to red, green, and blue (R, G, B)
 channels, and their frequent associations in forest stands (Table \@ref(tab:species)).
-Finally, the interpretation rely on the ground-control points and the
+Finally, the interpretation relied on the ground-control points and the
 ecological knowledge of the photo-interpreter. We used this forest map
-as our reference data for species, crown closure and age.
+as our reference data for species, crown closure, and age.
 
 
 
@@ -402,6 +403,28 @@ by the total number of points of the stand so each stand vertical distribution
 summed to one to allow comparisons between stands of inconsistent shapes, areas
 and sampling intensities.
 
+Even-aged stands are less complex to analyze from a vertical structure point
+of view than irregular stands, so we focused our analysis on even-aged stands
+with clearly dominant species representing at least 50% of the stand cover. We
+excluded stands with an average sampling rate below 2 pt/m², or an area of
+less than 4 ha to ensure a sufficient number of LiDAR returns. From these stands,
+we kept only those with a dominant species that had at least 100 observations
+(stands): aspen, balsam fir, black spruce, paper birch, and white spruce. From
+22 365 segmented stands of the original forest map, we reduced our dataset to
+5 428 stands representing 35% of the study area (Figure \@ref(fig:fig-loc)).
+Stand area distribution was similar for every selected species (median 9 ha,
+minimum 4 ha, maximum 137 ha).
+
+We subtracted the ground elevation from the absolute point elevation to compute
+the vertical distribution of LiDAR return for every stand [@muss_etal11].
+Vertical distribution is a histogram of LiDAR returns height sliced in 40
+horizontal sections relative to their highest returned point. The slices were
+defined relative to maximal height [@harding_etal01; @coops_etal07] to allow
+comparison across stands of different heights. We then divided each slice count
+by the total number of points of the stand so each stand vertical distribution
+summed to one to allow comparisons between stands of inconsistent shapes, areas,
+and sampling intensities.
+
 Analysis
 ----------------------
 
@@ -418,7 +441,7 @@ of the model.
 To compare inter- and intraspecific LiDAR return distribution variations and the
 confounding variables, we used a nonparametric graphical test of
 significance [@myllymaki_mrkvicka19; @mrkvicka_etal19]. We modeled vertical
-distributions of LiDAR returns as a function of dominant species, crown closure
+distributions of LiDAR returns as a function of dominant species, crown closure,
 and age using the general linear model
 
 \begin{equation}
@@ -441,7 +464,7 @@ Lane -@freedman_lane83). We successively tested the three null
 hypotheses $\beta_{sp}(h) = 0$, $\beta_{cc}(h) = 0$, $\beta_{age}(h) = 0$ 
 for each $h$.
 The corresponding three null models were obtained by
-removing the variable under study from the full model (Equation \@ref(eq:full)),
+removing the studied variable from the full model (Equation \@ref(eq:full)),
 
 \begin{equation}
 d_i(h) = \beta_0(h)+ \beta_{cc}(h) \cdot CC +
@@ -460,25 +483,23 @@ d_i(h) = \beta_0(h)+\beta_{sp}(h)\cdot Species + \beta_{cc}(h) \cdot CC+
 \varepsilon_i(h) (\#eq:age)
 \end{equation}
 
-The test relies on two procedures: 1) Freedman-Lane algorithm to permute
-the residuals of the null model and create the reference distribution of
-the coefficients under the null hypothesis, and 2) the *global extreme
-rank length envelope test* to build a null global envelope in which our
-null hypothesis (no differences between distributions) is accepted
-[@myllymaki_etal17]. The null hypothesis (no differences
-between distributions) was rejected if the test vector calculated from the
-vertical distribution of LiDAR returns leaved the envelope at any point. We
-used 2999 random permutations to estimate the p-value, and to build the
-global envelopes for the nonparametric graphical test of significance
-[@myllymaki_mrkvicka19]. To account for the three models in equations
-2-4, we used a Bonferroni adjusted significance level $\alpha = 0.05/3$,
-and consequently considered the 98% global envelopes. We checked the
-data for heterogeneity of variance [@winkler_etal14], and the
-homoscedasticity tests of [@mrkvicka_etal20] indicated heterogeneity
-of variance for all variables. Following [@mrkvicka_etal20], we 
-transformed the data by scaling groups ($j$)
-according to their variance dispersion. The initial $d_{i,j}$
-function was transformed into $S_{i,j}$ function, 
+The test relies on two procedures: 1) Freedman-Lane algorithm to permute the
+residuals of the null model and create the reference distribution of the
+coefficients under the null hypothesis, and 2) the *global extreme rank length
+envelope test* to build a null global envelope in which our null hypothesis (no
+differences between distributions) is accepted [@myllymaki_etal17]. The null
+hypothesis was rejected if the test vector, calculated from the vertical
+distribution of LiDAR returns, leaved the envelope at any point. We used 2999
+random permutations to estimate the p-value and to build the global envelopes
+for the nonparametric graphical test of significance [@myllymaki_mrkvicka19]. To
+account for the three models in equations \@ref(eq:species)--\@ref(eq:age), we
+used a Bonferroni adjusted significance level $\alpha = 0.05/3$, and
+consequently considered the 98% global envelopes. We checked the data for
+heterogeneity of variance [@winkler_etal14], and the homoscedasticity tests of
+[@mrkvicka_etal20] indicated heterogeneity of variance for all variables.
+Following [@mrkvicka_etal20], we transformed the data by scaling groups ($j$)
+according to their variance dispersion. The initial $d_{i,j}$ function was
+transformed into $S_{i,j}$ function,
 
 \begin{equation}
 S_{i,j}(h) = \frac{d_{i,j}(h) - \bar{d_j}(r)}{\sqrt{Var(d_j(h))}} \cdot
@@ -492,7 +513,7 @@ Our experiments with simulated data showed that the application of the
 transformation for all groups at once (by combining all group levels)
 generally removed heterogeneity of the variance, but it required to have
 sufficient observations in all categories, which was not the case of our
-data. We instead relied on successive application of the transformation
+data. We instead relied on the successive application of the transformation
  (Equation \@ref(eq:variance)) for each of the confounding variables. In this case, we found
 that the order in which the transformation is applied is important
 because it can reintroduce significant heterogeneity of variance. We
@@ -500,14 +521,14 @@ settled on the successive transformation by crown closure, age, and
 species which provided the best results and reduced heterogeneity, but
 did not completely remove it. Our simulations showed that heterogeneity
 could remain significant after successive transformations without
-affecting the results, especially for large dataset (i.e. 5000
-observations) while the homogeneity test would not detect heterogeneity
+affecting the results, especially for a large dataset of 5000
+observations, while the homogeneity test would not detect heterogeneity
 in a smaller random sample of 200 observations, which made the remaining
 heterogeneity of variance acceptable.
 
 We used the parameter differences (contrasts) as the test vector by using the
-left-out $\beta$ in equation 2 to 4. We also summarized the differences by
-species, crown closure and age by the sum of the differences per class (sum of
+left-out $\beta$ in \@ref(eq:species)--\@ref(eq:age). We also summarized the differences by
+species, crown closure, and age by the sum of the differences per class (sum of
 absolute differences for species), and the absolute sum of these differences per
 variable to identify the areas of the LiDAR return distribution that presented
 the most differences. We performed the analysis using R 3.6.3 [@rcoreteam20],
@@ -521,21 +542,21 @@ The contrasts from the nonparametric graphical test of significance
 confirm that we can reject the null hypothesis: the differences between
 species, after accounting for age and crown closure, were significantly
 different (p-value < 0.001) (Figure \@ref(fig:fig-sp)). We observed two groups of
-species where differences were significant, but small: balsam fir–paper
+species where differences were significant but small: balsam fir–paper
 birch, black spruce–white spruce. Balsam fir and paper birch differences
-were small and localized at 65–70% and below 12% of height. White spruce
+were small and localized at 65–70% and below 12% of stand height. White spruce
 and black spruce also had small localized differences at 22–30% and
-5–8%. However some differences were more important between groups of
+5–8%. However, some differences were more important between groups of
 species: black and white spruces had the lowest distribution of LiDAR
-returns when compared to other species. Black spruce had less returns
-than balsam fir between 38–62% of height (40–57% for paper birch), while
-it had more below 28% of height (30% for paper birch). Aspen’s vertical
+returns when compared to other species. Black spruce had fewer returns
+than balsam fir between 38–62% of stand height (40–57% for paper birch), while
+it had more below 28% of stand height (30% for paper birch). Aspen’s vertical
 distribution of LiDAR returns had a significantly distinctive shape when
 compared to every other species: it did not display a prominent peak,
 which made the distribution more uniform than other species, except for
 the area between 57–60% of height for all species, and 8–18% for balsam
 fir and paper birch. Overall, areas of higher variability for species
-were located around 5, 25, 50, and 70% of height.
+were located around 5, 25, 50, and 70% of stand height.
 
 ```{r include = FALSE}
 fig_sp_caption <- "Contrasts from the nonparametric graphical
@@ -606,18 +627,18 @@ of the stand as age increased is reflected by the younger stands (10,
 30 yr) with an abundance of lower returns below 28% and 41%
 respectively, and fewer returns above 33% and 49% of height,
 respectively. The effect is reversed in mature stands of 50 and 70
-years, where there is a positive effect of age between 38–97% of height
-(44–100% for 70 yr), and a negative effect below 31% of height (38% for
+years, where there is a positive effect of age between 38–97% of stand height
+(44–100% for 70 yr), and a negative effect below 31% of stand height (38% for
 70 yr). Like mature stands, older stands of 90 and 120 years of age also
 had a positive effect in the superior part of the stand, although it was
 lower than mature stands (90 yr: 38–68%; 120 yr: 33–44%) and of smaller
-magnitude. The inferior parts of old stands distribution were negatively
-affected by age below 28 and 23% of height for 90 and 120 years of age,
-respectively. Overall, the differences in vertical distribution of LiDAR
+magnitude. Older stands vertical distribution were negatively
+affected by age below 28 and 23% of stand height for 90 and 120 years of age,
+respectively. Overall, the differences in the vertical distribution of LiDAR
 returns gradually decreased as the age increased. For example, changes
-in the distribution between 10 and 50 years were larger than differences
-between 50 and 120 years. Overall, areas of higher variability for age
-groups were located around 5, 20, and 50% of height. Figure \@ref(fig:fig-age2)
+in the distribution between 10 and 30 years were larger than the changes
+between 70 and 90 years. Overall, areas of higher variability for age
+groups were located around 5, 20, and 50% of stand height. Figure \@ref(fig:fig-age2)
 displays the effect of age on each species vertical distribution of LiDAR
 returns.
 
@@ -648,7 +669,6 @@ fig_age2_short_caption <- "Coefficients from the nonparametric graphical test of
 
 
 ```{r fig-age2, fig.cap=fig_age2_caption, fig.scap=fig_age2_short_caption, echo = FALSE}
-
 knitr::include_graphics("../figure/fig6-age2.svg")
 ```
 
@@ -661,8 +681,8 @@ that even-aged stands exhibit species-specific patterns that evolve
 predictably with crown closure and age. We observed two groups of
 species: balsam fir and paper birch which had a more symmetrical
 vertical distribution of LiDAR returns centered between 40 and 60% of
-stand height, and white spruce and black spruce that had a distribution
-of LiDAR returns that was generally skewed toward the inferior part of
+stand height, and white spruce and black spruce distributions
+of LiDAR returns that were generally skewed toward the inferior part of
 the stand (below 30%). Aspen displayed a more even distribution of LiDAR
 returns with a higher proportion of returns higher in the stand than
 other species.
@@ -680,14 +700,14 @@ shade-tolerant conifer. Since we used the dominant species to classify
 stands, this could be the result of frequent association between balsam
 fir and paper birch in the same stand.
 
-Increased crown closure was associated to a concentration of the
+Increased crown closure was associated with a concentration of the
 vertical distribution of LiDAR returns which moved points below 33% to
-above 38% of height. Complementarily, stands with a lower crown closure
+above 38% of stand height. Complementarily, stands with a lower crown closure
 presented a vertical distribution of LiDAR returns that was more
-dispersed and skewed toward the ground, with less returns in the
+dispersed and skewed toward the ground, with fewer returns in the
 superior parts of the stand.
 
-Age increase was associated to a displacement of the vertical
+Age increase was associated with a displacement of the vertical
 distribution of LiDAR returns to the top of the stand for up to 50–70
 years and then plateaued or declined in the 90–120 years groups. The
 differences between age groups decreased as the age increased: younger
@@ -705,10 +725,10 @@ of the stand can be highly dependent on the LiDAR survey parameters
 [@roussel_etal17; @roussel_etal18], which might explain why they
 appeared less relevant. The area between 35 and 60% of stand height,
 which might be more independent of the survey parameters, was
-discriminant for species, crown closure and age.
+discriminant for species, crown closure, and age.
 
 Interestingly, the graphical test of significance rejected the
-hypothesis that the distribution of LiDAR returns were similar, and also
+hypothesis that the distributions of LiDAR returns were similar, and also
 identified the areas responsible for the rejection. We think that this
 method could complement and sometimes replace other methods of analysis
 of the vertical distribution of LiDAR returns, such as principal
@@ -720,17 +740,17 @@ Limitations
 The median stand area was 9 ha, a large area compared to other
 area-based approaches, which allowed the aggregation LiDAR returns to
 identify specific patterns. Stands are by design the most homogeneous
-unit of the forest landscape, and vertical LiDAR distributions are more
-reliable after a sufficient number of aggregated returns are grouped,
-but the exact optimal area to observe these patterns would require
+unit of the forest landscape and vertical LiDAR distributions are more
+reliable after a sufficient number of aggregated returns are grouped. 
+The exact optimal area to observe these patterns will require
 additional research.
 
 The non-parametric graphical test of significance that we used is slightly
 liberal due to the Freedman-Lane permutation which is approximate
-[@mrkvicka_etal19], however it is one of the best methods from the literature
+[@mrkvicka_etal19], however, it is one of the best methods from the literature
 under the presence of confounding variables [@winkler_etal14]. It also has the
 advantage of the graphical interpretation, especially the identification of the
-exact domain of rejection, which allowed for a better interpretation than the
+exact area of rejection, which allowed for a better interpretation than the
 global rejection of the null hypothesis despite the higher risk of rejecting the
 null hypothesis.
 
@@ -746,26 +766,24 @@ pursued the optimization of classification accuracy, and provided little
 analysis of the causal understanding of species discrimination. Although we did
 not perform species classification, our results show that it is possible to
 interpret the differences between complex predictors such as the vertical
-distribution of LiDAR returns, while accounting for confounding factors.
+distribution of LiDAR returns while accounting for confounding factors.
 
-Additional evidence are needed to establish if the relation between
-vertical density of LiDAR returns, and species, crown closure and age
+Additional evidence is needed to establish if the relation between
+vertical density of LiDAR returns, and species, crown closure, and age
 are circumstantial to our study area, or if they hold in other areas,
 with different species, and LiDAR survey parameters.
 
-One result we find promising from this research is that it provides the
-tools to study vertical stand structure extensively by using airborne
-LiDAR data, which can be collected on large territories, with an
-intuitive method that can be used to create functional explanation of
-the dynamics.
+Our results indicate that LiDAR vertical distribution can be analyzed using 
+a graphical test of significance. These results can be used extensively to 
+study forest structure on a new scale. 
 
 Conclusion
 ========================
 
 Using light detection and ranging (LiDAR) vertical distributions can
-provide an understanding of the interplay between species, crown closure
+provide an understanding of the interplay between species, crown closure,
 and age. The use of the functional graphical test of significance allows
-to interpret the differences in distributions explained by multiple
+interpreting the differences in distributions explained by multiple
 confounding variables. By using an airborne LiDAR survey, it is possible
 to find ecosystems at multiple evolution stages to observe LiDAR
 patterns variations and eventually link them to structural and 
@@ -780,7 +798,7 @@ around 50% of stand height, while the white–black spruces had their
 distributions skewed below 30% of stand height. Most of the differences
 between distributions occurred below 80% of the stand height, and the
 area between 35–60% of height appeared as the most promising for
-discriminating species, crown closure and age based on vertical
+discriminating species, crown closure, and age based on the vertical
 distribution of LiDAR returns.
 
 # Notes
