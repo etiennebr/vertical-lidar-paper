@@ -34,7 +34,7 @@ if (params$refresh) {
 ```
 
 ```{r, include=FALSE}
-options(tinytex.verbose = TRUE)
+options(tinytex.verbose = FALSE)
 ```
 
 <details>
