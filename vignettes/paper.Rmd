@@ -19,18 +19,14 @@ csl: "templates/trees.csl"
 bibliography: "`r rbbt::bbt_write_bib('biblio.json', overwrite = TRUE)`"
 link-citations: yes
 always_allow_html: true
-params:
-   refresh: false
 ---
 
 ```{r setup, include = FALSE}
 library(knitr)
 library(kableExtra)
 
-if (params$refresh) {
-  # Source for the figures
-  knitr::knit("contrasts.Rmd")
-}
+# Source for the figures
+# Make sure this is run: here::here("vignettes/contrasts.Rmd")
 ```
 
 ```{r, include=FALSE}
