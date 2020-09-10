@@ -145,7 +145,7 @@ crown closure, and age groups. Results indicate that aspen stands had the
 most uniform vertical distribution of LiDAR returns; balsam fir and
 white birch distributions were similar and centered around 50% of the
 stand height; black spruce and white spruce vertical distributions were
-skewed below 30% of stand height (p<0.001). An increase in crown closure
+skewed below 30% of stand height ($p$<0.001). An increase in crown closure
 concentrated the vertical distribution of returns around 50% height. Age
 gradually shifted the distribution higher in the stand until 50–70
 years, plateaued and slowly declined at 90–120 years. Most of the
@@ -448,9 +448,9 @@ d_i(h) = \beta_0(h)+\beta_{sp}(h)\cdot Species + \beta_{cc}(h) \cdot CC +
 \beta_{age}(h) \cdot Age + \varepsilon_i(h) (\#eq:full)
 \end{equation}
 
-Where $d_i$ contains the lidar density distribution at scaled height $h$
+Where $d_i$ contains the LiDAR density distribution at scaled height $h$
 (represented by the vertical distribution histogram) for observation $i$, and
-$\beta(h)$ is the estimated parameter for each coefficient, $CC$ is crown
+$\beta(h)$ is the parameter vector related to each variable, $CC$ is crown
 closure, $sp$ is species, and $\varepsilon(h)$ are error terms with mean zero
 and finite variance $\sigma^2$. Species were encoded as categorical variables
 using dummy variables, crown closure was introduced as a continuous variable
@@ -458,12 +458,11 @@ while age—given that the last class was open—was encoded as a categorical
 variable.
 
 We studied the effect of each variable after accounting for the other
-confounding variables (also called the nuisance factors by Freedman and
-Lane -@freedman_lane83). We successively tested the three null
-hypotheses $\beta_{sp}(h) = 0$, $\beta_{cc}(h) = 0$, $\beta_{age}(h) = 0$ 
-for each $h$.
-The corresponding three null models were obtained by
-removing the studied variable from the full model (Equation \@ref(eq:full)),
+confounding variables (also called the nuisance factors by Freedman and Lane
+-@freedman_lane83). We tested the null hypotheses for each of the three
+variables for all $h$, and for all components $i$ associated with the levels of
+the variable. The corresponding three null models were obtained by removing the
+studied variable from the full model (Equation \@ref(eq:full)),
 
 \begin{equation}
 d_i(h) = \beta_0(h)+ \beta_{cc}(h) \cdot CC +
@@ -475,12 +474,20 @@ d_i(h) = \beta_0(h) + \beta_{sp}(h) \cdot Species +
 \beta_{age}(h) \cdot Age+ \varepsilon_i(h) (\#eq:cc)
 \end{equation}
 
-, and
-
 \begin{equation}
 d_i(h) = \beta_0(h)+\beta_{sp}(h)\cdot Species + \beta_{cc}(h) \cdot CC+ 
 \varepsilon_i(h) (\#eq:age)
 \end{equation}
+
+We used the coefficients of the variable of interest
+(the left-out $\beta$ in Equations \@ref(eq:species)--\@ref(eq:age)) for the 
+statistical test. For the continuous crown closure variable, the test statistic
+was simply $\beta_{cc}(h)$ for all $h$. For age, the coefficients $\beta_{age}(h)$
+of all the age groups were joint to a one test statistic. To compare the
+different species, the test statistic consisted of all differences
+$\beta_m(h)-\beta_n(h)$ for species $m$ and $n$ with $1<=m<n<=5$. The
+coefficients $\beta_m{h}$ of categorical variables were constrained to sum to
+zero.
 
 The test relies on two procedures: 1) Freedman-Lane algorithm to permute the
 residuals of the null model and create the reference distribution of the
@@ -489,7 +496,7 @@ envelope test* to build a null global envelope in which our null hypothesis (no
 differences between distributions) is accepted [@myllymaki_etal17]. The null
 hypothesis was rejected if the test vector, calculated from the vertical
 distribution of LiDAR returns, leaved the envelope at any point. We used 2999
-random permutations to estimate the p-value and to build the global envelopes
+random permutations to estimate the $p$-value and to build the global envelopes
 for the nonparametric graphical test of significance [@myllymaki_mrkvicka19]. To
 account for the three models in equations \@ref(eq:species)--\@ref(eq:age), we
 used a Bonferroni adjusted significance level $\alpha = 0.05/3$, and
@@ -525,14 +532,9 @@ observations, while the homogeneity test would not detect heterogeneity
 in a smaller random sample of 200 observations, which made the remaining
 heterogeneity of variance acceptable.
 
-We used the parameter differences (contrasts) as the test vector by using the
-left-out $\beta$ in \@ref(eq:species)--\@ref(eq:age). We also summarized the differences by
-species, crown closure, and age by the sum of the differences per class (sum of
-absolute differences for species), and the absolute sum of these differences per
-variable to identify the areas of the LiDAR return distribution that presented
-the most differences. We performed the analysis using R 3.6.3 [@rcoreteam20],
-the GET package [@myllymaki_mrkvicka19; @mrkvicka_etal19], and Lastools
-[@isenburg12] to correct and extract the LiDAR data.
+We performed the analysis using R 3.6.3 [@rcoreteam20], the GET package
+[@myllymaki_mrkvicka19; @mrkvicka_etal19], and Lastools [@isenburg12] to correct
+and extract the LiDAR data.
 
 Results
 =====================
@@ -540,7 +542,7 @@ Results
 The contrasts from the nonparametric graphical test of significance
 confirm that we can reject the null hypothesis: the differences between
 species, after accounting for age and crown closure, were significantly
-different (p-value < 0.001) (Figure \@ref(fig:fig-sp)). We observed two groups of
+different ($p$ < 0.001) (Figure \@ref(fig:fig-sp)). We observed two groups of
 species where differences were significant but small: balsam fir–paper
 birch, black spruce–white spruce. Balsam fir and paper birch differences
 were small and localized at 65–70% and below 12% of stand height. White spruce
@@ -563,12 +565,9 @@ tests of significance for species. The species in columns are subtracted
 from the species in rows (e.g. first column, second row is the aspen -
 balsam fir contrast). The area outside the grey envelope is the area of
 rejection of the null hypothesis (differences between species,
-p<0.001) from the permutation of the residuals of the null model (Equation \\@ref(eq:variance)), 
+$p$<0.001) from the permutation of the residuals of the null model (Equation \\@ref(eq:variance)), 
 the black curve is the average parameter difference (bolder when
-outside the envelope). The diagonal displays the transformed vertical
-LiDAR return distribution of each species (on a different scale than the
-contrasts): black lines represent the median species distribution,
-shaded areas represent 95% and 50% variation envelopes. Panels above the
+outside the envelope). Panels above the
 diagonal are the reflection of the observed functions and the global
 envelope from the lower part."
 fig_sp_short_caption <- "Contrasts from the nonparametric graphical
@@ -582,9 +581,9 @@ knitr::include_graphics("../figure/fig2-sp-combined.svg")
 
 An increase in crown closure was associated with a decrease in the density of
 LiDAR returns below 33% of stand height, while the density of LiDAR returns
-above 38% increased (Figure \@ref(fig:fig-cc)). The largest effect was
-concentrated around the middle height (50%), while the inferior area (below 3%
-of height) had the smallest effect. Figure \@ref(fig:fig-cc2) displays the effect of crown
+above 38% increased (Figure \@ref(fig:fig-cc)). The largest augmentation effect was
+concentrated around the middle height (50%), while the inferior area (around 3%
+of height) had the largest reduction effect. Figure \@ref(fig:fig-cc2) displays the effect of crown
 closure on each species’ vertical distribution of LiDAR returns.
 
 ```{r include = FALSE}
@@ -603,11 +602,11 @@ knitr::include_graphics("../figure/fig3-glm-cc.svg")
 
 ```{r include = FALSE}
 fig_cc2_caption <- 
-"Relative vertical LiDAR return distribution
+"Vertical distribution of LiDAR returns 
 as a function of crown closure (columns) and species (rows). Black lines
 represent the median distribution; shaded areas represent 95% and 50%
 variation envelopes."
-fig_cc2_short_caption <- "Relative vertical LiDAR return distribution
+fig_cc2_short_caption <- "Vertical distribution of LiDAR returns 
 as a function of crown closure and species."
 ```
 
@@ -618,8 +617,8 @@ knitr::include_graphics("../figure/fig4-cc.svg")
 
 The effect of increasing age gradually shifted the distribution higher
 in the stand up to 70 years of age, when it seemed to reach a plateau
-(Figure \@ref(fig:fig-age)). Most differences for stands between 10 and 70 years of age
-were significant (p<0.001), while significant differences for stands
+(Figure \@ref(fig:fig-age)). The effect of age was significant at most height 
+for stands between 10 and 70 years of age ($p$<0.001), while significant effect for stands
 of 90 and 120 years of age were of smaller magnitude and below 69% and
 44% respectively. The gradual shift of the distribution toward the top
 of the stand as age increased is reflected by the younger stands (10,
@@ -629,11 +628,11 @@ respectively. The effect is reversed in mature stands of 50 and 70
 years, where there is a positive effect of age between 38–97% of stand height
 (44–100% for 70 yr), and a negative effect below 31% of stand height (38% for
 70 yr). Like mature stands, older stands of 90 and 120 years of age also
-had a positive effect in the superior part of the stand, although it was
+had an abundance of returns in the superior part of the stand, although it was
 lower than mature stands (90 yr: 38–68%; 120 yr: 33–44%) and of smaller
-magnitude. Older stands vertical distribution were negatively
-affected by age below 28 and 23% of stand height for 90 and 120 years of age,
-respectively. Overall, the differences in the vertical distribution of LiDAR
+magnitude. Older stands vertical distribution were reduced
+below 28 and 23% of stand height for 90 and 120 years of age,
+respectively. Overall, the rate of change in the vertical distribution of LiDAR
 returns gradually decreased as the age increased. For example, changes
 in the distribution between 10 and 30 years were larger than the changes
 between 70 and 90 years. Overall, areas of higher variability for age
@@ -645,7 +644,7 @@ returns.
 fig_age_caption <- 
 "Coefficients from the nonparametric graphical test of
 significance for age groups. The grey envelope displays the area of
-acceptance of the null hypothesis (no effect, p<0.001) from the
+acceptance of the null hypothesis (no effect, $p$<0.001) from the
 permutation of the residuals of the null model (eq. \\@ref(eq:age)), the black curve
 is the average parameter difference (bolder when outside the envelope)."
 fig_age_short_caption <- "Coefficients from the nonparametric graphical test of significance for age groups."
@@ -658,12 +657,13 @@ knitr::include_graphics("../figure/fig5-age.svg")
 
 ```{r include = FALSE}
 fig_age2_caption <- 
-"Relative LiDAR return distribution as a function of age
+"Vertical distribution of LiDAR returns as a function of age
 (columns) and species (rows). Black lines represent the median
 distribution; shaded areas represent 95% and 50% variation envelopes.
 Top right numbers in the panels indicate the number of observations
 (stands)."
-fig_age2_short_caption <- "Coefficients from the nonparametric graphical test of significance for age groups."
+fig_age2_short_caption <- "Vertical distribution of LiDAR returns 
+as a function of age groups and species."
 ```
 
 
