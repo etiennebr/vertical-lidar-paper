@@ -12,12 +12,15 @@ editor_options:
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  fig.width = 8,
+  fig.height = 8
 )
 ```
 
 ```{r setup}
-devtools::load_all(here::here("../vertical-lidar-paper"))
+devtools::load_all(here::here())
+dir.create("figure")
 library(GET)
 library(patchwork)
 library(tibble)
@@ -31,7 +34,7 @@ alpha <- 0.05 / 3  # (Bonferroni correction)
 nperm <- 3000-1  # number of permutations
 m <- 40-1  # number of discrete points per functions
 device <- "pdf"
-plot_use_trans <- TRUE  # use transformed data for plots
+plot_use_trans <- FALSE  # use transformed data for plots
 
 # test variance equality
 functional_anova <- function(g, nsim = nperm, contrasts = TRUE, curve_set = cset_trans, ...) {
@@ -71,6 +74,9 @@ corrUnequalVar <- function(curve_set, groups, n.aver = 1L, mirror = FALSE) {
   curve_set$funcs <- t(x)
   curve_set
 }
+
+wave <- wave %>% 
+  mutate(age_class = sort_num_factor(age_class))
 ```
 
 ## Homogeneity
@@ -174,8 +180,8 @@ res_flm_age <- functional_lm(Y ~ dominant_species + crown_closure, contrasts = F
 ### p-values
 ```{r}
 p_value(res_flm_sp)
-p_value(res_flm_age)
 p_value(res_flm_cc)
+p_value(res_flm_age)
 ```
 
 # Figures
@@ -231,12 +237,12 @@ psp <- wave_long %>%
   geom_ribbon(aes(ymin = `0.25`, ymax = `0.75`), fill = dark_grey) +
   geom_line(aes(y = `0.5`), colour = "grey20") +
   scale_y_continuous("Density of LiDAR returns", breaks = c(0:2) / 10, expand = c(0, 0)) +
-  scale_x_continuous("Scaled stand height", limits = c(0, 1), breaks = 1:2/2, expand = c(0, 0)) +
+  scale_x_continuous("Stand height", limits = c(0, 1), breaks = 1:2/2, expand = c(0, 0)) +
   facet_grid(~dominant_species) + 
   coord_flip(ylim = c(0, 0.30), xlim = c(0, 1))
 
 # Create species contrasts and add species on the diagonal
-pcsp <- my_plot_contrasts(res_flm_sp, m, full = TRUE, diag = TRUE) +
+pcsp <- my_plot_contrasts(res_flm_sp, m, full = TRUE, diag = FALSE) +
   scale_y_continuous(latex2exp::TeX("$\\beta_{m}-\\beta_{n}$")) 
   
 ggsave("figure/fig2-sp-combined.pdf", pcsp, device = "pdf", dpi = "retina", width = 234, height = 234, units = "mm")
@@ -297,12 +303,13 @@ represent the median distribution, shaded areas represent 95% and 50% variation
 envelope. Top right numbers in the panels indicate the number of observations
 (stands).
 ```{r age}
-label_age <- function(x) sort_num_factor(paste(x, "yr"))
+label_age <- function(x) paste(x, "yr")
 # upgrade labels
 attr(res_flm_age, "labels") <- label_age(attr(res_flm_age, "labels"))
 page <- my_plot_continuous(res_flm_age, m) +
   coord_flip(ylim = c(-0.05, 0.15), expand = c(0, 0)) +
   scale_y_continuous(latex2exp::TeX("$\\beta_{age}$"), labels = c(-5, 0, 5, 10) / 100, breaks = c(-5, 0, 5, 10) / 100)
+page
 
 ggsave("figure/fig5-age.pdf", page, device = "pdf", dpi = "retina", width = 234, height = 234 / 2, units = "mm")
 ggsave("figure/fig5-age.svg", page, device = "svg", dpi = "retina", width = 234, height = 234 / 2, units = "mm")
@@ -324,7 +331,7 @@ page2 <- wave_long %>%
   geom_ribbon(aes(ymin = `0.25`, ymax = `0.75`), fill = dark_grey) +
   geom_line(aes(y = `0.5`), colour = "grey20") +
   geom_hline(aes(yintercept = 0), color = "grey50", size = 0.1) +
-  facet_grid(dominant_species~label_age(age_class)) +
+  facet_grid(dominant_species~sort_num_factor(label_age(age_class))) +
   scale_x_continuous("Stand height", limits = c(0, 1), breaks = 1:2/2, expand = c(0, 0)) +
   scale_y_continuous("Density of LiDAR returns", breaks = c(0:2) / 10, expand = c(0, 0)) +
   coord_flip(ylim = c(-0, 0.25), xlim = c(0, 1)) +
