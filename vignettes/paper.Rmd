@@ -1,5 +1,5 @@
 ---
-title: "Species, crown closure, and age as determinants of the vertical distribution of airborne lidar returns"
+title: "Species, crown closure, and age as determinants of the vertical distribution of airborne LiDAR returns"
 author: "Etienne Racine^1,\\*^, Nicholas C. Coops^2^, Jean Bégin^1^, Mari Myllymäki^3^"
 date: "^1^:Département des sciences du bois et de la forêt, 2405 rue de la Terrasse, Université Laval, Québec, QC G1V 0A6, Canada; ^2^:Department of Forest Resources Management, 2424 Main Mall, University of British Columbia, Vancouver, BC V6T 1Z4, Canada; ^3^:Natural Resources Institute Finland (Luke), Latokartanonkaari 9, FI-00790 Helsinki, Finland"
 output:
@@ -68,7 +68,7 @@ mari.myllymaki@luke.fi
 (\*) Corresponding Author
 </details>
 
-Keywords: Boreal forest; Lidar remote sensing; Tree Species; Functional
+Keywords: Boreal forest; LiDAR remote sensing; Tree Species; Functional
 data analysis; Stand structure.
 
 Acknowledgments
