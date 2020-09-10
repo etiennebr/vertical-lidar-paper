@@ -209,7 +209,7 @@ displays the area of acceptance of the null hypothesis (no differences between
 species, p<0.001) from the permutation of the residuals of the null model (eq.
 2), the black curve is the average parameter difference (bolder when outside the
 envelope). The diagonal displays the `r ifelse(plot_use_trans, "transformed ", "")`
-vertical lidar return distribution of each species (on a different scale than
+vertical LiDAR return distribution of each species (on a different scale than
 the contrasts): black lines represent the median species distribution, shaded
 areas represent 95% and 50% variation envelopes.
 
@@ -230,34 +230,35 @@ psp <- wave_long %>%
   geom_ribbon(aes(ymin = `0.025`, ymax = `0.975`), fill = light_grey) + 
   geom_ribbon(aes(ymin = `0.25`, ymax = `0.75`), fill = dark_grey) +
   geom_line(aes(y = `0.5`), colour = "grey20") +
-  scale_y_continuous("Scaled lidar return density (transformed)", breaks = c(0:2) / 10, expand = c(0, 0)) +
+  scale_y_continuous("Density of LiDAR returns", breaks = c(0:2) / 10, expand = c(0, 0)) +
   scale_x_continuous("Scaled stand height", limits = c(0, 1), breaks = 1:2/2, expand = c(0, 0)) +
   facet_grid(~dominant_species) + 
   coord_flip(ylim = c(0, 0.30), xlim = c(0, 1))
 
 # Create species contrasts and add species on the diagonal
-pcsp <- my_plot_contrasts(res_flm_sp, m, full = TRUE, diag = TRUE, add = psp)
-
+pcsp <- my_plot_contrasts(res_flm_sp, m, full = TRUE, diag = TRUE) +
+  scale_y_continuous(latex2exp::TeX("$\\beta_{m}-\\beta_{n}$")) 
+  
 ggsave("figure/fig2-sp-combined.pdf", pcsp, device = "pdf", dpi = "retina", width = 234, height = 234, units = "mm")
 ggsave("figure/fig2-sp-combined.svg", pcsp, device = "svg", dpi = "retina", width = 234, height = 234, units = "mm")
 ```
 
 ## Crown closure
 
-Figure 3. Coefficients of the transformed vertical distribution of lidar returns
+Figure 3. Coefficients of the transformed vertical distribution of LiDAR returns
 for crown closure. Black lines represent the median distribution, shaded areas
 represent 95% and 50% variation envelope. Top right numbers in the panels
 indicate the number of observations (stands).
 ```{r crown_closure}
 label_cc <- function(d) paste0(d, "%")
-pc_cc <- my_plot_continuous(res_flm_cc, m, main = "my main") + scale_y_continuous("Scaled density effect")
+pc_cc <- my_plot_continuous(res_flm_cc, m, main = "my main") + scale_y_continuous(latex2exp::TeX("$\\beta_{cc}$"))
 
 ggsave("figure/fig3-glm-cc.pdf", pc_cc, device = "pdf", dpi = "retina", width = 234 / 2, height = 234 / 2, units = "mm")
 ggsave("figure/fig3-glm-cc.svg", pc_cc, device = "svg", dpi = "retina", width = 234 / 2, height = 234 / 2, units = "mm")
 ```
 
 Figure 4. `r ifelse(plot_use_trans, "Transformed v", "V")`ertical distribution 
-of lidar returns as a function of crown closure and species. Black lines
+of LiDAR returns as a function of crown closure and species. Black lines
 represent the median distribution, shaded areas represent 95% and 50% variation
 envelope. Top right numbers in the panels indicate the number of observations
 (stands).
@@ -272,15 +273,15 @@ pcc <- wave_long %>%
   geom_ribbon(aes(ymin = `0.25`, ymax = `0.75`), fill = dark_grey) +
   geom_line(aes(y = `0.5`), colour = "grey20") +
   geom_vline(aes(xintercept = 0)) +
-  scale_x_continuous("Scaled height", limits = c(0, 1), breaks = 1:2/2, expand = c(0, 0)) +
-  scale_y_continuous("Scaled lidar return density", breaks = c(0:2) / 10, expand = c(0, 0)) +
+  scale_x_continuous("Stand height", limits = c(0, 1), breaks = 1:2/2, expand = c(0, 0)) +
+  scale_y_continuous("Density of LiDAR returns", breaks = c(0:2) / 10, expand = c(0, 0)) +
   facet_grid(dominant_species~label_cc(crown_closure)) +
   coord_flip(ylim = c(0, 0.25), xlim = c(0, 1)) +
   ( if(plot_use_trans) 
     # transformed data
     list(
       coord_flip(ylim = c(-0.1, 0.2), xlim = c(0, 1)),
-      scale_y_continuous("Scaled lidar return density (transformed)", breaks = c(-2, 0, 2, 4, 6) / 10, expand = c(0, 0))
+      scale_y_continuous(breaks = c(-2, 0, 2, 4, 6) / 10, expand = c(0, 0))
       )
   )
 pcc
@@ -291,7 +292,7 @@ ggsave("figure/fig4-cc.svg", pcc, device = "svg", dpi = "retina", width = 234, h
 
 ## Age
 Figure 5. `r ifelse(plot_use_trans, "Transformed v", "V")`ertical distribution 
-of lidar returns as a function of stand density and species. Black lines
+of LiDAR returns as a function of stand density and species. Black lines
 represent the median distribution, shaded areas represent 95% and 50% variation
 envelope. Top right numbers in the panels indicate the number of observations
 (stands).
@@ -301,14 +302,14 @@ label_age <- function(x) sort_num_factor(paste(x, "yr"))
 attr(res_flm_age, "labels") <- label_age(attr(res_flm_age, "labels"))
 page <- my_plot_continuous(res_flm_age, m) +
   coord_flip(ylim = c(-0.05, 0.15), expand = c(0, 0)) +
-  scale_y_continuous("Scaled density difference", labels = c(-5, 0, 5, 10) / 100, breaks = c(-5, 0, 5, 10) / 100)
+  scale_y_continuous(latex2exp::TeX("$\\beta_{age}$"), labels = c(-5, 0, 5, 10) / 100, breaks = c(-5, 0, 5, 10) / 100)
 
 ggsave("figure/fig5-age.pdf", page, device = "pdf", dpi = "retina", width = 234, height = 234 / 2, units = "mm")
 ggsave("figure/fig5-age.svg", page, device = "svg", dpi = "retina", width = 234, height = 234 / 2, units = "mm")
 ```
 
 Figure 6. `r ifelse(plot_use_trans, "Transformed v", "V")`ertical distribution 
-of lidar returns as a function of age groups and species. Black lines
+of LiDAR returns as a function of age groups and species. Black lines
 represent the median distribution, shaded areas represent 95% and 50% variation
 envelope. Top right numbers in the panels indicate the number of observations
 (stands).
@@ -324,14 +325,14 @@ page2 <- wave_long %>%
   geom_line(aes(y = `0.5`), colour = "grey20") +
   geom_hline(aes(yintercept = 0), color = "grey50", size = 0.1) +
   facet_grid(dominant_species~label_age(age_class)) +
-  scale_x_continuous("Scaled height", limits = c(0, 1), breaks = 1:2/2, expand = c(0, 0)) +
-  scale_y_continuous("Scaled lidar return density", breaks = c(0:2) / 10, expand = c(0, 0)) +
+  scale_x_continuous("Stand height", limits = c(0, 1), breaks = 1:2/2, expand = c(0, 0)) +
+  scale_y_continuous("Density of LiDAR returns", breaks = c(0:2) / 10, expand = c(0, 0)) +
   coord_flip(ylim = c(-0, 0.25), xlim = c(0, 1)) +
   ( if(plot_use_trans)
     # transformed data
     list(
       coord_flip(ylim = c(-0.1, 0.25), xlim = c(0, 1)),
-      scale_y_continuous("Scaled lidar return density (transformed)", breaks = c(0, 10, 20) / 100, expand = c(0, 0))
+      scale_y_continuous("Density of LiDAR returns (transformed)", breaks = c(0, 10, 20) / 100, expand = c(0, 0))
       )
   )
 page2
@@ -367,15 +368,15 @@ papu <- wl %>%
   geom_line(aes(color = dominant_species), show.legend = FALSE) +
   geom_ribbon(aes(ymin = q025, ymax = q0975), fill = "#000000", alpha = 0.2) +
   geom_ribbon(aes(ymin = q25, ymax = q75), fill = "#000000", alpha = 0.2) +
-  scale_y_continuous("Scaled lidar return density", breaks = c(0:2) / 10, expand = c(0, 0)) +
-  scale_x_continuous("Scaled height", limits = c(0, 1), breaks = 1:2/2) +
+  scale_y_continuous("Density of LiDAR returns", breaks = c(0:2) / 10, expand = c(0, 0)) +
+  scale_x_continuous("Stand height", limits = c(0, 1), breaks = 1:2/2) +
   geom_text(data = wl %>% 
               distinct(dominant_species, crown_closure, age_class, stand_id) %>% 
               count(dominant_species, crown_closure, age_class), 
             aes(label = n), x = Inf, y = Inf, hjust = 1.5, vjust = 1.5, size = 2.5) +
   facet_grid(dominant_species + age_class ~ crown_closure) +
     labs(
-    title = "Vertical distribution of lidar returns",
+    title = "Vertical distribution of LiDAR returns",
     subtitle = "Figure A-1", 
     caption = wrapper(cap, 80)
     )
@@ -397,15 +398,15 @@ papt <- wlt %>%
   geom_line(aes(color = dominant_species), show.legend = FALSE) +
   geom_ribbon(aes(ymin = q025, ymax = q0975), fill = "#000000", alpha = 0.2) +
   geom_ribbon(aes(ymin = q25, ymax = q75), fill = "#000000", alpha = 0.2) +
-  scale_y_continuous("Scaled lidar return density (transformed)", breaks = c(0:2) / 10, expand = c(0, 0)) +
-  scale_x_continuous("Scaled height", limits = c(0, 1), breaks = 1:2/2) +
+  scale_y_continuous("Density of LiDAR returns (transformed)", breaks = c(0:2) / 10, expand = c(0, 0)) +
+  scale_x_continuous("Stand height", limits = c(0, 1), breaks = 1:2/2) +
   geom_text(data = wlt %>% 
               distinct(dominant_species, crown_closure, age_class, stand_id) %>% 
               count(dominant_species, crown_closure, age_class), 
             aes(label = n), x = Inf, y = Inf, hjust = 1.5, vjust = 1.5, size = 2.5) +
   facet_grid(dominant_species + age_class ~crown_closure) +
   labs(
-    title = "Vertical distribution of lidar returns (transformed)",
+    title = "Vertical distribution of LiDAR returns (transformed)",
     subtitle = "Figure A-2", 
     caption = wrapper(cap, 80)
     )
