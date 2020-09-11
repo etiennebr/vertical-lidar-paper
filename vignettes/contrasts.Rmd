@@ -29,6 +29,8 @@ library(dplyr)
 library(tidyr)
 library(purrr)
 
+op <- options(contrasts = c("contr.sum", "contr.poly"))
+
 ggplot2::theme_set(theme_pub())
 alpha <- 0.05 / 3  # (Bonferroni correction)
 nperm <- 3000-1  # number of permutations
@@ -151,7 +153,9 @@ res_fanova_age_trans <- functional_anova(independent_factors$age_class, contrast
 
 # Compare before and after transformation
 res_fanova_sp + res_fanova_cc + res_fanova_age
-res_fanova_sp_trans + res_fanova_cc_trans + res_fanova_age_trans
+res_fanova_sp_trans + ggtitle("Species") + scale_x_continuous(sec.axis = sec_axis(trans = ~.x/m)) +
+  res_fanova_cc_trans + ggtitle("Crown closure") + scale_x_continuous(sec.axis = sec_axis(trans = ~.x/m)) +
+  res_fanova_age_trans + ggtitle("Age") + scale_x_continuous(sec.axis = sec_axis(trans = ~.x/m))
 ```
 
 
@@ -422,3 +426,84 @@ ggsave("figure/appendix-1.pdf", papu + theme_pub(10), width = 6, height = 22, un
 ggsave("figure/appendix-2.pdf", papt + theme_pub(10), width = 6, height = 22, units = "in")
 ```
 
+## Formal test of homoscedasticity of resdiuals using BP
+```{r}
+full_mod <- function(x) {
+  lm(ss ~ dominant_species + age_class + crown_closure, data = x)
+}
+
+sp_mod <- function(x) {
+  lm(ss ~ age_class + crown_closure, data = x)
+}
+cc_mod <- function(x) {
+  lm(ss ~ dominant_species + age_class, data = x)
+}
+age_mod <- function(x) {
+  lm(ss ~ dominant_species + crown_closure, data = x)
+}
+
+my_bp <- function(data, model) {
+  # Use the model formula to create the Breusch-Pagan Test using the squared
+  # residuals. Little hack: Substitue the left-hand side of the formula with the
+  # squared residuals unevaluated (the data must contain a .resid column).
+  stopifnot(".resid" %in% names(data))
+  f <- model$call[[2]]
+  f[[2]] <- quote(I(.resid^2))
+  lm(f, data = data)
+}
+
+add_mod <- function(data, mod) {
+  mutate(data,
+         model = map(data, mod),
+         aug = map(model, broom::augment),
+         data = map2(data, aug, ~bind_cols(.x, .y %>% select(.resid))),
+         resid_mod = map2(data, model, my_bp),  # full
+         summary = map(resid_mod, broom::glance),
+         bptest = map(model, lmtest::bptest),
+         bptest_statistic = map_dbl(bptest, "statistic"),
+         bptest_p_value   = map_dbl(bptest, "p.value"),
+  ) %>% 
+    unnest(summary)
+}
+
+plot_mod <- function(x) {
+  qplot(bptest_statistic, height / m, data = x) + geom_path() +  # this plot just confirms the bp values with the R² (×N)
+  qplot(r.squared, height / m, data = x) + geom_path() +
+  qplot(bptest_p_value, height / m, data = x) + geom_path() + geom_vline(xintercept = 5/100, alpha = 0.5, size = 2, color = "blue") + geom_text(aes(label = round(height * 100 / m)))
+}
+  
+
+wlt_by_height <- nest(wlt, data = -height)
+
+
+ds <- function(..., data, n = 100) {
+  #set.seed(seed)
+  #slice_sample(data, n = n) %>% 
+    lm(..., data = data)
+}
+seed <- sample.int(9999, 1)
+
+# Full model
+wlt_by_height %>% 
+  add_mod(full_mod) %>% 
+  plot_mod()
+
+# Reduced models:
+wlt_by_height %>% 
+  add_mod(sp_mod) %>% 
+  plot_mod()
+
+wlt_by_height %>% 
+  add_mod(cc_mod) %>% 
+  plot_mod()
+
+wlt_by_height %>% 
+  add_mod(age_mod) %>% 
+  plot_mod()
+
+# Untransformed data (highly significant, and max R²~0.2
+wl %>% 
+  nest(data = -height) %>% 
+  add_mod(full_mod) %>% 
+  plot_mod()
+```
