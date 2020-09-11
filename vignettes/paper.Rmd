@@ -48,7 +48,7 @@ ORCID : 0000-0002-0151-9037<br>
 Department of Forest Resources Management<br>
 2424 Main Mall, University of British Columbia, Vancouver, BC V6T 1Z4, Canada<br>
 nicholas.coops@ubc.ca
---
+
 Jean Bégin<br>
 ORCID : 0000-0002-9595-6632<br>
 Département des sciences du bois et de la forêt<br>
@@ -526,7 +526,7 @@ completely remove it according to the test from @mrkvicka_etal20. Our
 simulations showed that heterogeneity could remain significant after successive
 transformations, especially for a large dataset of 5000 observations, which is a
 common problem of null hypothesis testing on large datasets. We thus looked at
-the importance of the correlation by running Breusch-Pagan test of
+the importance of the correlation by running Breusch-Pagan [@breusch_pagan79] test of
 heteroscedasticity using the squared residuals $(d_i(h) - \hat{d_i}(h)) ^ 2$ on
 the left-hand side of the reduced equations \@ref(eq:species)--\@ref(eq:age).
 While the test indicated significant heteroscedasticity in some areas of the
