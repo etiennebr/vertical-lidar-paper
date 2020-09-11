@@ -499,7 +499,7 @@ account for the three models in equations \@ref(eq:species)--\@ref(eq:age), we
 used a Bonferroni adjusted significance level $\alpha = 0.05/3$, and
 consequently considered the 98% global envelopes. We checked the data for
 heterogeneity of variance [@winkler_etal14], and the homoscedasticity tests of
-[@mrkvicka_etal20] indicated heterogeneity of variance for all variables.
+@mrkvicka_etal20 indicated heterogeneity of variance for all variables.
 Following [@mrkvicka_etal20], we transformed the data by scaling groups ($j$)
 according to their variance dispersion. The initial $d_{i,j}$ function was
 transformed into $S_{i,j}$ function,
@@ -517,17 +517,21 @@ transformation for all groups at once (by combining all group levels)
 generally removed heterogeneity of the variance, but it required to have
 sufficient observations in all categories, which was not the case of our
 data. We instead relied on the successive application of the transformation
- (Equation \@ref(eq:variance)) for each of the confounding variables. In this case, we found
-that the order in which the transformation is applied is important
-because it can reintroduce significant heterogeneity of variance. We
-settled on the successive transformation by crown closure, age, and
-species which provided the best results and reduced heterogeneity, but
-did not completely remove it. Our simulations showed that heterogeneity
-could remain significant after successive transformations without
-affecting the results, especially for a large dataset of 5000
-observations, while the homogeneity test would not detect heterogeneity
-in a smaller random sample of 200 observations, which made the remaining
-heterogeneity of variance acceptable.
+(Equation \@ref(eq:variance)) for each of the confounding variables. In this
+case, we found that the order in which the transformation is applied is
+important because it can reintroduce significant heterogeneity of variance. We
+settled on the successive transformation by crown closure, age, and species
+which provided the best results and reduced heterogeneity, but did not
+completely remove it according to the test from @mrkvicka_etal20. Our
+simulations showed that heterogeneity could remain significant after successive
+transformations, especially for a large dataset of 5000 observations, which is a
+common problem of null hypothesis testing on large datasets. We thus looked at
+the importance of the correlation by running Breusch-Pagan test of
+heteroscedasticity using the squared residuals $(d_i(h) - \hat{d_i}(h)) ^ 2$ on
+the left-hand side of the reduced equations \@ref(eq:species)--\@ref(eq:age).
+While the test indicated significant heteroscedasticity in some areas of the
+curves, the coefficient of determination was less than 4% for all variables and
+all $h$, which confirmed that no further adjustment was required.
 
 We performed the analysis using R 3.6.3 [@rcoreteam20], the GET package
 [@myllymaki_mrkvicka19; @mrkvicka_etal19], and Lastools [@isenburg12] to correct
