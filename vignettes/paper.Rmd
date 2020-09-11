@@ -433,25 +433,26 @@ discriminant analysis or principal component analysis [@koenig_hofle16;
 ability to understand the effect of a given variable and interpret the results
 of the model.
 
-To compare inter- and intraspecific LiDAR return distribution variations and the
+To compare inter- and intraspecific variations in the distribution of LiDAR returns and the
 confounding variables, we used a nonparametric graphical test of
-significance [@myllymaki_mrkvicka19; @mrkvicka_etal19]. We modeled vertical
+significance [@myllymaki_mrkvicka19; @mrkvicka_etal19]. We modeled the vertical
 distributions of LiDAR returns as a function of dominant species, crown closure,
 and age using the general linear model
 
 \begin{equation}
-d_i(h) = \beta_0(h)+\beta_{sp}(h)\cdot Species + \beta_{cc}(h) \cdot CC +
-\beta_{age}(h) \cdot Age + \varepsilon_i(h) (\#eq:full)
+d_i(h) = \beta_0(h)+\beta_{sp}(h)\cdot Species_i + \beta_{cc}(h) \cdot CC_i +
+\beta_{age}(h) \cdot Age_i + \varepsilon_i(h) (\#eq:full)
 \end{equation}
 
-Where $d_i$ contains the LiDAR density distribution at scaled height $h$
+
+where $d_i$ contains the LiDAR density distribution at scaled height $h$
 (represented by the vertical distribution histogram) for observation $i$, and
 $\beta(h)$ is the parameter vector related to each variable, $CC$ is crown
-closure, $sp$ is species, and $\varepsilon(h)$ are error terms with mean zero
-and finite variance $\sigma^2$. Species were encoded as categorical variables
-using dummy variables, crown closure was introduced as a continuous variable
-while age—given that the last class was open—was encoded as a categorical
-variable.
+closure, and $\varepsilon(h)$ is the error term with mean zero and finite variance $\sigma^2$. 
+Species as well as ​age---given that the last class was open---were regarded as
+categorical variables and thus encoded with dummy variables in $Species_i$ and
+$Age_i$, while $CC_i$ was a continuous variable.
+
 
 We studied the effect of each variable after accounting for the other
 confounding variables (also called the nuisance factors by Freedman and Lane
@@ -461,17 +462,17 @@ the variable. The corresponding three null models were obtained by removing the
 studied variable from the full model (Equation \@ref(eq:full)),
 
 \begin{equation}
-d_i(h) = \beta_0(h)+ \beta_{cc}(h) \cdot CC +
-\beta_{age}(h) \cdot Age+ \varepsilon_i(h) (\#eq:species)
+d_i(h) = \beta_0(h)+ \beta_{cc}(h) \cdot CC_i +
+\beta_{age}(h) \cdot Age_i + \varepsilon_i(h) (\#eq:species)
 \end{equation}
 
 \begin{equation}
-d_i(h) = \beta_0(h) + \beta_{sp}(h) \cdot Species +
-\beta_{age}(h) \cdot Age+ \varepsilon_i(h) (\#eq:cc)
+d_i(h) = \beta_0(h) + \beta_{sp}(h) \cdot Species_i +
+\beta_{age}(h) \cdot Age_i + \varepsilon_i(h) (\#eq:cc)
 \end{equation}
 
 \begin{equation}
-d_i(h) = \beta_0(h)+\beta_{sp}(h)\cdot Species + \beta_{cc}(h) \cdot CC+ 
+d_i(h) = \beta_0(h)+\beta_{sp}(h)\cdot Species_i + \beta_{cc}(h) \cdot CC_i + 
 \varepsilon_i(h) (\#eq:age)
 \end{equation}
 
@@ -481,8 +482,8 @@ statistical test. For the continuous crown closure variable, the test statistic
 was simply $\beta_{cc}(h)$ for all $h$. For age, the coefficients $\beta_{age}(h)$
 of all the age groups were joint to a one test statistic. To compare the
 different species, the test statistic consisted of all differences
-$\beta_m(h)-\beta_n(h)$ for species $m$ and $n$ with $1<=m<n<=5$. The
-coefficients $\beta_m{h}$ of categorical variables were constrained to sum to
+$\beta_{sp, m}(h)-\beta_{sp, n}(h)$ for species $m$ and $n$ with $1<=m<n<=5$. The
+coefficients $\beta_{sp}m(h)$ of categorical variables were constrained to sum to
 zero.
 
 The test relies on two procedures: 1) Freedman-Lane algorithm to permute the
