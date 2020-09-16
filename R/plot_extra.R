@@ -67,7 +67,7 @@ my_plot_contrasts <- function(x, scale_r, upper = !full, full = FALSE, diag = !f
     scale_size_manual(values = c("outside" = line_outside, "inside" = line_inside)) +
     #geom_point(aes(color = inside), size = 0.5) +
     facet_grid(b~a) +
-    xlab("Stand Height") +
+    xlab("Relative stand Height") +
     ylab("Estimates") +
     coord_flip()
   

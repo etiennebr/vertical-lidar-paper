@@ -244,7 +244,7 @@ psp <- wave_long %>%
   geom_ribbon(aes(ymin = `0.25`, ymax = `0.75`), fill = dark_grey) +
   geom_line(aes(y = `0.5`), colour = "grey20") +
   scale_y_continuous("Density of LiDAR returns", breaks = c(0:2) / 10, expand = c(0, 0)) +
-  scale_x_continuous("Stand height", limits = c(0, 1), breaks = 1:2/2, expand = c(0, 0)) +
+  scale_x_continuous("Relative stand height", limits = c(0, 1), breaks = 1:2/2, expand = c(0, 0)) +
   facet_grid(~dominant_species) + 
   coord_flip(ylim = c(0, 0.30), xlim = c(0, 1))
 
@@ -284,7 +284,7 @@ pcc <- wave_long %>%
   geom_ribbon(aes(ymin = `0.25`, ymax = `0.75`), fill = dark_grey) +
   geom_line(aes(y = `0.5`), colour = "grey20") +
   geom_vline(aes(xintercept = 0)) +
-  scale_x_continuous("Stand height", limits = c(0, 1), breaks = 1:2/2, expand = c(0, 0)) +
+  scale_x_continuous("Relative stand height", limits = c(0, 1), breaks = 1:2/2, expand = c(0, 0)) +
   scale_y_continuous("Density of LiDAR returns", breaks = c(0:2) / 10, expand = c(0, 0)) +
   facet_grid(dominant_species~label_cc(crown_closure)) +
   coord_flip(ylim = c(0, 0.25), xlim = c(0, 1)) +
@@ -335,7 +335,7 @@ page2 <- wave_long %>%
   geom_line(aes(y = `0.5`), colour = "grey20") +
   geom_hline(aes(yintercept = 0), color = "grey50", size = 0.1) +
   facet_grid(dominant_species~sort_num_factor(label_age(age_class))) +
-  scale_x_continuous("Stand height", limits = c(0, 1), breaks = 1:2/2, expand = c(0, 0)) +
+  scale_x_continuous("Relative stand height", limits = c(0, 1), breaks = 1:2/2, expand = c(0, 0)) +
   scale_y_continuous("Density of LiDAR returns", breaks = c(0:2) / 10, expand = c(0, 0)) +
   coord_flip(ylim = c(-0, 0.25), xlim = c(0, 1)) +
   ( if(plot_use_trans)
@@ -378,7 +378,7 @@ papu <- wl %>%
   geom_ribbon(aes(ymin = q025, ymax = q0975), fill = "#000000", alpha = 0.2) +
   geom_ribbon(aes(ymin = q25, ymax = q75), fill = "#000000", alpha = 0.2) +
   scale_y_continuous("Density of LiDAR returns", breaks = c(0:2) / 10, expand = c(0, 0)) +
-  scale_x_continuous("Stand height", limits = c(0, 1), breaks = 1:2/2) +
+  scale_x_continuous("Relative stand height", limits = c(0, 1), breaks = 1:2/2) +
   geom_text(data = wl %>% 
               distinct(dominant_species, crown_closure, age_class, stand_id) %>% 
               count(dominant_species, crown_closure, age_class), 
@@ -408,7 +408,7 @@ papt <- wlt %>%
   geom_ribbon(aes(ymin = q025, ymax = q0975), fill = "#000000", alpha = 0.2) +
   geom_ribbon(aes(ymin = q25, ymax = q75), fill = "#000000", alpha = 0.2) +
   scale_y_continuous("Density of LiDAR returns (transformed)", breaks = c(0:2) / 10, expand = c(0, 0)) +
-  scale_x_continuous("Stand height", limits = c(0, 1), breaks = 1:2/2) +
+  scale_x_continuous("Relative stand height", limits = c(0, 1), breaks = 1:2/2) +
   geom_text(data = wlt %>% 
               distinct(dominant_species, crown_closure, age_class, stand_id) %>% 
               count(dominant_species, crown_closure, age_class), 
