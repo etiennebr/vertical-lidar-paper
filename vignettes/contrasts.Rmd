@@ -425,7 +425,7 @@ ggsave("figure/appendix-2.pdf", papt + theme_pub(10), width = 6, height = 22, un
 ```
 
 ## Formal test of homoscedasticity of resdiuals using BP
-```{r}
+```{r breusch-pagan}
 full_mod <- function(x) {
   lm(ss ~ dominant_species + age_class + crown_closure, data = x)
 }
@@ -450,8 +450,8 @@ my_bp <- function(data, model) {
   lm(f, data = data)
 }
 
-add_mod <- function(data, mod) {
-  mutate(data,
+add_mod <- function(x, mod) {
+  mutate(x,
          model = map(data, mod),
          aug = map(model, broom::augment),
          data = map2(data, aug, ~bind_cols(.x, .y %>% select(.resid))),
@@ -505,3 +505,68 @@ wl %>%
   add_mod(full_mod) %>% 
   plot_mod()
 ```
+
+## R-squared
+
+We can compute the R-squared for each $h$ of every model. 
+```{r rsq}
+add_mod_rsq <- function(x, mod, col) {
+  mutate(x,
+         model = map(data, mod),
+         glance = map(model, broom::glance),
+         rsq = map_dbl(glance, "adj.r.squared")
+  ) 
+}
+
+wlt_by_height <- nest(wlt, data = -height)
+
+# Full model R²
+r_squared <- wlt_by_height %>% 
+  add_mod_rsq(full_mod) %>% 
+  mutate(
+    r_squared_full = rsq
+  ) %>% 
+  # sp
+  add_mod_rsq(sp_mod) %>% 
+  mutate(
+    r_squared_dominant_species = rsq
+  )  %>% 
+  # cc
+  add_mod_rsq(cc_mod) %>% 
+  mutate(
+    r_squared_crown_closure = rsq
+  ) %>% 
+  # age
+  add_mod_rsq(age_mod) %>% 
+  mutate(
+    r_squared_age_class = rsq
+  )
+
+prsq <- r_squared %>% 
+  select(-(data:rsq)) %>% 
+  pivot_longer(-height, names_to = "model", names_prefix = "r_squared_", values_to = "r_squared") %>% 
+  mutate(
+    model_ordered = factor(model, levels = c("dominant_species", "crown_closure", "age_class", "full")),
+    model_label = forcats::fct_recode(model_ordered, "Species" = "dominant_species", "Crown closure" = "crown_closure", "Age" = "age_class", "Full" = "full")
+  ) %>% 
+  ggplot(aes(height / m, r_squared, group = model)) +
+  geom_path(aes(color = model_ordered), show.legend = FALSE) +
+  geom_text(data = . %>% 
+              filter(
+                  model == "age_class" & height == 14 |
+                  model == "crown_closure" & height == 23 |
+                  model == "full" & height == 28 |
+                  model == "dominant_species" & height == 33 
+                  ) %>% 
+              mutate(
+                r_squared = r_squared + c(7, 0, 5, 10) / 100
+              ), aes(label = model_label, color = model), hjust = 1.2, vjust = 1, show.legend = FALSE) +
+  coord_flip() +
+  scale_x_continuous("Relative stand height", expand = c(0, 1/100)) +
+  scale_y_continuous(latex2exp::TeX("$R^2$"), limits = c(0, 0.48), expand = c(0, 0)) +
+  scale_color_manual("Model", values = pal_4)
+prsq
+
+save_figures("figure/fig-r-squared", prsq, width = 234 / 2, height = 234)
+```
+

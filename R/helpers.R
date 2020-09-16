@@ -3,6 +3,7 @@ light_grey <- "grey85"
 dark_grey <- "grey75"
 pal_cc <- RColorBrewer::brewer.pal(9, "YlOrRd")[-1]
 pal_age <- RColorBrewer::brewer.pal(9, "BuPu")[-(1:2)]
+pal_4 <- RColorBrewer::brewer.pal(4, "Set2") %>% purrr::set_names(c("dominant_species", "crown_closure", "age_class", "full"))
 
 # plot =========================================================================
 theme_pub <- function(base_size = 14, base_family = "", ...){
