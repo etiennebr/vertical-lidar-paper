@@ -3,18 +3,24 @@ title: "Species, crown closure, and age as determinants of the vertical distribu
 author: "Etienne Racine^1,\\*^, Nicholas C. Coops^2^, Jean Bégin^1^, Mari Myllymäki^3^"
 date: "^1^:Département des sciences du bois et de la forêt, 2405 rue de la Terrasse, Université Laval, Québec, QC G1V 0A6, Canada; ^2^:Department of Forest Resources Management, 2424 Main Mall, University of British Columbia, Vancouver, BC V6T 1Z4, Canada; ^3^:Natural Resources Institute Finland (Luke), Latokartanonkaari 9, FI-00790 Helsinki, Finland"
 output:
-  bookdown::pdf_document2: 
-    latex_engine: xelatex
-  bookdown::word_document2:
-    reference_docx: "templates/StylesTemplate.docx"
-    keep_md: true
   bookdown::html_document2:
     df_print: paged
-    toc: true
     number_sections: false
     section_divs: false
     keep_md: true
     numbering: false
+  bookdown::pdf_document2: 
+    latex_engine: xelatex
+    keep_tex: true
+    keep_md: true
+  bookdown::word_document2:
+    reference_docx: "templates/StylesTemplate.docx"
+    keep_md: true
+    fig_width: 7
+    fig_height: 7
+    fig_caption: true
+    device: png
+    number_sections: false
 csl: "templates/trees.csl"
 bibliography: "`r rbbt::bbt_write_bib('biblio.json', overwrite = TRUE)`"
 link-citations: yes
@@ -25,6 +31,13 @@ always_allow_html: true
 library(knitr)
 library(kableExtra)
 
+is_docx_output <- function(x) {
+  isTRUE(knitr::opts_knit$get('rmarkdown.pandoc.to') == "docx")
+}
+
+include <- function(fig, path = "figure", device = ifelse(is_docx_output(), "png", "svg")) {
+  knitr::include_graphics(file.path(path, paste0(fig, ".", device)))
+}
 # Source for the figures
 # Make sure this is run before: `knitr::knit(here::here("vignettes/contrasts.Rmd"))`
 ```
@@ -302,7 +315,7 @@ fig_loc_short_caption <- "Location of Matane Wildlife Reserve and selected stand
 #   }
 #   merge_pngs(c("pictures/rfm.png", "pictures/location_2.png"))
 # }
-knitr::include_graphics("pictures/fig-location.png")
+include("fig-location", "pictures", dev = "png")
 ```
 
 Data
@@ -576,7 +589,7 @@ tests of significance for species."
 
 
 ```{r fig-sp, fig.cap=fig_sp_caption, fig.scap=fig_sp_short_caption, echo = FALSE}
-knitr::include_graphics("../figure/fig2-sp-combined.svg")
+include("fig-sp-combined")
 ```
 
 An increase in crown closure was associated with a decrease in the density of
@@ -601,7 +614,7 @@ fig_cc_short_caption <- "Coefficients of vertical distribution of LiDAR returns 
 
 
 ```{r fig-cc, fig.cap=fig_cc_caption, fig.scap=fig_cc_short_caption, echo = FALSE}
-knitr::include_graphics("../figure/fig3-glm-cc.svg")
+include("fig-glm-cc")
 ```
 
 ```{r include = FALSE}
@@ -616,7 +629,7 @@ as a function of crown closure and species."
 
 
 ```{r fig-cc2, fig.cap=fig_cc2_caption, fig.scap=fig_cc2_short_caption, echo = FALSE}
-knitr::include_graphics("../figure/fig4-cc.svg")
+include("fig-cc")
 ```
 
 The effect of increasing age gradually shifted the distribution higher
@@ -658,7 +671,7 @@ fig_age_short_caption <- "Coefficients from the nonparametric graphical test of 
 
 
 ```{r fig-age, fig.cap=fig_age_caption, fig.scap=fig_age_short_caption, echo = FALSE}
-knitr::include_graphics("../figure/fig5-age.svg")
+include("fig-age")
 ```
 
 ```{r include = FALSE}
@@ -672,7 +685,7 @@ as a function of age groups and species."
 
 
 ```{r fig-age2, fig.cap=fig_age2_caption, fig.scap=fig_age2_short_caption, echo = FALSE}
-knitr::include_graphics("../figure/fig6-age2.svg")
+include("fig-age2")
 ```
 
 The coefficient of determination of the models varied across stand height (Figure 
@@ -690,16 +703,16 @@ displayed a difference of more than 0.10 with the full model R² at 18--38% and
 
 ```{r include = FALSE}
 fig_rsq_caption <- 
-"$R²(h)$ of each model. Each label indicates the minimal model, which exludes the 
+"Comparison of $R²(h)$. The minimal model exludes the 
 variable of interest. For examples, the Species model explicitly excludes the 
 $Species$ variable (Eq. \\@ref(eq:species)). The full model 
 (Eq. \\@ref(eq:full)) contains all variables."
-fig_rsq_short_caption <- "$R²(h)$ of each model"
+fig_rsq_short_caption <- "Comparison of $R²(h)$"
 ```
 
 
 ```{r fig-rsq, fig.cap=fig_rsq_caption, fig.scap=fig_rsq_short_caption, echo = FALSE}
-knitr::include_graphics("figure/fig-r-squared.svg")
+include("fig-r-squared")
 ```
 
 
