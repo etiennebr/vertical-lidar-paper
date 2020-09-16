@@ -19,3 +19,6 @@ Imports:
     readr,
     tidyr,
     ggplotify
+    magrittr,
+    purrr
+RoxygenNote: 7.1.0

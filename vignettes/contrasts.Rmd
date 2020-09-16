@@ -32,10 +32,13 @@ library(purrr)
 op <- options(contrasts = c("contr.sum", "contr.poly"))
 
 ggplot2::theme_set(theme_pub())
+save_figures <- function(path, fig, width, height, units = "mm", dpi = "retina", devices = c("pdf", "svg", "png")) {
+  lapply(devices, function(dev) ggsave(glue::glue("{path}.{dev}"), fig, device = dev, dpi = dpi, width = width, height = height, units = units))
+  invisible(fig)
+}
 alpha <- 0.05 / 3  # (Bonferroni correction)
 nperm <- 3000-1  # number of permutations
 m <- 40-1  # number of discrete points per functions
-device <- "pdf"
 plot_use_trans <- FALSE  # use transformed data for plots
 
 # test variance equality
@@ -131,8 +134,8 @@ the curve. Given our unbalanced data, with missing combinations of predictors,
 we could not apply the transformation at once. However, the remaining areas of
 heteroscedasticity did not seem to affect the final results of simulated data,
 especially with datasets with the same number of observations. The test of
-heteroscedasticity ($Z_{ij}(r) = T_{ij}(r) - \bar{T}_j(r)$) appeared to be more
-conservative for larger datasets (i.e. 5000 observations), than with smaller
+heteroscedasticity ($Z_{ij}(r) = T_{ij}(r) - \bar{T}_j(r)$) appeared to be overly 
+powerful for larger datasets (i.e. 5000 observations), than with smaller
 datasets (e.g. 200 observations). For example, the test would not indicate
 heterogenuous variance on a dataset downsampled from a large dataset in which 
 the test found heteroscedasticity.
@@ -195,7 +198,7 @@ Create a transformed set of data with both transformed and untransformed data.
 trans_ss <- cset_trans[["funcs"]] %>% 
   t() %>%
   as_tibble() %>%
-  set_names(~paste0("trans_", .x))
+  purrr::set_names(~paste0("trans_", .x))
 
 wave_long <- wave %>%
   bind_cols(trans_ss) %>%
@@ -249,8 +252,7 @@ psp <- wave_long %>%
 pcsp <- my_plot_contrasts(res_flm_sp, m, full = TRUE, diag = FALSE) +
   scale_y_continuous(latex2exp::TeX("$\\beta_{m}-\\beta_{n}$")) 
   
-ggsave("figure/fig2-sp-combined.pdf", pcsp, device = "pdf", dpi = "retina", width = 234, height = 234, units = "mm")
-ggsave("figure/fig2-sp-combined.svg", pcsp, device = "svg", dpi = "retina", width = 234, height = 234, units = "mm")
+save_figures("figure/fig-sp-combined", pcsp, width = 234, height = 234)
 ```
 
 ## Crown closure
@@ -263,8 +265,7 @@ indicate the number of observations (stands).
 label_cc <- function(d) paste0(d, "%")
 pc_cc <- my_plot_continuous(res_flm_cc, m, main = "my main") + scale_y_continuous(latex2exp::TeX("$\\beta_{cc}$"))
 
-ggsave("figure/fig3-glm-cc.pdf", pc_cc, device = "pdf", dpi = "retina", width = 234 / 2, height = 234 / 2, units = "mm")
-ggsave("figure/fig3-glm-cc.svg", pc_cc, device = "svg", dpi = "retina", width = 234 / 2, height = 234 / 2, units = "mm")
+save_figures("figure/fig-glm-cc", pc_cc, width = 234 / 2, height = 234 / 2)
 ```
 
 Figure 4. `r ifelse(plot_use_trans, "Transformed v", "V")`ertical distribution 
@@ -296,8 +297,7 @@ pcc <- wave_long %>%
   )
 pcc
 
-ggsave("figure/fig4-cc.pdf", pcc, device = "pdf", dpi = "retina", width = 234, height = 234, units = "mm")
-ggsave("figure/fig4-cc.svg", pcc, device = "svg", dpi = "retina", width = 234, height = 234, units = "mm")
+save_figures("figure/fig-cc", pcc, width = 234, height = 234)
 ```
 
 ## Age
@@ -315,8 +315,7 @@ page <- my_plot_continuous(res_flm_age, m) +
   scale_y_continuous(latex2exp::TeX("$\\beta_{age}$"), labels = c(-5, 0, 5, 10) / 100, breaks = c(-5, 0, 5, 10) / 100)
 page
 
-ggsave("figure/fig5-age.pdf", page, device = "pdf", dpi = "retina", width = 234, height = 234 / 2, units = "mm")
-ggsave("figure/fig5-age.svg", page, device = "svg", dpi = "retina", width = 234, height = 234 / 2, units = "mm")
+save_figures("figure/fig-age", page, width = 234, height = 234 / 2)
 ```
 
 Figure 6. `r ifelse(plot_use_trans, "Transformed v", "V")`ertical distribution 
@@ -348,8 +347,7 @@ page2 <- wave_long %>%
   )
 page2
 
-ggsave("figure/fig6-age2.pdf", page2, device = "pdf", dpi = "retina", width = 234, height = 234, units = "mm")
-ggsave("figure/fig6-age2.svg", page2, device = "svg", dpi = "retina", width = 234, height = 234, units = "mm")
+save_figures("figure/fig-age2", page2, width = 234, height = 234)
 ```
 
 
