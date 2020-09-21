@@ -255,29 +255,55 @@ function), which are used to predict stand attributes [@magnussen_etal99;
 point density as low as 1 pt/m², which reduces cost and processing compared to
 tree-crown approaches [@white_etal13].
 
+The ability to use low-density LiDAR surveys for species classification would
+provide an extensive species mapping answering the need of forest management
+because the very-high point density LiDAR surveys needed by the tree crown
+approaches are generally not available. For that reason, we investigate the link
+between species and the vertical distribution of LiDAR returns from
+lower-density surveys by using a novel method called the graphical test of
+significance [@myllymaki_mrkvicka19; @mrkvicka_etal19]. The test allows for a
+visual understanding of functional data---such as a the vertical distribution of
+LiDAR returns. It provides a framework to perform non-parametric tests to
+compare a continuous function (i.e. the vertical distribution of LiDAR returns)
+against categorical and continuous variables.
+ 
 ## Forest vertical structure
 
-In a study of 14 areas in New Hampshire, @aber79 observed that the vertical
-concentration of the foliage evolved across stand age and the end point of the 
-forest succession seemed to reach an equilibrium where the foliage was relatively 
-evenly distributed within the canopy.
+The information contained in the vertical distribution of LiDAR returns is
+closely related to the distribution of the vertical distribution of the
+vegetation, which has been linked to leaf-area index, and other forest
+attributes. However, when provided, the interpretation of the distribution of
+the LiDAR return is often limited and hardly generalizes to other studies
+[fassnacht_etal16]. For that reason, methods that have the potential to
+generalize and eventually allow to build a theoretical framework are much
+needed.
 
 Some studies explicitly compared the vertical distribution of LiDAR returns
-between species. For example, @orka_etal09 found that first and last returns
-were more dispersed in Birch (*Betula* spp.) than in Norway spruce (*Picea
-abies* (L.) Karst.), which also had a vertical distribution of first returns
-skewed toward the superior canopy, and that increased stand height modified the
-overall return distribution. These observations can be useful to characterize 
-the habitat and understand the forest structure dynamics.
+between species. For example, we noted that @orka_etal09 found that first and
+last returns were more dispersed in Birch (*Betula* spp.) than in Norway spruce
+(*Picea abies* (L.) Karst.), which also had a vertical distribution of first
+returns skewed toward the superior canopy, and that increased stand height
+modified the overall return distribution. 
+
+@aber79 studied the evolution of foliage distribution in a study of 14 areas in New
+Hampshire. He observed that the vertical concentration of the foliage evolved
+across stand age, and the end point of the forest succession seemed to reach an
+equilibrium where the foliage was relatively evenly distributed within the
+canopy. While these observations of foliage distribution do not apply directly
+to the vertical distribution of LiDAR returns, they are likely to influence the
+LiDAR returns.
 
 ## Objectives
 
-In this paper, we combined ideas from the tree-crown approach to species
+In this paper, we combined principles from the tree-crown approach to species
 identification, the vertical biomass distribution, and the area-based method to
 compare the vertical distribution of LiDAR returns of different species, crown
 closure, and ages, which are known to affect the stand structure. We speculate
 that intraspecific variations of LiDAR distribution patterns are smaller than
-interspecific variations after accounting for stand crown closure and age.
+interspecific variations after accounting for stand crown closure and age. Our
+approach relies on the introduction of the non-parametric graphical test of significance, 
+which can provide an intuitive understanding of the vertical distribution of 
+LiDAR returns.
 
 # Method
 
