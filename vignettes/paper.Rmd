@@ -140,7 +140,7 @@ Abstract
 
 Tree species have different overall shapes, structures, and forest stand 
 dynamics. Light detection
-and ranging (LiDAR) can measure the position of
+and ranging (LiDAR) can measure the three dimensional position of
 reflective material by sending laser pulses through the canopy. We examine the 
 influence of three forest stand attributes:
 species, crown closure, and age on the vertical distribution of aerial
@@ -148,22 +148,21 @@ LiDAR returns of forested stands. We studied over five thousand regular,
 even-aged stands in Quebec (Canada) with five dominant species: balsam
 fir (*Abies balsamea* (L.) Mill.), paper birch (*Betula papyrifera*
 Marsh), black spruce (*Picea mariana* (Mill.) BSP), white spruce (*Picea glauca* 
-Moench) and aspen (*Populus tremuloides* Michx.). We used a
-novel nonparametric graphical test of significance to identify the effect of 
-the variables on the distributions. 
+Moench) and aspen (*Populus tremuloides* Michx.). We modeled vertical distribution of LiDAR 
+returns against the three attributes using a novel nonparametric graphical test of significance.
 Results indicate that aspen stands had the
 most uniform vertical distribution of LiDAR returns; balsam fir and
 white birch distributions were similar and centered around 50% of the
 stand height; black spruce and white spruce vertical distributions were
 skewed below 30% of stand height ($p$<0.001). An increase in crown closure
-concentrated the vertical distribution of returns c. 50% height. Age
+concentrated the vertical distribution of returns around 50% height. Increasing age
 gradually shifted the distribution higher in the stand until 50–70
-years, plateaued and slowly declined at 90–120 years. The full model maximal R²
-was 0.47 c. 10% of stand height. Results suggest that the stands
+years, where it then plateaued and slowly declined at 90–120 years. The full model maximal R²
+was 0.47 around 10% of stand height. Results suggest that the stands
 vertical distributions of LiDAR returns depends on the three variables studied.
 This improved understanding can be used for stand-level species classification
 with LiDAR, and to improve our understanding of the evolution of the forest
-structure.
+structure over time.
 
 # Introduction
 
@@ -182,7 +181,7 @@ strategies vary by species resulting in archetypal tree morphologies that will
 have predictable, although complex, reactions to growth conditions. This results
 in the distinct species-specific tree shapes.
 
-Traditionally, characterization of stand vertical distributoin of aboveground 
+Traditionally, characterization of stand vertical distribution of aboveground 
 biomass required either on-site estimation of biomass per vertical layer
 often using destructive measurements, scafolding, or tree climbing,
 that are time-consuming and limited to small areas [@macarthur_horn69;
@@ -237,12 +236,13 @@ high number of LiDAR returns and very accurate registration of ground
 observations [@orka_etal09; @muss_etal11]. Furthermore, a small observation area 
 such as an individual tree crown loses the shape of the vertical distribution of
 LiDAR returns because the number of LiDAR returns decreases and the distribution
-increasingly becomes a collection of random deviates. For that reason, accuracy
-in species identification is improved by increasing point density up to 10 pt/m²
-[@fassnacht_etal16].
+increasingly becomes a collection of random deviates. For that reason, species 
+identification accuracy is improved by having a very high point density in 
+excess of 10 pt/m² [@fassnacht_etal16] making it difficult to apply and validate 
+these approaches over large areas, and on a less dense LiDAR datasets.
 
-Aerial LiDAR is also used in area-based approaches (see e.g. @white_etal13 for
-an exhaustive description). This approach generally uses a stand or a pixel on
+An alternative to individual tree-crown extraction approaches is the application of
+area-based approaches (see e.g. @white_etal13). This approach generally uses a pixel or a stand on
 which LiDAR returns are aggregated and from which predictors are derived and
 then used in a model to predict forest attributes. LiDAR metrics often derive
 predictors from the vertical distribution of LiDAR returns: the number or LiDAR
@@ -327,7 +327,7 @@ of their decennial forest mapping program. LiDAR survey had a nominal
 point density of 3 points/m² with an Optech ALTM 2050 sensor recording
 first and last returns at 40kHz, flown at 1200 m above ground, with a
 flight overlap of 30% and maximal scan angle of 15° from nadir with a
-footprint diameter of c. 25 cm.
+footprint diameter of 25 cm.
 
 Airborne photography was acquired with a Leica ADS–40 pushbroom camera
 at 0.2 and 0.5 m resolution for panchromatic and near-infrared, green,
@@ -595,13 +595,13 @@ include("fig-sp-combined")
 An increase in crown closure was associated with a decrease in the density of
 LiDAR returns below 33% of stand height, while the density of LiDAR returns
 above 38% increased (Figure \@ref(fig:fig-cc)). The largest augmentation was
-concentrated around the middle height (c. 50%), while the inferior area (around
+concentrated around the middle height (50%), while the inferior area (around
 3% of height) had the largest reduction effect. Figure \@ref(fig:fig-cc2)
 displays the effect of crown closure on each species vertical
 distribution of LiDAR returns. The increase in crown closure concentrated the
 returns around the middle height, except for aspen which peak was located
-superior (c. 80% of stand height) and white spruce which peak was inferior (c.
-20%). Although black spruce peak was centered c. 50% stand height, the observed
+superior (around 80% of stand height) and white spruce which peak was inferior (around
+20%). Although black spruce peak was centered at 50% stand height, the observed
 variability was skewed toward the inferior stand height.
 
 ```{r include = FALSE}
@@ -703,7 +703,7 @@ displayed a difference of more than 0.10 with the full model R² at 18--38% and
 
 ```{r include = FALSE}
 fig_rsq_caption <- 
-"Comparison of $R²(h)$. The minimal model exludes the 
+"Comparison of $R²(h)$. The minimal model excludes the 
 variable of interest. For examples, the Species model explicitly excludes the 
 $Species$ variable (Eq. \\@ref(eq:species)). The full model 
 (Eq. \\@ref(eq:full)) contains all variables."
@@ -866,7 +866,7 @@ spruce. Aspen was the most different species with a more uniform
 distribution of LiDAR returns and a peak in a superior part of the stand
 than the other species. Balsam fir–paper birch displayed a peak centered
 around 50% of stand height, while the white–black spruces had their
-distributions skewed below c. 30% of stand height. Increase in crown 
+distributions skewed below 30% of stand height. Increase in crown 
 closure concentrated the distributions around 50% by deflating the 
 distribution below 33%, while age affected a larger part 
 
