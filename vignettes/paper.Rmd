@@ -521,8 +521,7 @@ was simply $\beta_{cc}(h)$ for all $h$. For age, the coefficients $\beta_{age}(h
 of all the age groups were joint to a one test statistic. To compare the
 different species, the test statistic consisted of all differences
 $\beta_{sp, m}(h)-\beta_{sp, n}(h)$ for species $m$ and $n$ with $1≤m<n≤5$. The
-coefficients $\beta_{sp}m(h)$ of categorical variables were constrained to sum to
-zero.
+coefficients of categorical variables were constrained to sum to zero.
 
 The test relies on two procedures: 1) Freedman-Lane algorithm to permute the
 residuals of the null model and create the reference distribution of the
@@ -682,7 +681,7 @@ between 70 and 90 years. Overall, areas of higher variability for age
 groups were located around 5, 20, and 50% of stand height. Figure
 \@ref(fig:fig-age2) displays the effect of age on each species vertical
 distribution of LiDAR returns. The young white and black spruces stand displayed
-a strong assymetry toward the inferior part of the stand that disappeared in
+a strong asymmetry toward the inferior part of the stand that disappeared in
 older stands.
 
 ```{r include = FALSE}
@@ -729,11 +728,10 @@ displayed a difference of more than 0.10 with the full model R² at 18--38% and
 
 ```{r include = FALSE}
 fig_rsq_caption <- 
-"Comparison of $R²(h)$. The minimal model excludes the 
-variable of interest. For examples, the Species model explicitly excludes the 
-$Species$ variable (Eq. \\@ref(eq:species)). The full model 
-(Eq. \\@ref(eq:full)) contains all variables."
-fig_rsq_short_caption <- "Comparison of $R²(h)$"
+"Comparison of $R²(h)$ of the full model (Eq. \\@ref(eq:full)) containing all 
+variables, and the three reduced models (Eq. \\@ref(eq:species)--\\@ref(eq:age))
+where one variable has been left out (either Species, Crown Closure, or Age)."
+fig_rsq_short_caption <- "Comparison of $R²(h)$."
 ```
 
 
