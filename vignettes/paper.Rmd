@@ -256,28 +256,28 @@ point density as low as 1 pt/m², which reduces cost and processing compared to
 tree-crown approaches [@white_etal13].
 
 Lowering the minimum LiDAR point density threshold for species classification
-would increase the area that could be mapped by increasing the number of
-available LiDAR surveys. The species information could then be used for
+would increase the potential area where the method could be used while lowering
+the costs of acquisition. The species information could then be used for
 extensive forest management, or landscape-scale studies. One avenue to
 area-based species mapping is to increase our understanding of the interaction
 between LiDAR and stand-level vegetation. For that reason, we investigate the
 link between species and the vertical distribution of LiDAR returns from
 lower-density surveys by using a novel method called the graphical test of
 significance [@myllymaki_mrkvicka19;@mrkvicka_etal19]. The test allows for a
-visual understanding of functional data---such as a the vertical distribution of
+visual understanding of functional data---such as the vertical distribution of
 LiDAR returns. It provides a framework to perform non-parametric tests to
 compare a continuous function (i.e. the vertical distribution of LiDAR returns)
 against categorical and continuous variables. To our knowledge, it is the first
-time the method is used in ecology or remote sensing, although it has been
-recently been used in econometric [@mrkvicka_etal20].
- 
+time the method is used in ecology or remote sensing, although it was recently
+used in econometric [@mrkvicka_etal20].
+
 ## Forest vertical structure
 
 The information contained in the vertical distribution of LiDAR returns is
 closely related to the distribution of the vegetation. Crown closure (the
 proportion of area covered by vegetation) generally allows for an increased
 probability of reaching lower vegetation [@hilker_etal10]. Age influences the
-vertical position of the crown within the stand [@coops_etal09, @racine_etal14].
+vertical position of the crown within the stand [@coops_etal09; @racine_etal14].
 While using direct foliage measurements, @aber79 observed that the vertical
 concentration of the foliage evolved across stand age, and that the end point of the
 forest succession seemed to reach an equilibrium where the foliage was
