@@ -289,7 +289,7 @@ canopy.
 
 Species also have different structures that influence the distribution of LiDAR
 returns, but most studies interpretations are limited and hard to generalize to
-across ecosystems or LiDAR parameters [@fassnacht_etal16]. Some studies
+across ecosystems or LiDAR surveys [@fassnacht_etal16]. Some studies
 explicitly compared the vertical distribution of LiDAR returns between species.
 For example, @orka_etal09 found that the first and last returns were more
 dispersed in Birch (*Betula* spp.) stands than in Norway spruce (*Picea abies*
@@ -371,7 +371,7 @@ many species by integrating information on landscape position, crown
 shapes, texture, and color. Every photo was segmented into homogenous
 stands using species, crown closure, height, and geomorphic criteria.
 Each stand was classified regarding species composition, crown closure,
-age, height, and other ecological parameters using a combination of
+age, height, and other ecological variables using a combination of
 photography, ground-control points and historical data as a reference.
 Stand age is estimated using ground control plots where trees were
 cored, this information is then combined with available archives, height,
@@ -878,7 +878,7 @@ Additional evidence is needed to establish if the relation between
 vertical density of LiDAR returns, and species, crown closure, and age
 are circumstantial to our study area, or if they hold in other areas,
 with different species, and LiDAR survey parameters. Other variables, such as
-LiDAR parameters and abiotic factors, could be included to improve the model.
+LiDAR scan angle and abiotic factors, could be included to improve the model.
 
 Our results indicate that LiDAR vertical distribution can be analyzed using 
 a graphical test of significance. These results can be used extensively to 
