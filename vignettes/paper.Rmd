@@ -256,20 +256,23 @@ point density as low as 1 pt/m², which reduces cost and processing compared to
 tree-crown approaches [@white_etal13].
 
 Lowering the minimum LiDAR point density threshold for species classification
-would increase the potential area where the method could be applied while reducing
-the costs of acquisition. The species information could then be used for
+would increase the number of potential surveys where the method could be applied
+while reducing the costs of acquisition. The species information could then be used for
 extensive forest management, or landscape-scale studies. One avenue to
 area-based species mapping is to increase our understanding of the interaction
 between LiDAR and stand-level vegetation. The vertical distribution of LiDAR
 returns is complex to analyze without resorting to dimension reduction, a method
-that generally limits the interpretability of results. However, a novel method
-called the graphical test of significance [@myllymaki_mrkvicka19;@mrkvicka_etal19] 
-allows for a visual understanding of functional data---such as the vertical
-distribution of LiDAR returns. It provides a framework to perform non-parametric
-tests to compare a continuous function (i.e. the vertical distribution of LiDAR
-returns) against categorical and continuous variables. To our knowledge, it is
-the first time the method is used in ecology or remote sensing, although it was
-recently used in econometric [@mrkvicka_etal20].
+that generally limits the interpretability of results. We hypothesize that using
+functional general linear models (GLM) and a novel non-parametric graphical
+test of significance [@mrkvicka_etal19] would allow to link the forest
+attributes to the vertical distribution from low-density LiDAR surveys. The test
+provides a framework to compare a function (i.e. the vertical distribution of
+LiDAR returns) against categorical and continuous variables. It allows for a
+visual understanding of the effects of the variables on the functional data.
+To our knowledge, it is the first time the method is used in ecology or remote
+sensing, although similar graphical tests have been used in
+economical applications [@mrkvicka_etal20], and similar non-parametric tests 
+have been used in neuroimaging (Winkler et al., 2014).
 
 ## Forest vertical structure
 
