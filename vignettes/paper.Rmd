@@ -3,6 +3,14 @@ title: "Species, crown closure, and age as determinants of the vertical distribu
 author: "Etienne Racine^1,\\*^, Nicholas C. Coops^2^, Jean Bégin^1^, Mari Myllymäki^3^"
 date: "^1^:Département des sciences du bois et de la forêt, 2405 rue de la Terrasse, Université Laval, Québec, QC G1V 0A6, Canada; ^2^:Department of Forest Resources Management, 2424 Main Mall, University of British Columbia, Vancouver, BC V6T 1Z4, Canada; ^3^:Natural Resources Institute Finland (Luke), Latokartanonkaari 9, FI-00790 Helsinki, Finland"
 output:
+  bookdown::word_document2:
+    reference_docx: "templates/StylesTemplate.docx"
+    keep_md: true
+    fig_width: 7
+    fig_height: 7
+    fig_caption: true
+    device: png
+    number_sections: false
   bookdown::html_document2:
     df_print: paged
     number_sections: false
@@ -13,14 +21,6 @@ output:
     latex_engine: xelatex
     keep_tex: true
     keep_md: true
-  bookdown::word_document2:
-    reference_docx: "templates/StylesTemplate.docx"
-    keep_md: true
-    fig_width: 7
-    fig_height: 7
-    fig_caption: true
-    device: png
-    number_sections: false
 csl: "templates/trees.csl"
 bibliography: "`r rbbt::bbt_write_bib('biblio.json', overwrite = TRUE)`"
 link-citations: yes
@@ -256,38 +256,39 @@ point density as low as 1 pt/m², which reduces cost and processing compared to
 tree-crown approaches [@white_etal13].
 
 Lowering the minimum LiDAR point density threshold for species classification
-would increase the potential area where the method could be used while lowering
+would increase the potential area where the method could be applied while reducing
 the costs of acquisition. The species information could then be used for
 extensive forest management, or landscape-scale studies. One avenue to
 area-based species mapping is to increase our understanding of the interaction
-between LiDAR and stand-level vegetation. For that reason, we investigate the
-link between species and the vertical distribution of LiDAR returns from
-lower-density surveys by using a novel method called the graphical test of
-significance [@myllymaki_mrkvicka19;@mrkvicka_etal19]. The test allows for a
-visual understanding of functional data---such as the vertical distribution of
-LiDAR returns. It provides a framework to perform non-parametric tests to
-compare a continuous function (i.e. the vertical distribution of LiDAR returns)
-against categorical and continuous variables. To our knowledge, it is the first
-time the method is used in ecology or remote sensing, although it was recently
-used in econometric [@mrkvicka_etal20].
+between LiDAR and stand-level vegetation. The vertical distribution of LiDAR
+returns is complex to analyze without resorting to dimension reduction, a method
+that generally reduces the interpretability of results. However, a novel method
+called the graphical test of significance [@myllymaki_mrkvicka19;@mrkvicka_etal19] 
+allows for a visual understanding of functional data---such as the vertical
+distribution of LiDAR returns. It provides a framework to perform non-parametric
+tests to compare a continuous function (i.e. the vertical distribution of LiDAR
+returns) against categorical and continuous variables. To our knowledge, it is
+the first time the method is used in ecology or remote sensing, although it was
+recently used in econometric [@mrkvicka_etal20].
 
 ## Forest vertical structure
 
 The information contained in the vertical distribution of LiDAR returns is
 closely related to the distribution of the vegetation. Crown closure (the
 proportion of area covered by vegetation) generally allows for an increased
-probability of reaching lower vegetation [@hilker_etal10]. Age influences the
-vertical position of the crown within the stand [@coops_etal09; @racine_etal14].
-While using direct foliage measurements, @aber79 observed that the vertical
-concentration of the foliage evolved across stand age, and that the end point of the
-forest succession seemed to reach an equilibrium where the foliage was
-relatively evenly distributed within the canopy.
+probability for the LiDAR returns to reach lower vegetation [@hilker_etal10].
+In turn, age influences the vertical position of the crown within the stand
+[@coops_etal09; @racine_etal14]. While using direct foliage measurements,
+@aber79 observed that the vertical concentration of the foliage evolved across
+stand age, and that the end point of the forest succession seemed to reach an
+equilibrium where the foliage was relatively evenly distributed within the
+canopy.
 
-Species also have different structures, that influence the distribution of LiDAR 
+Species also have different structures that influence the distribution of LiDAR 
 returns, but most studies interpretations are limited and hardly generalize to
 other studies [fassnacht_etal16]. Some studies explicitly compared the vertical
 distribution of LiDAR returns between species. For example, @orka_etal09 found
-that the first and last returns were more dispersed in Birch (*Betula* spp.)
+that the first and last returns were more dispersed in Birch (*Betula* spp.) stands
 than in Norway spruce (*Picea abies* (L.) Karst.), which also had a vertical
 distribution of first returns skewed toward the superior canopy, and that
 increased stand height modified the overall return distribution.
@@ -786,7 +787,15 @@ rapid transformation in the 10 yr group, which gradually decelerated to
 stabilize in the 70 years group. The 90 and 120 years groups displayed
 the smallest magnitude of change. While it is well established that 
 absolute stand height varies predictably with age, the changes we observed here 
-are relative to the maximal height of the stand. 
+are relative to the maximal height of the stand. Age effect was akin to the 
+crown closure effect: while they increased, they were both associated to an 
+increased proportion of points in the superior part of the stand. The crown 
+closure variable however seemed to explain more of the distribution variations 
+in the lower stand (below 21%) and the middle stand (46--67%), while age 
+contribution to R² happened between 18--38%. Unlike @aber79 who observed a 
+a stable distribution of foliage at the end point of the forest succession, the
+vertical distribution of LiDAR returns of the 120 year class rather 
+displayed a marginal concentration below the middle height (33--38%).
 
 The most important differences between vertical LiDAR distributions occurred
 below 80% of height. The superior sections of the stand often displayed very
