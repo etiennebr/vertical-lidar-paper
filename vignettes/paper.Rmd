@@ -83,7 +83,7 @@ data analysis; Stand structure.
 Acknowledgments
 ================
 
-We thank Benoit St-Onge, Nicole K. S. Barker, Sebastien Renard,
+We thank Benoît St-Onge, Nicole K. S. Barker, Sébastien Renard,
 Christian Roy and Josh Nowak for comments on early versions of this
 manuscript, Anick Patry, Antoine Leboeuf and Marc-Olivier Lemonde from
 Ministère de la Forêt, de la Faune et des Parcs for providing data and
