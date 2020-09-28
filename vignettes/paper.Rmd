@@ -520,7 +520,8 @@ d_i(h) = \beta_0(h)+\beta_{sp}(h)\cdot Species_i + \beta_{cc}(h) \cdot CC_i +
 
 We used the coefficients of the variable of interest
 (the left-out $\beta$ in Equations \@ref(eq:species)--\@ref(eq:age)) for the 
-statistical test. For the continuous crown closure variable, the test statistic
+statistical test as suggested by @mrkvicka_etal19. 
+For the continuous crown closure variable, the test statistic
 was simply $\beta_{cc}(h)$ for all $h$. For age, the coefficients $\beta_{age}(h)$
 of all the age groups were joint to a one test statistic. To compare the
 different species, the test statistic consisted of all differences
@@ -538,8 +539,8 @@ for the nonparametric graphical test of significance [@myllymaki_mrkvicka19]. To
 account for the three models in equations \@ref(eq:species)--\@ref(eq:age), we
 used a Bonferroni adjusted significance level $\alpha = 0.05/3$, and
 consequently considered the 98% global envelopes. We checked the data for
-heterogeneity of variance [@winkler_etal14], and the homoscedasticity tests of
-@mrkvicka_etal20 indicated heterogeneity of variance for all variables.
+heterogeneity of variance [@winkler_etal14], and the model residuals
+indicated heterogeneity of variance for all variables.
 Following [@mrkvicka_etal20], we transformed the data by scaling groups ($j$)
 according to their variance dispersion. The initial $d_{i,j}$ function was
 transformed into $S_{i,j}$ function,
@@ -549,8 +550,9 @@ S_{i,j}(h) = \frac{d_{i,j}(h) - \bar{d_j}(r)}{\sqrt{Var(d_j(h))}} \cdot
   \sqrt{Var(d(h))} + \bar{d_j}(h)   (\#eq:variance)
 \end{equation}
 
-where the group sample mean $\bar{d_j}(h)$ and
-global variance $Var(d(h))$ are used to correct for unequal variance among groups.
+where the group sample mean $\bar{d_j}(h)$ is used to correct for unequal
+variance among groups. The group sample mean and overall variance $Var(d(h))$
+are used preserve the original scale of the mean and variability of the functions.
 
 Our experiments with simulated data showed that the application of the
 transformation for all groups at once (by combining all group levels)
@@ -559,13 +561,9 @@ sufficient observations in all categories, which was not the case of our
 data. We instead relied on the successive application of the transformation
 (Equation \@ref(eq:variance)) for each of the confounding variables. In this
 case, we found that the order in which the transformation is applied is
-important because it can reintroduce significant heterogeneity of variance. We
+important because it can reintroduce heterogeneity of variance. We
 settled on the successive transformation by crown closure, age, and species
-which provided the best results and reduced heterogeneity, but did not
-completely remove it according to the test from @mrkvicka_etal20. Our
-simulations showed that heterogeneity could remain significant after successive
-transformations, especially for a large dataset of 5000 observations, which is a
-common problem of null hypothesis testing on large datasets. We thus looked at
+which provided the best results and reduced heterogeneity. We verified
 the importance of the correlation by running Breusch-Pagan [@breusch_pagan79] test of
 heteroscedasticity using the squared residuals $(d_i(h) - \hat{d_i}(h))²$ on
 the left-hand side of the reduced equations \@ref(eq:species)--\@ref(eq:age).
