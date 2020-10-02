@@ -128,21 +128,17 @@ read and approved this version to be published.
 
 Key Message
 ===========
-
-Using LiDAR remote sensing to assess even-aged stands vertical distributions, we
-find that species, age, and crown closure drive up to 47% of the distribution.
-Increases in crown closure concentrate LiDAR returns around 50% of stand height,
-while age raises the vertical distributions until a plateau and ultimate decline
-at maturity. While these patterns are consistent across species, they are
-statistically distinct.
+<!-- Should be no more than 30 words -->
+We assess even-aged stands vertical distributions of LiDAR returns and find
+that species, age, and crown closure each have a distinct pattern that explain
+up to 47% of the variations.
 
 Abstract
 ========
-
-Tree species have different overall shapes, structures, and forest stand 
-dynamics. Light detection
+<!-- Please provide an abstract of 150 to 250 words -->
+Tree species have different shapes and forest stand dynamics. Light detection
 and ranging (LiDAR) can measure the three dimensional position of
-reflective material by sending laser pulses through the canopy. We examine the 
+reflective material by sending laser pulses through the canopy. We examined the 
 influence of three forest stand attributes:
 species, crown closure, and age on the vertical distribution of aerial
 LiDAR returns of forested stands. We studied over five thousand regular,
@@ -150,20 +146,18 @@ even-aged stands in Quebec (Canada) with five dominant species: balsam
 fir (*Abies balsamea* (L.) Mill.), paper birch (*Betula papyrifera*
 Marsh), black spruce (*Picea mariana* (Mill.) BSP), white spruce (*Picea glauca* 
 Moench) and aspen (*Populus tremuloides* Michx.). We modeled vertical distribution of LiDAR 
-returns against the three attributes using a novel nonparametric graphical test of significance.
-Results indicate that aspen stands had the
-most uniform vertical distribution of LiDAR returns; balsam fir and
+returns against the three attributes using a functional glm and a novel nonparametric graphical test of significance.
+Results indicate that aspen stands had the most uniform vertical distribution of LiDAR returns; balsam fir and
 white birch distributions were similar and centered around 50% of the
-stand height; black spruce and white spruce vertical distributions were
+stand height; black spruce and white spruce distributions were
 skewed below 30% of stand height ($p$<0.001). An increase in crown closure
-concentrated the vertical distribution of returns around 50% height. Increasing age
-gradually shifted the distribution higher in the stand until 50–70
-years, where it then plateaued and slowly declined at 90–120 years. The full model maximal R²
+concentrated the distributions around 50% height. Increasing age
+gradually shifted the distributions higher in the stand until 50–70
+years, where it plateaued and slowly declined at 90–120 years. The full model maximal R²
 was 0.47 around 10% of stand height. Results suggest that the stands
-vertical distributions of LiDAR returns depends on the three variables studied.
-This improved understanding can be used for stand-level species classification
-with LiDAR, and to improve our understanding of the evolution of the forest
-structure over changing conditions.
+vertical distributions of LiDAR returns depend on the three variables studied.
+This understanding can be used for stand-level species classification and to study 
+the evolution of the forest structure over changing conditions.
 
 # Introduction
 
