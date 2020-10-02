@@ -86,7 +86,8 @@ Acknowledgments
 We thank Benoît St-Onge, Nicole K. S. Barker, Sébastien Renard,
 Christian Roy and Josh Nowak for comments on early versions of this
 manuscript; Tomáš Mrkvička for helpful discussions on the transformations of 
-heteroscedastic data; Anick Patry, Antoine Leboeuf, and Marc-Olivier Lemonde from
+heteroscedastic data; Anick Patry, Antoine Leboeuf, Marc-Olivier Lemonde, 
+and Jean-François Bourdon from
 Ministère des Forêts, de la Faune et des Parcs for providing data and
 support.
 
