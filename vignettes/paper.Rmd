@@ -292,15 +292,15 @@ return distribution.
 
 In this study we verify if we can discriminate distinct patterns
 between species in the vertical distribution of LiDAR returns from a low-density
-area-based survey. We hypothesize that the use of a functional glm combined to a
+area-based survey. We hypothesize that the use of a functional GLM combined to a
 non-parametric graphical 
-test of significance makes it possible to verify whether the inter-specific
-variation, in the vertical distribution patterns, is greater than the
-intra-specific variation after accounting for stand crown closure and age
+test of significance makes it possible to verify inter-specific
+differences in the vertical distribution patterns
+after accounting for stand crown closure and age
 effects. To our knowledge, it is the first time this method is used in ecology
 or remote sensing, although similar graphical tests have been applied to 
-economy (Mrkvička et al. 2020), and similar non-parametric tests have been
-used in neuroimaging (Winkler et al., 2014).
+economical data (Mrkvička et al. 2020), and similar non-parametric GLMs are
+commonly used in neuroimaging (Winkler et al., 2014).
 
 # Method
 
@@ -487,13 +487,16 @@ $\beta(h)$ is the parameter vector related to each variable, $CC$ is crown
 closure, and $\varepsilon(h)$ is the error term with mean zero and finite variance $\sigma^2$. 
 Species as well as ​age---given that the last class was open---were regarded as
 categorical variables and thus encoded with dummy variables in $Species_i$ and
-$Age_i$, while $CC_i$ was a continuous variable.
+$Age_i$, while $CC_i$ was regarded as a continuous variable.
 
 We studied the effect of each variable after accounting for the other
 confounding variables (also called the nuisance factors by Freedman and Lane
--@freedman_lane83). We tested the null hypotheses for each of the three
-variables for all $h$, and for all components $i$ associated with the levels of
-the variable. The corresponding three null models were obtained by removing the
+-@freedman_lane83). We tested the three null hypotheses $\beta_{sp, m}(h)=0$ for all $m$ and $h$, 
+$\beta_{cc}(h)=0$ for all $h$, and $\beta_{age, l}(h)=0$
+for all $l$ and $h$ for the three variables, respectively. 
+For the discrete factors, $m$ and $l$ are equal to the number of groups of the 
+discrete factor and the coefficients are constrained to sum to zero.
+The corresponding three null models were obtained by removing the
 studied variable from the full model (Equation \@ref(eq:full)),
 
 \begin{equation}
@@ -513,24 +516,28 @@ d_i(h) = \beta_0(h)+\beta_{sp}(h)\cdot Species_i + \beta_{cc}(h) \cdot CC_i +
 
 We used the coefficients of the variable of interest
 (the left-out $\beta$ in Equations \@ref(eq:species)--\@ref(eq:age)) for the 
-statistical test as suggested by @mrkvicka_etal19. 
-For the continuous crown closure variable, the test statistic
-was simply $\beta_{cc}(h)$ for all $h$. For age, the coefficients $\beta_{age}(h)$
-of all the age groups were joint to a one test statistic. To compare the
-different species, the test statistic consisted of all differences
-$\beta_{sp, m}(h)-\beta_{sp, n}(h)$ for species $m$ and $n$ with $1≤m<n≤5$. The
-coefficients of categorical variables were constrained to sum to zero.
+statistical test as suggested by @mrkvicka_etal19: 
+for the continuous crown closure variable, the test statistic
+was the vector $\beta_{cc}(h)$ for all $h$; for age, the test was based on the 
+values of the effect $\beta_{age,l}(h)$ of all the age groups $l$ for all $h$. 
+To inspect species differences,
+another alternative was used: the test was based on all differences
+$\beta_{sp, m}(h)-\beta_{sp, n}(h)$ for species $m$ and $n$ with $1≤m<n≤5$. 
 
 The test relies on two procedures: 1) Freedman-Lane algorithm to permute the
 residuals of the null model and create the reference distribution of the
 coefficients under the null hypothesis, and 2) the *global extreme rank length
-envelope test* to build a null global envelope [@myllymaki_etal17]. The null
+envelope test* to build a null global envelope for the above mentioned test 
+statistics and correct for the multiple tests conducted along $h$
+[@myllymaki_etal17]. The null
 hypothesis was rejected if the test vector, calculated from the vertical
 distribution of LiDAR returns, leaved the envelope at any point. We used 2999
 random permutations to estimate the $p$-value and to build the global envelopes
 for the nonparametric graphical test of significance [@myllymaki_mrkvicka19]. To
-account for the three models in equations \@ref(eq:species)--\@ref(eq:age), we
-used a Bonferroni adjusted significance level $\alpha = 0.05/3$, and
+account for the tests of all three variables, we 
+used a Bonferroni adjusted significance level $\alpha = 0.05/3$ in addition
+to the inherent correction applied within the *global extreme rank length
+envelope test* to account for multiple $h$, and
 consequently considered the 98% global envelopes. We checked the data for
 heterogeneity of variance [@winkler_etal14], and the model residuals
 indicated heterogeneity of variance for all variables.
@@ -586,25 +593,28 @@ than balsam fir between 38–62% of stand height (40–57% for paper birch), whi
 it had more below 28% of stand height (30% for paper birch). Aspen’s vertical
 distribution of LiDAR returns had a significantly distinctive shape when
 compared to every other species: it did not display a prominent peak,
-which made the distribution more uniform than other species. Except for
+which made the distribution more uniform than other species 
+(Figures \@ref(fig:fig-cc2) and \@ref(fig:fig-age2)). Except for
 the area between 57–60% of height for all species, and 8–18% for balsam
 fir and paper birch, all differences with aspen were significant ($p$<0.001). 
-Overall, areas of higher variability for species
+Overall, areas of larger differences for species
 were located around 5, 25, 50, and 70% of stand height.
 
 ```{r include = FALSE}
-fig_sp_caption <- "Contrasts from the nonparametric graphical
-tests of significance for species. The species in columns are subtracted
-from the species in rows (e.g. first column, second row is the aspen -
-balsam fir contrast). The area outside the grey envelope is the area of
-rejection of the null hypothesis (differences between species,
-$p$<0.001) from the permutation of the residuals of the null model (Equation \\@ref(eq:variance)), 
-the black curve is the average parameter difference (bolder when
-outside the envelope). Panels above the
-diagonal are the reflection of the observed functions and the global
-envelope from the lower part."
-fig_sp_short_caption <- "Contrasts from the nonparametric graphical
-tests of significance for species."
+fig_sp_caption <- "Nonparametric graphical
+tests of significance for species using contrasts: 
+the observed difference between the coefficients of two species (black curve), 
+where species in columns are subtracted from the species in rows (e.g. first 
+column, second row is the aspen - balsam fir contrast), and the 98% global 
+envelope (grey bands below the diagonal) that shows the area of acceptance 
+of the null hypothesis (no effect, $p$<0.001) obtained from the permutations 
+of the residuals of the null model (Equation \\@ref(eq:species)). The observed 
+curve is bolder when outside the envelope. 
+
+Panels above the diagonal are the reflection of the observed functions 
+and the global envelope from the lower part."
+fig_sp_short_caption <- "Nonparametric graphical
+tests of significance for species"
 ```
 
 
@@ -621,20 +631,20 @@ displays the effect of crown closure on each species vertical
 distribution of LiDAR returns, including the effect of age. The increase in crown closure concentrated the
 returns around the middle height, except for aspen which peak was located
 superior (around 80% of stand height) and white spruce which peak was inferior (around
-20%). Although black spruce peak was centered at 50% stand height, the observed
+20%). Although black spruce peak was centered at 50% stand height for high values of crown closure, the observed
 variability was skewed toward the inferior stand height. Some species were more 
-represented in younger or older age classes, which inflated the envelopes of 
-variations. The model from Figure \@ref(fig:fig-cc) accounted for this effect.
+represented in younger or older age classes, which inflated the variation envelopes. 
+The model from Figure \@ref(fig:fig-cc) accounted for this effect.
 
 ```{r include = FALSE}
 fig_cc_caption <- 
-"Coefficients of the transformed vertical distribution of LiDAR
-returns for crown closure. The area outside the grey envelope is the area of
-rejection of the null hypothesis (estimate different from zero,
-$p$<0.001) from the permutation of the residuals of the null model (Equation \\@ref(eq:variance)), 
-the black curve is the average parameter difference (bolder when
-outside the envelope)."
-fig_cc_short_caption <- "Coefficients of vertical distribution of LiDAR returns for crown closure."
+"Nonparametric graphical tests of significance for crown closure:
+the observed coefficient (black curve), 
+and the 98% global envelope (grey band) that shows the area of acceptance of 
+the null hypothesis (no effect, <0.001) obtained from the permutations of the 
+residuals of the null model (Equation \\@ref(eq:cc)). The observed curve is 
+bolder when outside the envelope."
+fig_cc_short_caption <- "Nonparametric graphical tests of significance for crown closure"
 ```
 
 
@@ -647,7 +657,7 @@ fig_cc2_caption <-
 "Vertical distribution of LiDAR returns 
 as a function of crown closure (columns) and species (rows). Black lines
 represent the median distribution; shaded areas represent 95% and 50%
-variation envelopes."
+local variation envelopes."
 fig_cc2_short_caption <- "Vertical distribution of LiDAR returns 
 as a function of crown closure and species."
 ```
@@ -686,12 +696,15 @@ older stands.
 
 ```{r include = FALSE}
 fig_age_caption <- 
-"Coefficients from the nonparametric graphical test of
-significance for age groups. The grey envelope displays the area of
-acceptance of the null hypothesis (no effect, $p$<0.001) from the
-permutation of the residuals of the null model (Eq. \\@ref(eq:age)), the black curve
-is the average parameter difference (bolder when outside the envelope)."
-fig_age_short_caption <- "Coefficients from the nonparametric graphical test of significance for age groups."
+"
+The nonparametric graphical tests of significance for age:
+the observed coefficients of the six age groups (black curves), 
+and the 98% global envelope (grey bands below the diagonal) that shows the 
+area of acceptance of the null hypothesis (no effect, $p$<0.001) obtained from 
+the permutations of the residuals of the null model (Eq. \\@ref(eq:age)). 
+The observed curve is bolder when outside the envelope.
+"
+fig_age_short_caption <- "Nonparametric graphical tests of significance for age"
 ```
 
 
@@ -703,7 +716,7 @@ include("fig-age")
 fig_age2_caption <- 
 "Vertical distribution of LiDAR returns as a function of age
 (columns) and species (rows). Black lines represent the median
-distribution; shaded areas represent 95% and 50% variation envelopes."
+distribution; shaded areas represent 95% and 50% local variation envelopes."
 fig_age2_short_caption <- "Vertical distribution of LiDAR returns 
 as a function of age groups and species."
 ```
@@ -792,7 +805,7 @@ crown closure effect: while they increased, they were both associated to an
 increased proportion of points in the superior part of the stand. The crown 
 closure variable however seemed to explain more of the distribution variations 
 in the lower stand (below 21%) and the middle stand (46--67%), while age 
-contribution to R² happened between 18--38%. Unlike @aber79 who observed a 
+contribution to R² happened between 18--38%. Unlike @aber79 who observed 
 a stable distribution of foliage at the end point of the forest succession, the
 vertical distribution of LiDAR returns of the 120 year class rather 
 displayed a marginal concentration below the middle height (33--38%).
@@ -823,7 +836,7 @@ curves---scaling the curves relative to the highest return received.
 Interestingly, the graphical test of significance rejected the hypothesis that
 the distributions of LiDAR returns were similar, and also identified the areas
 responsible for the rejection. This allowed to form groups of species with
-similar distributions, and identify the area of rejection. We think that this
+similar distributions. We think that this
 method could complement and sometimes replace other methods of analysis of the
 vertical distribution of LiDAR returns, such as principal component analysis or
 linear discriminant analysis when interpretability is desired.
@@ -849,12 +862,12 @@ registration still proved useful.
 
 The non-parametric graphical test of significance that we used is slightly
 liberal because the Freedman-Lane permutation is approximate
-[@mrkvicka_etal19], however, it is one of the best methods from the literature
-under the presence of confounding variables [@winkler_etal14]. It also has the
+[@mrkvicka_etal19], however, the permutation scheme is regarded as
+one of the best methods from the literature
+under the presence of confounding variables [@winkler_etal14; @anderson_robinson01]. It also has the
 advantage of the graphical interpretation, especially the identification of the
-exact area of rejection, which allowed for a better interpretation than the
-global rejection of the null hypothesis despite the higher risk of rejecting the
-null hypothesis.
+ area of rejection, which allowed us to interpreted at which relative heights 
+ and between which species the differences occurred.
 
 ## Future outlook
 
@@ -885,7 +898,8 @@ Conclusion
 
 Using light detection and ranging (LiDAR) vertical distributions can
 provide an understanding of the interplay between species, crown closure,
-and age. The use of the functional graphical test of significance allows
+and age. The use of the functional generalised linear models combined to the 
+graphical test of significance allows
 interpreting the differences in distributions explained by multiple
 confounding variables. By using an airborne LiDAR survey, it is possible
 to find ecosystems at multiple evolution stages to observe LiDAR
