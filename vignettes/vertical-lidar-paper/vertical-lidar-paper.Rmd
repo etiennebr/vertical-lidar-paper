@@ -1,0 +1,121 @@
+---
+title: Species, crown closure, and age as determinants of the vertical distribution of airborne LiDAR returns
+author:
+  - name: Etienne B. Racine
+    email: etienne.bellemare-racine.1@ulaval.ca
+    orcid : 0000-0003-1109-894X
+    affiliation: ulaval
+    footnote: 1
+  - name: Nicholas C. Coops
+    orcid: 0000-0002-0151-9037
+    # email: nicholas.coops@ubc.ca
+    affiliation: ubc
+  - name: Jean Bégin
+    orcid: 0000-0002-9595-6632
+    # email: jean.begin@sbf.ulaval.ca
+    affiliation: ulaval
+  - name: Mari Myllymäki
+    orcid : 0000-0002-2713-7088
+    # email: mari.myllymaki@luke.fi
+    affiliation: luke
+address:
+  - code: ulaval
+    address: |
+      Département des sciences du bois et de la forêt 
+      2405 rue de la Terrasse, Université Laval, 
+      Québec, QC G1V 0A6, Canada
+  - code: ubc
+    address: |
+      Department of Forest Resources Management 
+      2424 Main Mall, University of British Columbia, 
+      Vancouver, BC V6T 1Z4, Canada
+  - code: luke
+    address: |
+      Natural Resources Institute Finland (Luke) 
+      Latokartanonkaari 9, FI-00790 Helsinki, Finland
+footnote:
+  - code: 1
+    text: "Corresponding Author"
+abstract: |
+  Tree species have different overall shapes, structures, and forest stand 
+  dynamics. Light detection
+  and ranging (LiDAR) can measure the three dimensional position of
+  reflective material by sending laser pulses through the canopy. We examine the 
+  influence of three forest stand attributes:
+  species, crown closure, and age on the vertical distribution of aerial
+  LiDAR returns of forested stands. We studied over five thousand regular,
+  even-aged stands in Quebec (Canada) with five dominant species: balsam
+  fir (*Abies balsamea* (L.) Mill.), paper birch (*Betula papyrifera*
+  Marsh), black spruce (*Picea mariana* (Mill.) BSP), white spruce (*Picea glauca* 
+  Moench) and aspen (*Populus tremuloides* Michx.). We modeled vertical distribution of LiDAR 
+  returns against the three attributes using a novel nonparametric graphical test of significance.
+  Results indicate that aspen stands had the
+  most uniform vertical distribution of LiDAR returns; balsam fir and
+  white birch distributions were similar and centered around 50% of the
+  stand height; black spruce and white spruce vertical distributions were
+  skewed below 30% of stand height ($p$<0.001). An increase in crown closure
+  concentrated the vertical distribution of returns around 50% height. Increasing age
+  gradually shifted the distribution higher in the stand until 50–70
+  years, where it then plateaued and slowly declined at 90–120 years. The full model maximal R²
+  was 0.47 around 10% of stand height. Results suggest that the stands
+  vertical distributions of LiDAR returns depends on the three variables studied.
+  This improved understanding can be used for stand-level species classification
+  with LiDAR, and to improve our understanding of the evolution of the forest
+  structure over changing conditions.
+keywords: |
+  Boreal forest; LiDAR remote sensing; Tree Species; 
+  Functional data analysis; Stand structure.
+keymessage: |
+  Using LiDAR remote sensing to assess even-aged stands vertical distributions, we
+  find that species, age, and crown closure drive up to 47% of the distribution.
+  Increases in crown closure concentrate LiDAR returns around 50% of stand height,
+  while age raises the vertical distributions until a plateau and ultimate decline
+  at maturity. While these patterns are consistent across species, they are
+  statistically distinct.
+layout: twocolumn
+
+journal: "Trees"
+date: "`r Sys.Date()`"
+bibliography: "`r rbbt::bbt_write_bib('biblio.bib', overwrite = TRUE)`"
+linenumbers: true
+numbersections: false
+link-citations: yes
+always_allow_html: true
+csl: elsevier-harvard.csl
+output:
+  rticles::elsevier_article: default
+  bookdown::pdf_book:
+    base_format: rticles::elsevier_article
+    latex_engine: xelatex
+---
+
+```{r include = FALSE}
+# install_github("paleolimbot/rbbt")
+# install.packages(c("rticles"))
+```
+
+```{r setup, include = FALSE}
+library(knitr)
+library(kableExtra)
+
+is_docx_output <- function(x) {
+  isTRUE(knitr::opts_knit$get('rmarkdown.pandoc.to') == "docx")
+}
+
+include <- function(fig, path = "figure", device = ifelse(is_docx_output(), "png", "svg")) {
+  knitr::include_graphics(file.path(path, paste0(fig, ".", device)))
+}
+# Source for the figures
+# Make sure this is run before: `knitr::knit(here::here("vignettes/contrasts.Rmd"))`
+```
+
+```{r, include=FALSE}
+options(tinytex.verbose = FALSE)
+```
+
+
+# Introduction
+
+The distribution of vegetation material within canopies varies with tree
+allometry and competition strategies, leading to variations in canopy
+structure and ultimately in environmental conditions [@graser_etal20]
