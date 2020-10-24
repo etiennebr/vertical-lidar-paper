@@ -276,7 +276,9 @@ In turn, age influences the vertical position of the crown within the stand
 @aber79 observed that the vertical concentration of the foliage evolved across
 stand age, and that the end point of the forest succession seemed to reach an
 equilibrium where the foliage was relatively evenly distributed within the
-canopy.
+canopy. @martin-ducup_etal16 noted that crown closure and stand 
+maturity affected the shapes of the crown of sugar maples as measured using 
+terrestrial LiDAR. 
 
 Species shapes influence the distribution of LiDAR
 returns, but most studies interpretations are limited and hard to generalize 
@@ -286,7 +288,7 @@ For example, @orka_etal09 found that the first and last returns were more
 dispersed in Birch (*Betula* spp.) stands than in Norway spruce (*Picea abies*
 (L.) Karst.), which also had a vertical distribution of first returns skewed
 toward the superior canopy, and that increased stand height modified the overall
-return distribution.
+return distribution. 
 
 ## Objectives
 
@@ -545,10 +547,11 @@ Following [@mrkvicka_etal20], we transformed the data by scaling groups ($j$)
 according to their variance dispersion. The initial $d_{i,j}$ function was
 transformed into $S_{i,j}$ function,
 
-\begin{equation}
+$$
 S_{i,j}(h) = \frac{d_{i,j}(h) - \bar{d_j}(r)}{\sqrt{Var(d_j(h))}} \cdot
-  \sqrt{Var(d(h))} + \bar{d_j}(h)   (\#eq:variance)
-\end{equation}
+  \sqrt{Var(d(h))} + \bar{d_j}(h)  
+(\#eq:variance)
+$$
 
 where the group sample mean $\bar{d_j}(h)$ is used to correct for unequal
 variance among groups. The group sample mean and overall variance $Var(d(h))$
@@ -609,10 +612,10 @@ column, second row is the aspen - balsam fir contrast), and the 98% global
 envelope (grey bands below the diagonal) that shows the area of acceptance 
 of the null hypothesis (no effect, $p$<0.001) obtained from the permutations 
 of the residuals of the null model (Equation \\@ref(eq:species)). The observed 
-curve is bolder when outside the envelope. 
-
-Panels above the diagonal are the reflection of the observed functions 
+curve is bolder when outside the envelope. Panels above the diagonal are the 
+reflection of the observed functions 
 and the global envelope from the lower part."
+
 fig_sp_short_caption <- "Nonparametric graphical
 tests of significance for species"
 ```
@@ -620,6 +623,36 @@ tests of significance for species"
 
 ```{r fig-sp, fig.cap=fig_sp_caption, fig.scap=fig_sp_short_caption, echo = FALSE}
 include("fig-sp-combined")
+```
+
+
+```{r include = FALSE}
+fig_cc2_caption <- 
+"Vertical distribution of LiDAR returns 
+as a function of crown closure (columns) and species (rows). Black lines
+represent the median distribution; shaded areas represent 95% and 50%
+local variation envelopes."
+fig_cc2_short_caption <- "Vertical distribution of LiDAR returns 
+as a function of crown closure and species."
+```
+
+
+```{r fig-cc2, fig.cap=fig_cc2_caption, fig.scap=fig_cc2_short_caption, echo = FALSE}
+include("fig-cc")
+```
+
+```{r include = FALSE}
+fig_age2_caption <- 
+"Vertical distribution of LiDAR returns as a function of age
+(columns) and species (rows). Black lines represent the median
+distribution; shaded areas represent 95% and 50% local variation envelopes."
+fig_age2_short_caption <- "Vertical distribution of LiDAR returns 
+as a function of age groups and species."
+```
+
+
+```{r fig-age2, fig.cap=fig_age2_caption, fig.scap=fig_age2_short_caption, echo = FALSE}
+include("fig-age2")
 ```
 
 An increase in crown closure was associated with a decrease in the density of
@@ -650,21 +683,6 @@ fig_cc_short_caption <- "Nonparametric graphical tests of significance for crown
 
 ```{r fig-cc, fig.cap=fig_cc_caption, fig.scap=fig_cc_short_caption, echo = FALSE}
 include("fig-glm-cc")
-```
-
-```{r include = FALSE}
-fig_cc2_caption <- 
-"Vertical distribution of LiDAR returns 
-as a function of crown closure (columns) and species (rows). Black lines
-represent the median distribution; shaded areas represent 95% and 50%
-local variation envelopes."
-fig_cc2_short_caption <- "Vertical distribution of LiDAR returns 
-as a function of crown closure and species."
-```
-
-
-```{r fig-cc2, fig.cap=fig_cc2_caption, fig.scap=fig_cc2_short_caption, echo = FALSE}
-include("fig-cc")
 ```
 
 The effect of increasing age gradually shifted the distribution higher
@@ -710,20 +728,6 @@ fig_age_short_caption <- "Nonparametric graphical tests of significance for age"
 
 ```{r fig-age, fig.cap=fig_age_caption, fig.scap=fig_age_short_caption, echo = FALSE}
 include("fig-age")
-```
-
-```{r include = FALSE}
-fig_age2_caption <- 
-"Vertical distribution of LiDAR returns as a function of age
-(columns) and species (rows). Black lines represent the median
-distribution; shaded areas represent 95% and 50% local variation envelopes."
-fig_age2_short_caption <- "Vertical distribution of LiDAR returns 
-as a function of age groups and species."
-```
-
-
-```{r fig-age2, fig.cap=fig_age2_caption, fig.scap=fig_age2_short_caption, echo = FALSE}
-include("fig-age2")
 ```
 
 The coefficient of determination of the models varied across stand height (Figure 
