@@ -301,7 +301,7 @@ differences in the vertical distribution patterns
 after accounting for stand crown closure and age
 effects. To our knowledge, it is the first time this method is used in ecology
 or remote sensing, although similar graphical tests have been applied to 
-economical data (Mrkvička et al. 2020), and similar non-parametric GLMs are
+economical data (Mrkvička et al. 2020), and similar non-parametric inference is
 commonly used in neuroimaging (Winkler et al., 2014).
 
 # Method
@@ -497,7 +497,7 @@ confounding variables (also called the nuisance factors by Freedman and Lane
 $\beta_{cc}(h)=0$ for all $h$, and $\beta_{age, l}(h)=0$
 for all $l$ and $h$ for the three variables, respectively. 
 For the discrete factors, $m$ and $l$ are equal to the number of groups of the 
-discrete factor and the coefficients are constrained to sum to zero.
+discrete factor and the coefficients were constrained to sum to zero.
 The corresponding three null models were obtained by removing the
 studied variable from the full model (Equation \@ref(eq:full)),
 
@@ -543,7 +543,7 @@ envelope test* to account for multiple $h$, and
 consequently considered the 98% global envelopes. We checked the data for
 heterogeneity of variance [@winkler_etal14], and the model residuals
 indicated heterogeneity of variance for all variables.
-Following [@mrkvicka_etal20], we transformed the data by scaling groups ($j$)
+Following @mrkvicka_etal20, we transformed the data by scaling groups ($j$)
 according to their variance dispersion. The initial $d_{i,j}$ function was
 transformed into $S_{i,j}$ function,
 
@@ -553,8 +553,8 @@ S_{i,j}(h) = \frac{d_{i,j}(h) - \bar{d_j}(r)}{\sqrt{Var(d_j(h))}} \cdot
 (\#eq:variance)
 $$
 
-where the group sample mean $\bar{d_j}(h)$ is used to correct for unequal
-variance among groups. The group sample mean and overall variance $Var(d(h))$
+where the group sample variance $Var(d_j(h))$ is used to correct for unequal
+variance among groups. The group sample mean $\bar{d_j}(h)$ and overall variance $Var(d(h))$
 are used preserve the original scale of the mean and variability of the functions.
 
 Our experiments with simulated data showed that the application of the
@@ -870,7 +870,7 @@ liberal because the Freedman-Lane permutation is approximate
 one of the best methods from the literature
 under the presence of confounding variables [@winkler_etal14; @anderson_robinson01]. It also has the
 advantage of the graphical interpretation, especially the identification of the
- area of rejection, which allowed us to interpreted at which relative heights 
+ area of rejection, which allowed us to interpret at which relative heights 
  and between which species the differences occurred.
 
 ## Future outlook
