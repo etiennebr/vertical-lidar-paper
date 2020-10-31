@@ -268,7 +268,7 @@ visual understanding of the effects of the variables on the functional data.
 ## Forest vertical structure determinants
 
 The information contained in the vertical distribution of LiDAR returns is
-closely related to the distribution of the vegetation. Crown closure (the
+closely related to the distribution of the vegetation. Reduced crown closure (the
 proportion of area covered by vegetation) generally allows for an increased
 probability for the LiDAR returns to reach lower vegetation [@hilker_etal10].
 In turn, age influences the vertical position of the crown within the stand
@@ -355,7 +355,7 @@ flight overlap of 30% and maximal scan angle of 15° from nadir with a
 footprint diameter of 25 cm.
 
 Airborne photography was acquired with a Leica ADS–40 pushbroom camera
-at a resolution of 0.2 m for panchromatic, and and 0.5 m near-infrared, green,
+at a resolution of 0.2 m for panchromatic, and 0.5 m near-infrared, green,
 and blue bands (NIR, G, B respectively centered on 860, 560, and 460 nm);
 side overlap was 40% to ensure complete coverage of the area. This
 imagery was interpreted into stands following provincial guidelines adapted from 
