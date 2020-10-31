@@ -1,0 +1,255 @@
+---
+title: "contrasts"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{contrasts}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 8,
+  fig.height = 6
+)
+```
+
+```{r setup}
+devtools::load_all(here::here("../vertical-lidar-paper"))
+library(GET)
+library(patchwork)
+library(tibble)
+library(ggplot2)
+library(readr)
+library(dplyr)
+library(tidyr)
+library(purrr)
+
+ggplot2::theme_set(theme_pub())
+alpha <- 0.05 / 3  # (Bonferroni correction)
+nperm <- 100  # number of permutations
+```
+
+The observations are imbalanced. The most important imbalance is between 
+species, then age. The crown closures are more balanced, but still not 
+perfectly balanced. 
+
+## Diagnostic
+
+What's the magnitude of the problem and how are the differences between the age 
+and crown closure classes combined? Here I'll use the filtered data.
+```{r}
+# read data
+# wave can be create once with `source("data-raw/lidar_wave.R")`
+wave <- wave %>%
+    mutate(
+    age_class = sort_num_factor(age_class),
+    crown_closure = sort_num_factor(crown_closure)
+)
+```
+
+
+```{r}
+group_size <- wave  %>% 
+  group_by(dominant_species, age_class, crown_closure) %>% 
+  tally(name = "count") %>% 
+  group_by(dominant_species) %>% 
+  add_count(name = "total") 
+
+group_size %>% 
+  ggplot(aes(crown_closure, age_class, fill = count / total, label = count)) +
+  geom_tile(show.legend = FALSE) +
+  scale_fill_continuous(trans = "log") +
+  facet_wrap(~dominant_species) +
+  geom_text(color = "grey80", size = 3) +
+  coord_equal()
+```
+
+Aspen is the smallest category, with very little observations in each category. 
+Also balsam fir has substantially more observations than any other species. 
+Another imbalance is that some species are more represented in some classes. 
+Black and white spruces have lot of young stands, while paper birch stands are 
+mostly mature. I would expect the null model to account for these differences. 
+
+## Downsampling
+
+Downsample observations to mimic Aspen distribution for species comparison.
+```{r}
+set.seed(2020)
+ec_bf_down_aspen <- wave %>% 
+  group_by(dominant_species, age_class, crown_closure) %>% 
+  nest() %>% 
+  left_join(
+    group_size %>% 
+      ungroup() %>% 
+      filter(dominant_species == "aspen") %>% 
+      select(-dominant_species),
+    by = c("crown_closure", "age_class")
+  ) %>% 
+  mutate(
+    count = replace_na(count, 0),
+    data = map2(data, count, ~sample_n(.x, round(.y), replace = TRUE))
+  ) %>% 
+  unnest(data) %>% 
+  ungroup()
+
+# visualize results
+ec_bf_down_aspen  %>% 
+  group_by(dominant_species, age_class, crown_closure) %>% 
+  tally(name = "count") %>% 
+  group_by(dominant_species) %>% 
+  add_count(name = "total") %>% 
+  mutate(
+    count = ifelse(count < 1, NA, count)
+  ) %>% 
+  ggplot(aes(crown_closure, age_class, fill = count, label = count)) +
+  geom_tile(show.legend = FALSE) +
+  scale_fill_continuous(trans = "log") +
+  facet_wrap(~dominant_species) +
+  geom_text(color = "grey80", size = 3) +
+  coord_equal()
+```
+
+
+
+### Contrasts
+
+We setup the analysis
+```{r}
+mobs <- ec_bf_down_aspen %>% 
+  dplyr::select(starts_with("ss_")) %>% 
+  as.matrix()
+
+cset <- create_curve_set(list(r = 1:39, obs = t(mobs)))
+
+independent_factors <- ec_bf_down_aspen %>% 
+  select(
+    dominant_species, age_class, crown_closure
+  ) %>% 
+  as.data.frame()
+```
+
+```{r fig.width = 8, fig.height = 8}
+functional_lm <- function(null_model, nsim = nperm, contrasts = TRUE) {
+  graph.flm(
+    nsim = nsim,
+    formula.full = Y ~ dominant_species + age_class + crown_closure,
+    formula.reduced = null_model,
+    curve_sets = cset,
+    factors = independent_factors,
+    contrasts = contrasts,
+    GET.args = list(alpha = alpha)
+  )
+}
+
+res_flm_sp <- functional_lm(Y ~ age_class + crown_closure)
+res_flm_cc <- functional_lm(Y ~ dominant_species + age_class, contrasts = FALSE)
+res_flm_age <- functional_lm(Y ~ dominant_species + crown_closure, contrasts = FALSE)
+```
+
+
+```{r fig.width = 8, fig.height = 8}
+my_plot_contrasts(res_flm_sp, 39, full = TRUE)
+```
+
+My understanding is that I should balance the other factors for each analysis 
+(i.e. balance crown closure per cc class, balance age per age class), but let's 
+see what it does to other comparisons.
+
+```{r fig.width = 8, fig.height = 4}
+my_plot_continuous(res_flm_cc, 39) + scale_y_continuous("Scaled density difference (×10⁻³)", labels = function(x) paste0(x * 100))
+my_plot_continuous(res_flm_age, 39)  + scale_y_continuous("Scaled density difference (×10⁻³)", labels = function(x) paste0(x * 100))
+```
+
+It seems that age is very much affected because aspen only has three age classes 
+sufficently represented (30, 50, 70), crown closure is less affected  because it
+is better represented, but the differences are still smaller than with the 
+complete data.
+
+## Upsampling
+
+Another strategy is to upsample our observations by padding the data with
+observations drawn at random. Each missing observation becomes a penalty, since 
+it is replaced by a random observation from the global data.
+
+```{r}
+set.seed(2020)
+target_size <- 30
+
+wave_upsample <- wave %>% 
+  # pad empty classes
+  expand(dominant_species, age_class, crown_closure) %>%  
+  left_join(wave, by = c("dominant_species", "age_class", "crown_closure")) %>% 
+  # sample
+  group_by(dominant_species, age_class, crown_closure) %>% 
+  nest() %>% 
+  mutate(
+    count = target_size,
+    # # Permutation only (nothing exits the envelope)
+    # data = map2(data, count, ~sample_n(wave %>% select(matches("ss_")), round(.y), replace = TRUE))
+    
+    # # Pick within the available observations for the specific combination
+    # data = map2(data, count, ~sample_n(.x, round(.y), replace = TRUE))
+    
+    # If sufficient observations, sample a fraction of the data
+    # If missing observations, randomly pick observations from the pool
+    data = map2(data, count, ~sample_n_if_needed(.x %>% drop_na(), round(.y), fill = wave))
+  ) %>% 
+  unnest(data) %>% 
+  ungroup()
+
+# visualize results
+wave_upsample  %>% 
+  group_by(dominant_species, age_class, crown_closure) %>% 
+  tally(name = "count") %>% 
+  group_by(dominant_species) %>% 
+  add_count(name = "total") %>% 
+  mutate(
+    count = ifelse(count < 1, NA, count)
+  ) %>% 
+  ggplot(aes(crown_closure, age_class, fill = count, label = count)) +
+  geom_tile(show.legend = FALSE) +
+  scale_fill_continuous(trans = "log") +
+  facet_wrap(~dominant_species) +
+  geom_text(color = "grey80", size = 3)
+```
+
+Setup the functional format
+```{r}
+mobs <- wave_upsample %>% 
+  dplyr::select(starts_with("ss_")) %>% 
+  as.matrix()
+
+cset <- create_curve_set(list(r = 1:39, obs = t(mobs)))
+
+independent_factors <- wave_upsample %>% 
+  select(
+    dominant_species, age_class, crown_closure
+  ) %>% 
+  as.data.frame()
+
+res_flm_sp <- functional_lm(Y ~ age_class + crown_closure)
+res_flm_cc <- functional_lm(Y ~ dominant_species + age_class, contrasts = FALSE)
+res_flm_age <- functional_lm(Y ~ dominant_species + crown_closure, contrasts = FALSE)
+```
+
+Species
+```{r fig.width = 8, fig.height = 8}
+my_plot_contrasts(res_flm_sp, 39, full = TRUE)
+```
+
+```{r fig.width = 8, fig.height = 4}
+(
+  my_plot_continuous(res_flm_cc, 39)  + 
+   scale_y_continuous("Scaled density difference (×10⁻³)", labels = function(x) paste0(x * 100)) + 
+    ggtitle("Crown closure")
+   ) / 
+(
+  my_plot_continuous(res_flm_age, 39) + 
+    scale_y_continuous("Scaled density difference (×10⁻³)", labels = function(x) paste0(x * 100)) +
+    ggtitle("Age"))
+```

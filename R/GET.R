@@ -196,6 +196,7 @@ my_env_ggplot <- function (x, base_size, main, ylim, xlab, ylab, max_ncols_of_pl
     }
   }
   p$main = main
+  
   if (!is.na(scale_r)) {
     p$ribbon <- p$ribbon %>% 
       mutate(
@@ -206,6 +207,12 @@ my_env_ggplot <- function (x, base_size, main, ylim, xlab, ylab, max_ncols_of_pl
       mutate(
         r = r / scale_r
       ) 
+  }
+  
+  # standardize name
+  if (!"test_function" %in% names(p$ribbon)) {
+    names(p$ribbon)[names(p$ribbon) == "main"] <- "test_function"
+    names(p$df_outside)[names(p$df_outside) == "main"] <- "test_function"
   }
   
   if (isTRUE(split)) {
@@ -233,6 +240,8 @@ my_env_ggplot <- function (x, base_size, main, ylim, xlab, ylab, max_ncols_of_pl
         b = sort_num_factor(b)
       )
   }
+  
+  
   
   # add inside and lead point
   p$ribbon <- p$ribbon %>% 
@@ -280,3 +289,10 @@ flip_contrast_matrix <- function(x) {
 split_labels <- function(x, col) tidyr::separate(x, {{col}}, c("what_a", "a", "what_b", "b"), sep = "[\\.-]", remove = FALSE)
 
 sort_num_factor <- function(x, levels = stringr::str_sort(unique(x), numeric = TRUE)) factor(x, levels = levels)
+
+p_value <- function(x) {
+  if (!inherits(x, "global_envelope")) {
+    x <- attr(x, "level2_ge")
+  }
+  attr(x, "p")
+}
