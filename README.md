@@ -1,8 +1,8 @@
 
-# verticallidarpaper
+# Species, crown closure, and age as determinants of the vertical distribution of airborne LiDAR returns
 
 This repos contains the code and data for the manuscript on vertical 
-distributions of lidar returns
+distribution of lidar returns
 
 
 ## Summary 
