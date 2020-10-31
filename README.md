@@ -51,4 +51,4 @@ usethis::edit_file("vignettes/contrasts.Rmd")
 # Preprint
 
 A pdf version of the preprint of the manuscript is available in 
-[`vignette/paper.pdf`](vignette/paper.pdf).
+[`vignettes/paper.pdf`](vignettes/paper.pdf).
