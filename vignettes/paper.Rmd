@@ -39,12 +39,24 @@ is_docx_output <- function(x) {
 include <- function(fig, path = "figure", device = ifelse(is_docx_output(), "png", "svg")) {
   knitr::include_graphics(file.path(path, paste0(fig, ".", device)))
 }
+
+# sanitize captions
+cap <- function(x) {
+  # remove newlines from captions
+  gsub("\\n", " ", x) %>%
+  gsub("\\s\\s+", " ", .) %>%
+  # escape percent
+  gsub("([^\\\\])%", "\\1\\\\%", .) %>% 
+  gsub("\\\\@ref", "@ref", .)
+}
+
 # Source for the figures
 # Make sure this is run before: `knitr::knit(here::here("vignettes/contrasts.Rmd"))`
 ```
 
 ```{r, include=FALSE}
 options(tinytex.verbose = FALSE)
+knitr::opts_chunk$set(comment = "", out.width = "100%", echo = "FALSE")
 ```
 
 ```{r eval=!knitr::is_latex_output(), echo = FALSE, output = "asis"}
@@ -54,7 +66,7 @@ insert_asis("
 
 <summary>Author information</summary>
 
-Etienne B. Racine\*<br>
+Etienne B. Racine\\*<br>
 ORCID : 0000-0003-1109-894X<br>
 Département des sciences du bois et de la forêt<br>
 2405 rue de la Terrasse, Université Laval, Québec, QC G1V 0A6, Canada<br>
@@ -78,7 +90,7 @@ Natural Resources Institute Finland (Luke)<br>
 Latokartanonkaari 9, FI-00790 Helsinki, Finland<br>
 mari.myllymaki@luke.fi
 
-(\*) Corresponding Author
+(\\*) Corresponding Author
 </details>
 ")
 ```
@@ -86,60 +98,14 @@ mari.myllymaki@luke.fi
 Keywords: Boreal forest; LiDAR remote sensing; Tree Species; Functional
 data analysis; Stand structure.
 
-Acknowledgments
-================
-
-We thank Benoît St-Onge, Nicole K. S. Barker, Sébastien Renard,
-Christian Roy and Josh Nowak for comments on early versions of this
-manuscript; Tomáš Mrkvička for helpful discussions on the transformations of 
-heteroscedastic data; Anick Patry, Antoine Leboeuf, Marc-Olivier Lemonde, 
-and Jean-François Bourdon from
-Ministère des Forêts, de la Faune et des Parcs for providing data and
-support.
-
-Declarations
-================
-
-Funding
-------------
-
-This work was supported by the Ministère des Forêts de la Faune et des
-Parcs du Québec through the Fonds de Recherche Québécois sur la Nature
-et les Technologies and the Academy of Finland (project numbers 295100 and 327211).
-
-Conflicts of interest/Competing interests
-----------------------------------------------
-
-We declare no conflict of interest.
-
-Availability of data and material
--------------------------------------
-
-The original data was shared and is available upon request to the
-Gouvernement du Québec. The processed data is available in our
-repository https://github.com/etiennebr/vertical-lidar-paper
-
-Code availability
-----------------------
-
-The code to perform the analysis is available in a git repository at
-https://github.com/etiennebr/vertical-lidar-paper
-
-### Author contribution statement
-
-ER is the primary author of the manuscript. ER, NCC and JB contributed
-to the design of the study; the analysis was conducted by ER and MM, the
-redaction was conducted by ER and revised by other authors; all authors
-read and approved this version to be published.
-
-Key Message
+Key Message {-}
 ===========
 <!-- Should be no more than 30 words -->
 We assess even-aged stands vertical distributions of LiDAR returns and find
 that species, age, and crown closure each have a distinct pattern that explain
 up to 47% of the variations.
 
-Abstract
+Abstract {-}
 ========
 <!-- Please provide an abstract of 150 to 250 words -->
 Tree species have different shapes and forest stand dynamics. Light detection
@@ -336,7 +302,7 @@ patches)."
 fig_loc_short_caption <- "Location of Matane Wildlife Reserve and selected stands."
 ```
 
-```{r fig-loc, fig.cap=fig_loc_caption, fig.scap=fig_loc_short_caption, echo = FALSE}
+```{r fig-loc, fig.cap=cap(fig_loc_caption), fig.scap=fig_loc_short_caption, echo = FALSE}
 # if (!file.exists("pictures/fig-location.png")) {
 #   # adapted from https://github.com/rstudio/bookdown/issues/538#issuecomment-408133271 
 #   merge_pngs <- function(imgs, ncol = length(imgs), bottom_text = NULL){
@@ -346,7 +312,7 @@ fig_loc_short_caption <- "Location of Matane Wildlife Reserve and selected stand
 #   }
 #   merge_pngs(c("pictures/rfm.png", "pictures/location_2.png"))
 # }
-include("fig-location", "pictures", dev = "png")
+include("fig-location", "pictures", device = "png")
 ```
 
 Data
@@ -424,7 +390,9 @@ x <- tibble::tribble(
 
 ```{r species, results='asis', echo = FALSE, message=FALSE}
 library(dplyr)
-#writeLines("<caption>(\\#tab:species2)Description of tree shapes and associated species</caption>")
+if (!knitr::is_latex_output()) {
+  writeLines("<caption>(\\#tab:species)Description of tree shapes and associated species</caption>")
+  }
 knitr::kable(tibble::tibble(` ` = strrep("⠀", 60), row.names = NULL), caption = "Description of tree shapes and associated species")
 x %>% 
   rowwise() %>% 
@@ -553,11 +521,11 @@ Following @mrkvicka_etal20, we transformed the data by scaling groups ($j$)
 according to their variance dispersion. The initial $d_{i,j}$ function was
 transformed into $S_{i,j}$ function,
 
-$$
+\begin{equation}
 S_{i,j}(h) = \frac{d_{i,j}(h) - \bar{d_j}(r)}{\sqrt{Var(d_j(h))}} \cdot
   \sqrt{Var(d(h))} + \bar{d_j}(h)  
 (\#eq:variance)
-$$
+\end{equation}
 
 where the group sample variance $Var(d_j(h))$ is used to correct for unequal
 variance among groups. The group sample mean $\bar{d_j}(h)$ and overall variance $Var(d(h))$
@@ -627,7 +595,7 @@ tests of significance for species"
 ```
 
 
-```{r fig-sp, fig.cap=fig_sp_caption, fig.scap=fig_sp_short_caption, echo = FALSE}
+```{r fig-sp, fig.cap=cap(fig_sp_caption), fig.scap=cap(fig_sp_short_caption), echo = FALSE}
 include("fig-sp-combined")
 ```
 
@@ -643,7 +611,7 @@ as a function of crown closure and species."
 ```
 
 
-```{r fig-cc2, fig.cap=fig_cc2_caption, fig.scap=fig_cc2_short_caption, echo = FALSE}
+```{r fig-cc2, fig.cap=cap(fig_cc2_caption), fig.scap=cap(fig_cc2_short_caption), echo = FALSE}
 include("fig-cc")
 ```
 
@@ -657,7 +625,7 @@ as a function of age groups and species."
 ```
 
 
-```{r fig-age2, fig.cap=fig_age2_caption, fig.scap=fig_age2_short_caption, echo = FALSE}
+```{r fig-age2, fig.cap=cap(fig_age2_caption), fig.scap=cap(fig_age2_short_caption), echo = FALSE}
 include("fig-age2")
 ```
 
@@ -687,7 +655,7 @@ fig_cc_short_caption <- "Nonparametric graphical tests of significance for crown
 ```
 
 
-```{r fig-cc, fig.cap=fig_cc_caption, fig.scap=fig_cc_short_caption, echo = FALSE}
+```{r fig-cc, fig.cap=cap(fig_cc_caption), fig.scap=cap(fig_cc_short_caption), echo = FALSE}
 include("fig-glm-cc")
 ```
 
@@ -732,7 +700,7 @@ fig_age_short_caption <- "Nonparametric graphical tests of significance for age"
 ```
 
 
-```{r fig-age, fig.cap=fig_age_caption, fig.scap=fig_age_short_caption, echo = FALSE}
+```{r fig-age, fig.cap=cap(fig_age_caption), fig.scap=cap(fig_age_short_caption), echo = FALSE}
 include("fig-age")
 ```
 
@@ -758,7 +726,7 @@ fig_rsq_short_caption <- "Comparison of $R²(h)$."
 ```
 
 
-```{r fig-rsq, fig.cap=fig_rsq_caption, fig.scap=fig_rsq_short_caption, echo = FALSE}
+```{r fig-rsq, fig.cap=cap(fig_rsq_caption), fig.scap=cap(fig_rsq_short_caption), echo = FALSE, out.width="60%"}
 include("fig-r-squared")
 ```
 
@@ -928,6 +896,52 @@ distribution below 33%, while age affected was more diffuse across the whole
 stand height. These results could improve our understanding of the 
 evolution of the forest structure over changing conditions and could be used 
 for stand-level species classification with LiDAR.
+
+Acknowledgments {-}
+================
+
+We thank Benoît St-Onge, Nicole K. S. Barker, Sébastien Renard,
+Christian Roy and Josh Nowak for comments on early versions of this
+manuscript; Tomáš Mrkvička for helpful discussions on the transformations of 
+heteroscedastic data; Anick Patry, Antoine Leboeuf, Marc-Olivier Lemonde, 
+and Jean-François Bourdon from
+Ministère des Forêts, de la Faune et des Parcs for providing data and
+support.
+
+Declarations {-}
+================
+
+Funding {-}
+------------
+
+This work was supported by the Ministère des Forêts de la Faune et des
+Parcs du Québec through the Fonds de Recherche Québécois sur la Nature
+et les Technologies and the Academy of Finland (project numbers 295100 and 327211).
+
+Conflicts of interest/Competing interests {-}
+----------------------------------------------
+
+We declare no conflict of interest.
+
+Availability of data and material {-}
+-------------------------------------
+
+The original data was shared and is available upon request to the
+Gouvernement du Québec. The processed data is available in our
+repository https://github.com/etiennebr/vertical-lidar-paper
+
+Code availability {-}
+----------------------
+
+The code to perform the analysis is available in a git repository at
+https://github.com/etiennebr/vertical-lidar-paper
+
+### Author contribution statement {-}
+
+ER is the primary author of the manuscript. ER, NCC and JB contributed
+to the design of the study; the analysis was conducted by ER and MM, the
+redaction was conducted by ER and revised by other authors; all authors
+read and approved this version to be published.
 
 `r if (!knitr::is_latex_output()) '
 # References {-}
