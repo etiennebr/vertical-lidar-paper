@@ -581,8 +581,8 @@ were located around 5, 25, 50, and 70% of stand height.
 fig_sp_caption <- "Nonparametric graphical
 tests of significance for species using contrasts: 
 the observed difference between the coefficients of two species (black curve), 
-where species in columns are subtracted from the species in rows (e.g. first 
-column, second row is the aspen - balsam fir contrast), and the 98% global 
+where species in rows are subtracted from the species in columns (e.g. first 
+column, second row is the aspen − balsam fir contrast), and the 98% global 
 envelope (grey bands below the diagonal) that shows the area of acceptance 
 of the null hypothesis (no effect, $p$<0.001) obtained from the permutations 
 of the residuals of the null model (Equation \\@ref(eq:species)). The observed 
