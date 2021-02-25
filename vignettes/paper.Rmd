@@ -648,7 +648,7 @@ fig_cc_caption <-
 "Nonparametric graphical tests of significance for crown closure:
 the observed coefficient (black curve), 
 and the 98% global envelope (grey band) that shows the area of acceptance of 
-the null hypothesis (no effect, <0.001) obtained from the permutations of the 
+the null hypothesis (no effect, $p$<0.001) obtained from the permutations of the 
 residuals of the null model (Equation \\@ref(eq:cc)). The observed curve is 
 bolder when outside the envelope."
 fig_cc_short_caption <- "Nonparametric graphical tests of significance for crown closure"
