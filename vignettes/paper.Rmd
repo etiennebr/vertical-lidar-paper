@@ -4,16 +4,12 @@ author: "Etienne Racine^1,\\*^, Nicholas C. Coops^2^, Jean Bégin^1^, Mari Mylly
 date: "^1^:Département des sciences du bois et de la forêt, 2405 rue de la Terrasse, Université Laval, Québec, QC G1V 0A6, Canada; ^2^:Department of Forest Resources Management, 2424 Main Mall, University of British Columbia, Vancouver, BC V6T 1Z4, Canada; ^3^:Natural Resources Institute Finland (Luke), Latokartanonkaari 9, FI-00790 Helsinki, Finland"
 output:
   bookdown::pdf_document2: 
-    latex_engine: xelatex
+    latex_engine: pdflatex
     keep_tex: true
     keep_md: true
     toc: false
-  bookdown::html_document2:
-    df_print: paged
-    number_sections: false
-    section_divs: false
-    keep_md: true
-    numbering: false
+    includes:
+      in_header: "preamble.tex"
   bookdown::word_document2:
     reference_docx: "templates/StylesTemplate.docx"
     keep_md: true
@@ -22,8 +18,14 @@ output:
     fig_caption: true
     device: png
     number_sections: false
+  bookdown::html_document2:
+    df_print: pagedfarra
+    number_sections: false
+    section_divs: false
+    keep_md: true
+    numbering: false
 csl: "templates/trees.csl"
-bibliography: "`r rbbt::bbt_write_bib('biblio.json', overwrite = TRUE)`"
+bibliography: "biblio.json"
 link-citations: yes
 always_allow_html: true
 ---
@@ -357,9 +359,9 @@ Finally, the interpretation relied on the ground-control points and the
 ecological knowledge of the photo-interpreter. We used this forest map
 as our reference data for species, crown closure, and age.
 
-```{r species2, echo = FALSE}
+```{r species, echo = FALSE}
 x <- tibble::tribble(
-    ~Species, ~Silhouette, ~"Interpretation description^1,2^", ~"Associated species^2^",
+    ~Species, ~Silhouette, ~"Interpretation description\\textsuperscript{1, 2}", ~"Associated species\\textsuperscript{1}",
     
     "*Abies balsamea*", 
     "![](pictures/abies_balsamea.png){width='1.469cm' height='4.001cm'}", 
@@ -373,37 +375,37 @@ x <- tibble::tribble(
     
     "*Picea mariana*", 
     "![](pictures/picea_mariana.png){width='1.041cm' height='4.001cm'}", 
-    "On poorly drained sites, crown thin and narrow, spirelike, sharp summit with compact foliage. On well-drained upland sites, principal branches short compared with other spruces, lower ones greatly drooping, tips upturned. Upper part of the crown often very dense, oddly shaped, with many cones. Brown, slightly pink when young, paler than white spruce.", "In the southern part of its range, tamarack. <br> Northern part: jack pine, white spruce, balsam fir, white birch, trembling aspen.",
+    "On poorly drained sites, crown thin and narrow, spirelike, sharp summit with compact foliage. On well-drained upland sites, principal branches short compared with other spruces, lower ones greatly drooping, tips upturned. Upper part of the crown often very dense, oddly shaped, with many cones. Brown, slightly pink when young, paler than white spruce.", "In the southern part of its range, tamarack. Northern part: jack pine, white spruce, balsam fir, white birch, trembling aspen.",
     
     "*Picea glauca*", 
     "![](pictures/picea_glauca.png){width='1.469cm' height='4.001cm'}", 
-    "Well to moderately drained sites in mid slopes. Broad conical crown, appears star shaped, ragged, irregular, densely foliated, spirelike in northern parts of its range. <br> Principal branches bushy, generally horizontal, sometimes sloping downward in the lower part of the crown, tips gradually upturned. Brown, slightly pink when young, darker than black spruces.", 
+    "Well to moderately drained sites in mid slopes. Broad conical crown, appears star shaped, ragged, irregular, densely foliated, spirelike in northern parts of its range.  Principal branches bushy, generally horizontal, sometimes sloping downward in the lower part of the crown, tips gradually upturned. Brown, slightly pink when young, darker than black spruces.", 
     "Trembling aspen, white birch, black spruce, and balsam fir.",
     
     "*Populus tremuloides*", 
     "![](pictures/populus_tremuloides.png){width='1.191cm' height='4.001cm'}", 
     "All sites except poorly drained. Short, rounded, light bulb-shaped crown usually taller than surroundings when mixed. Crown surface looks blurred and smooth because of the small leaves. Orange-tinted pink.",
     "White spruce, black spruce, balsam fir, white birch, balsam poplar and jack pine")
-# x %>%
-#   knitr::kable(caption = "Description of tree shapes and associated species")
-```
 
-```{r species, results='asis', echo = FALSE, message=FALSE}
-library(dplyr)
-if (!knitr::is_latex_output()) {
-  writeLines("<caption>(\\#tab:species)Description of tree shapes and associated species</caption>")
-  }
-knitr::kable(tibble::tibble(` ` = strrep("⠀", 60), row.names = NULL), caption = "Description of tree shapes and associated species")
-x %>% 
-  rowwise() %>% 
-  mutate(ln = paste("", `Species`, `Silhouette`, `Interpretation description^1,2^`, 
-                        `Associated species^2^`, "", sep = " | ")) %>% 
-  add_row(tibble(ln = paste0("| ", paste(names(x), collapse = " | "), " |")), .before = 1) %>% 
-  add_row(ln = paste0("|-", paste(purrr::map_chr(names(x), ~strrep("-", nchar(.x))), collapse = "-|-"), "-|"), .before = 2) %>% 
-  add_row(ln = "| Footnotes: | | 1: Colors are based on (NIR+G+B mapped to R, G, B channels). <br> 2: Adapted from @farrar95a, and @leboeuf_vaillancourt13 .| |") %>% 
-  select(ln) %>% 
-  unlist() %>% 
-  writeLines()
+tbl_species <- x %>% 
+  dplyr::mutate(
+    Species = stringr::str_replace_all(Species, "\\*", ""),
+    Silhouette = stringr::str_extract(Silhouette, "([^\\)\\(!\\[\\])]+)"),
+    #Silhouette = here::here(Silhouette),
+    #Silhouette = sprintf('\\includegraphics[valign=T,scale=0.4]{%s}', Silhouette)
+    Silhouette = sprintf('\\includegraphics[valign=T,scale=0.5,raise=2mm]{%s}', Silhouette)
+    #Silhouette = sprintf('\\begin{minipage}\\includegraphics[valign=T,scale=0.4]{%s}\\end{minipage}', Silhouette)
+    #Silhouette = sprintf('\\raisebox{-.8\\height}{\\includegraphics[width=0.5\\textwidth, height=20mm]{%s}}', Silhouette)
+  ) 
+
+tbl_species %>% 
+ #dplyr::mutate(Silhouette = "Silhouette") %>% 
+  knitr::kable(caption = "Description of tree shapes and associated species", longtable = TRUE, escape = FALSE, booktabs = TRUE, linesep = "") %>% 
+  kableExtra::kable_paper(full_width = TRUE) %>% 
+  # kableExtra::column_spec(2, image = kableExtra::spec_image(here::here(tbl_species$Silhouette), 100*3, 100*3)) 
+  kableExtra::column_spec(1, italic = TRUE) %>% 
+  kableExtra::collapse_rows(1, latex_hline = "full") %>% 
+  kableExtra::footnote(number = c("Colors are based on (NIR+G+B mapped to R, G, B channels).", "Adapted from Farrar (1995) and Leboeuf and Vaillancourt (2013)"))
 ```
 
 ## Processing
@@ -412,7 +414,7 @@ Even-aged stands are less complex to analyze from a vertical structure
 point of view than irregular stands, so we focused our analysis on
 even-aged stands with clearly dominant species representing at least 50%
 of the stand cover. We excluded stands with an average LiDAR sampling
-rates below 2 pt∕m² or an area of less than 4 ha to ensure sufficient
+rates below 2 pt/m² or an area of less than 4 ha to ensure sufficient
 number of LiDAR returns. From these stands, we kept only those with a
 dominant species that had at least 100 observations (stands): aspen,
 balsam fir, black spruce, paper birch and white spruce. From 22 365
