@@ -1,0 +1,26 @@
+% include this 
+
+% fix for:
+% ! Package inputenc Error: Unicode character   (U+2009)
+% (inputenc)                not set up for use with LaTeX.
+\usepackage[utf8]{inputenc}
+\usepackage{amssymb}
+\usepackage{pifont}
+\usepackage{newunicodechar}
+\usepackage{gensymb}
+\usepackage{longtable,tabu} % longtabu
+\usepackage[export]{adjustbox} % valign
+\DeclareUnicodeCharacter{211D}{\mathbb{R}}
+\DeclareUnicodeCharacter{2009}{\,}
+\DeclareUnicodeCharacter{221E}{\ensuremath{\infty}}
+\DeclareUnicodeCharacter{2300}{\ensuremath{\oslash}}
+\DeclareUnicodeCharacter{0394}{\ensuremath{\Delta}}
+\DeclareUnicodeCharacter{2212}{\textminus}
+\DeclareUnicodeCharacter{2248}{\ensuremath{\approx}}
+\DeclareUnicodeCharacter{2265}{\ensuremath{\geq}}
+\DeclareUnicodeCharacter{2264}{\ensuremath{\leq}}
+\DeclareUnicodeCharacter{2800}{\,}
+\DeclareUnicodeCharacter{200B}{\,}
+%\newunicodechar{°}{\degree}
+\newunicodechar{²}{\ensuremath{{}^2}}
+\newunicodechar{✓}{\ding{51}}
