@@ -96,7 +96,7 @@ mobs <- wave %>%
   as.matrix()
 
 independent_factors <- wave %>% 
-  select(
+  dplyr::select(
     dominant_species, age_class, crown_closure
   ) %>% 
   mutate(
@@ -133,12 +133,9 @@ successive transformations can reintroduce heteroscedasticity in other areas of
 the curve. Given our unbalanced data, with missing combinations of predictors,
 we could not apply the transformation at once. However, the remaining areas of
 heteroscedasticity did not seem to affect the final results of simulated data,
-especially with datasets with the same number of observations. The test of
-heteroscedasticity ($Z_{ij}(r) = T_{ij}(r) - \bar{T}_j(r)$) appeared to be overly 
-powerful for larger datasets (i.e. 5000 observations), than with smaller
-datasets (e.g. 200 observations). For example, the test would not indicate
-heterogenuous variance on a dataset downsampled from a large dataset in which 
-the test found heteroscedasticity.
+especially with datasets with the same number of observations. The test would 
+not indicate heterogenuous variance on a dataset downsampled from a large 
+dataset in which the test found heteroscedasticity.
 
 ```{r}
 res_fanova_sp <- functional_anova(independent_factors$dominant_species, contrasts = FALSE, curve_set = cset) %>% 
@@ -255,6 +252,10 @@ pcsp <- my_plot_contrasts(res_flm_sp, m, full = TRUE, diag = FALSE) +
 save_figures("figure/fig-sp-combined", pcsp, width = 234, height = 234)
 ```
 
+```{r}
+knitr::include_graphics("figure/fig-sp-combined.svg")
+```
+
 ## Crown closure
 
 Figure 3. Coefficients of the transformed vertical distribution of LiDAR returns
@@ -267,6 +268,11 @@ pc_cc <- my_plot_continuous(res_flm_cc, m, main = "my main") + scale_y_continuou
 
 save_figures("figure/fig-glm-cc", pc_cc, width = 234 / 2, height = 234 / 2)
 ```
+
+```{r}
+knitr::include_graphics("figure/fig-glm-cc.svg")
+```
+
 
 Figure 4. `r ifelse(plot_use_trans, "Transformed v", "V")`ertical distribution 
 of LiDAR returns as a function of crown closure and species. Black lines
@@ -300,6 +306,10 @@ pcc
 save_figures("figure/fig-cc", pcc, width = 234, height = 234)
 ```
 
+```{r}
+knitr::include_graphics("figure/fig-cc.svg")
+```
+
 ## Age
 Figure 5. `r ifelse(plot_use_trans, "Transformed v", "V")`ertical distribution 
 of LiDAR returns as a function of stand density and species. Black lines
@@ -316,6 +326,11 @@ page <- my_plot_continuous(res_flm_age, m) +
 page
 
 save_figures("figure/fig-age", page, width = 234, height = 234 / 2)
+```
+
+
+```{r}
+knitr::include_graphics("figure/fig-age.svg")
 ```
 
 Figure 6. `r ifelse(plot_use_trans, "Transformed v", "V")`ertical distribution 
@@ -350,6 +365,10 @@ page2
 save_figures("figure/fig-age2", page2, width = 234, height = 234)
 ```
 
+
+```{r}
+knitr::include_graphics("figure/fig-age2.svg")
+```
 
 # Appendix
 
@@ -570,3 +589,7 @@ prsq
 save_figures("figure/fig-r-squared", prsq, width = 234 / 2, height = 234)
 ```
 
+
+```{r}
+knitr::include_graphics("figure/fig-r-squared.svg")
+```
