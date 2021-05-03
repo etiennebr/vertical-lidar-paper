@@ -262,7 +262,11 @@ For example, @orka_etal09 found that the first and last returns were more
 dispersed in Birch (*Betula* spp.) stands than in Norway spruce (*Picea abies*
 (L.) Karst.), which also had a vertical distribution of first returns skewed
 toward the superior canopy, and that increased stand height modified the overall
-return distribution. 
+return distribution. To our knowledge, it is the first time that a functional GLM 
+combined to a non-parametric graphical test of significance is used in ecology
+or remote sensing, although similar graphical tests have been applied to 
+economical data (Mrkvička et al. 2020), and similar non-parametric inference is
+commonly used in neuroimaging (Winkler et al., 2014).
 
 <!-- ## Objectives -->
 
@@ -272,11 +276,7 @@ area-based survey. We hypothesize that the use of a functional GLM combined to a
 non-parametric graphical 
 test of significance makes it possible to verify inter-specific
 differences in the vertical distribution patterns
-after accounting for stand crown closure and age
-effects. To our knowledge, it is the first time this method is used in ecology
-or remote sensing, although similar graphical tests have been applied to 
-economical data (Mrkvička et al. 2020), and similar non-parametric inference is
-commonly used in neuroimaging (Winkler et al., 2014).
+after accounting for stand crown closure and age effects. 
 
 # Method
 
