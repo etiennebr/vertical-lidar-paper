@@ -356,7 +356,7 @@ response based on composite near-infrared image, green and blue
 (NIR+G+B) images respectively mapped to red, green, and blue (R, G, B)
 channels, and their frequent associations in forest stands (Table \@ref(tab:species)).
 Finally, the interpretation relied on the ground-control points and the
-ecological knowledge of the photo-interpreter. We used this forest map
+ecological knowledge of the photo-interpreter. We used this photo-interpreted forest map 
 as our reference data for species, crown closure, and age.
 
 ```{r species, echo = FALSE}
