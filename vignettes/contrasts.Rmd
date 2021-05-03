@@ -36,6 +36,15 @@ save_figures <- function(path, fig, width, height, units = "mm", dpi = "retina",
   lapply(devices, function(dev) ggsave(glue::glue("{path}.{dev}"), fig, device = dev, dpi = dpi, width = width, height = height, units = units))
   invisible(fig)
 }
+
+is_docx_output <- function(x) {
+  isTRUE(knitr::opts_knit$get('rmarkdown.pandoc.to') == "docx")
+}
+
+include <- function(fig, path = "figure", device = ifelse(is_docx_output(), "png", ifelse(knitr::is_latex_output(), "pdf", "svg"))) {
+  knitr::include_graphics(file.path(path, paste0(fig, ".", device)))
+}
+
 alpha <- 0.05 / 3  # (Bonferroni correction)
 nperm <- 3000-1  # number of permutations
 m <- 40-1  # number of discrete points per functions
@@ -253,7 +262,7 @@ save_figures("figure/fig-sp-combined", pcsp, width = 234, height = 234)
 ```
 
 ```{r}
-knitr::include_graphics("figure/fig-sp-combined.svg")
+include("fig-sp-combined")
 ```
 
 ## Crown closure
@@ -270,7 +279,7 @@ save_figures("figure/fig-glm-cc", pc_cc, width = 234 / 2, height = 234 / 2)
 ```
 
 ```{r}
-knitr::include_graphics("figure/fig-glm-cc.svg")
+include("fig-glm-cc")
 ```
 
 
@@ -307,7 +316,7 @@ save_figures("figure/fig-cc", pcc, width = 234, height = 234)
 ```
 
 ```{r}
-knitr::include_graphics("figure/fig-cc.svg")
+include("fig-cc")
 ```
 
 ## Age
@@ -330,7 +339,7 @@ save_figures("figure/fig-age", page, width = 234, height = 234 / 2)
 
 
 ```{r}
-knitr::include_graphics("figure/fig-age.svg")
+include("fig-age")
 ```
 
 Figure 6. `r ifelse(plot_use_trans, "Transformed v", "V")`ertical distribution 
@@ -367,7 +376,7 @@ save_figures("figure/fig-age2", page2, width = 234, height = 234)
 
 
 ```{r}
-knitr::include_graphics("figure/fig-age2.svg")
+include("fig-age2")
 ```
 
 # Appendix
@@ -591,5 +600,5 @@ save_figures("figure/fig-r-squared", prsq, width = 234 / 2, height = 234)
 
 
 ```{r}
-knitr::include_graphics("figure/fig-r-squared.svg")
+include("fig-r-squared")
 ```
