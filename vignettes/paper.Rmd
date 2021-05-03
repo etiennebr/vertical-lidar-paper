@@ -155,7 +155,7 @@ that are time-consuming and limited to small areas [@macarthur_horn69;
 @aber79; @bassow_bazzaz97; @tackenberg07].
 
 
-## Forest remote sensing
+<!-- ## Forest remote sensing -->
 
 The increasing availability of data collected remotely from airborne,
 spaceborne and terrestrial sensors has improved our understanding of the
@@ -197,7 +197,7 @@ texture [@holmgren_persson04; @kim_etal11; @fassnacht_etal16], add spectral
 information by supplementing it with spectral imagery, and more recently using a
 multispectral LiDAR [@budei_etal18; @budei_st-onge18].
 
-## Individual tree-crown vs area-based methods
+<!-- ## Individual tree-crown vs area-based methods -->
 
 Most studies on species classification using aerial LiDAR have focused on
 individual tree-crown species identification. Tree crown delineation requires a
@@ -239,7 +239,7 @@ provides a framework to compare a function (i.e. the vertical distribution of
 LiDAR returns) against categorical and continuous variables. It allows for a
 visual understanding of the effects of the variables on the functional data.
 
-## Forest vertical structure determinants
+<!-- ## Forest vertical structure determinants -->
 
 The information contained in the vertical distribution of LiDAR returns is
 closely related to the distribution of the vegetation. Reduced crown closure (the
@@ -264,7 +264,7 @@ dispersed in Birch (*Betula* spp.) stands than in Norway spruce (*Picea abies*
 toward the superior canopy, and that increased stand height modified the overall
 return distribution. 
 
-## Objectives
+<!-- ## Objectives -->
 
 In this study we verify if we can discriminate distinct patterns
 between species in the vertical distribution of LiDAR returns from a low-density
