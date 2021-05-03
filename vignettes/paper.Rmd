@@ -434,7 +434,7 @@ by the total number of points of the stand so each stand vertical distribution
 summed to one to allow comparisons between stands of inconsistent shapes, areas,
 and LiDAR point density.
 
-Analysis
+Satistical Analysis
 ----------------------
 
 We used a novel method that builds on the functional data analysis field
