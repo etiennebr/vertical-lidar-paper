@@ -408,7 +408,7 @@ tbl_species %>%
   kableExtra::footnote(number = c("Colors are based on (NIR+G+B mapped to R, G, B channels).", "Adapted from Farrar (1995) and Leboeuf and Vaillancourt (2013)"))
 ```
 
-## Processing
+## LiDAR Data Processing
 
 Even-aged stands are less complex to analyze from a vertical structure
 point of view than irregular stands, so we focused our analysis on
