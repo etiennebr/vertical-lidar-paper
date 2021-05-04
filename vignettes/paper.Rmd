@@ -558,7 +558,7 @@ S_{i,j}(h) = \frac{d_{i,j}(h) - \bar{d_j}(r)}{\sqrt{Var(d_j(h))}} \cdot
 
 where the group sample variance $Var(d_j(h))$ is used to correct for unequal
 variance among groups. The group sample mean $\bar{d_j}(h)$ and overall variance $Var(d(h))$
-are used preserve the original scale of the mean and variability of the functions.
+are used to preserve the original scale of the mean and variability of the functions.
 
 Our experiments with simulated data showed that the application of the
 transformation for all groups at once (by combining all group levels)
