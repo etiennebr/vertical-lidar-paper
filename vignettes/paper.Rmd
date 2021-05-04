@@ -661,8 +661,10 @@ include("fig-age2")
 An increase in crown closure was associated with a decrease in the density of
 LiDAR returns below 33% of stand height, while the density of LiDAR returns
 above 38% increased (Figure \@ref(fig:fig-cc)). The largest augmentation was
-concentrated around the middle height (50%), while the inferior area (around
-3% of height) had the largest reduction effect. Figure \@ref(fig:fig-cc2)
+concentrated around the middle height (50%), while the inferior area (around 3%
+of height) had the largest reduction effect. Note that through the text we use
+*inferior* to identify the parts of the forest stand that are closer to the
+ground, and *superior* for the inverse. Figure \@ref(fig:fig-cc2)
 displays the effect of crown closure on each species vertical
 distribution of LiDAR returns, including the effect of age. The increase in crown closure concentrated the
 returns around the middle height, except for aspen which peak was located
@@ -770,7 +772,7 @@ predictably with crown closure and age. We observed two groups of
 species: balsam fir and paper birch which had a more symmetrical
 vertical distribution of LiDAR returns centered between 40 and 60% of
 stand height, and white spruce and black spruce distributions
-of LiDAR returns that were generally skewed toward the inferior part of
+of LiDAR returns that were generally skewed toward the inferior part (closer to ground) of
 the stand (below 30%). Aspen displayed a more even distribution of LiDAR
 returns with a higher proportion of returns in the superior part of the stand 
 than other species.
