@@ -884,13 +884,18 @@ We found differences in the distributions of LiDAR returns of five tree species.
 The graphical test of significance allowed an interpretation of the vertical
 distribution of LiDAR returns, which could
 be used to improve our understanding of stand structure evolution and species
-classification with LiDAR. In a review of remote sensing tree species
+classification with LiDAR. 
+In a review of remote sensing tree species
 classification, Fassnacht et al. -@fassnacht_etal16 noted that most studies
 pursued the optimization of classification accuracy, and provided little
-analysis of the causal understanding of species discrimination. Although we did
-not perform species classification, our results show that it is possible to
-interpret the differences between complex predictors such as the vertical
-distribution of LiDAR returns while accounting for confounding factors.
+analysis of the causal understanding of species discrimination. 
+The nonparametric graphical test of significance method can help study the evolution of forest structure by allowing the association of variables to the distribution of reflective material. 
+In this paper, we applied the method to a selection of simple stands (cleat species dominance, 
+and even-age) to visually understand the effect of each of these factors.
+Further work is required to apply the method to multi-species, or irregular stands.
+
+Species classification could be performed by training a model to associate vertical LiDAR distributions to species, essentially inverting the process used in this paper. 
+While fGLM is not particularly suited to predictions, non parametric methods, such as Deep Neural Network could be good candidates for species classification because they can handle the functional representation of the data and their non-linear relations. 
 
 Additional evidence is needed to establish if the relation between
 vertical density of LiDAR returns, and species, crown closure, and age
