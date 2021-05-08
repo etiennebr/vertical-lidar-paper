@@ -50,7 +50,9 @@ cap <- function(x) {
   gsub("\\s\\s+", " ", .) %>%
   # escape percent
   gsub("([^\\\\])%", "\\1\\\\%", .) %>% 
-  gsub("\\\\@ref", "@ref", .)
+  # escape ref (when using `@`ref, it is accidentally used by rbbt)
+  gsub("\\\\@ref", "~@~ref", .) %>% 
+  gsub("~@~", "@", .)
 }
 
 # Source for the figures
@@ -406,7 +408,7 @@ tbl_species %>%
   # kableExtra::column_spec(2, image = kableExtra::spec_image(here::here(tbl_species$Silhouette), 100*3, 100*3)) 
   kableExtra::column_spec(1, italic = TRUE) %>% 
   kableExtra::collapse_rows(1, latex_hline = "full") %>% 
-  kableExtra::footnote(number = c("Colors are based on (NIR+G+B mapped to R, G, B channels).", "Adapted from Farrar (1995) and Leboeuf and Vaillancourt (2013)"))
+  kableExtra::footnote(number = c("Colors are based on (NIR+G+B mapped to R, G, B channels).", "Adapted from @farrar95a; @leboeuf_vaillancourt13; @leboeuf_vaillancourt13a."))
 ```
 
 ## LiDAR Data Processing
