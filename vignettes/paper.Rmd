@@ -1,5 +1,5 @@
 ---
-title: "Species, crown closure, and age as determinants of the vertical distribution of airborne LiDAR returns"
+title: "Species, Crown Cover, and Age as Determinants of the Vertical Distribution of Airborne LiDAR Returns"
 author: "Etienne Racine^1,\\*^, Nicholas C. Coops^2^, Jean Bégin^1^, Mari Myllymäki^3^"
 date: "^1^:Département des sciences du bois et de la forêt, 2405 rue de la Terrasse, Université Laval, Québec, QC G1V 0A6, Canada; ^2^:Department of Forest Resources Management, 2424 Main Mall, University of British Columbia, Vancouver, BC V6T 1Z4, Canada; ^3^:Natural Resources Institute Finland (Luke), Latokartanonkaari 9, FI-00790 Helsinki, Finland"
 output:
@@ -104,7 +104,7 @@ Key Message {-}
 ===========
 <!-- Should be no more than 30 words -->
 We assess even-aged stands vertical distributions of LiDAR returns and find
-that species, age, and crown closure each have a distinct pattern that explain
+that species, age, and crown cover each have a distinct pattern that explain
 up to 47% of the variations.
 
 Abstract {-}
@@ -114,7 +114,7 @@ Tree species have different shapes and forest stand dynamics. Light detection
 and ranging (LiDAR) can measure the three dimensional position of
 reflective material by sending laser pulses through the canopy. We examined the 
 influence of three forest stand attributes:
-species, crown closure, and age on the vertical distribution of aerial
+species, crown cover, and age on the vertical distribution of aerial
 LiDAR returns of forested stands. We studied over five thousand regular,
 even-aged stands in Quebec (Canada) with five dominant species: balsam
 fir (*Abies balsamea* (L.) Mill.), paper birch (*Betula papyrifera*
@@ -124,7 +124,7 @@ returns against the three attributes using a functional glm and a novel nonparam
 Results indicate that aspen stands had the most uniform vertical distribution of LiDAR returns; balsam fir and
 white birch distributions were similar and centered around 50% of the
 stand height; black spruce and white spruce distributions were
-skewed below 30% of stand height ($p$<0.001). An increase in crown closure
+skewed below 30% of stand height ($p$<0.001). An increase in crown cover
 concentrated the distributions around 50% height. Increasing age
 gradually shifted the distributions higher in the stand until 50–70
 years, where it plateaued and slowly declined at 90–120 years. The full model maximal R²
@@ -182,7 +182,7 @@ shape, and ecosystem's aboveground biomass [@ellsworth_reich93;
 @cao_etal14; @papa_etal20], to identify tree species [@heinzel_koch11;
 @heinzel_koch12; @vaughn_etal12; @hovi_etal16; @fassnacht_etal16; @budei_etal18;
 @axelsson_etal18; @fedrigo_etal18], and to study stand characteristics such as
-age, crown closure, and basal area [@korhonen_etal11; @white_etal13;
+age, crown cover, and basal area [@korhonen_etal11; @white_etal13;
 @racine_etal14]. Airborne LiDAR is an important tool to quantify biomass and
 offers many opportunities to explore large-scale phenomena that could only be
 observed on the field, such as large-scale habitat characterization
@@ -242,15 +242,15 @@ visual understanding of the effects of the variables on the functional data.
 <!-- ## Forest vertical structure determinants -->
 
 The information contained in the vertical distribution of LiDAR returns is
-closely related to the distribution of the vegetation. Reduced crown closure (the
-proportion of area covered by vegetation) generally allows for an increased
+closely related to the distribution of the vegetation. Reduced crown cover (the
+proportion of area covered by vegetation, @gonsamo_etal13) generally allows for an increased
 probability for the LiDAR returns to reach lower vegetation [@hilker_etal10].
 In turn, age influences the vertical position of the crown within the stand
 [@coops_etal09; @racine_etal14]. While using direct foliage measurements,
 @aber79 observed that the vertical concentration of the foliage evolved across
 stand age, and that the end point of the forest succession seemed to reach an
 equilibrium where the foliage was relatively evenly distributed within the
-canopy. @martin-ducup_etal16 noted that crown closure and stand 
+canopy. @martin-ducup_etal16 noted that crown cover and stand 
 maturity affected the shapes of the crown of sugar maples as measured using 
 terrestrial LiDAR. 
 
@@ -276,7 +276,7 @@ area-based survey. We hypothesize that the use of a functional GLM combined to a
 non-parametric graphical 
 test of significance makes it possible to verify inter-specific
 differences in the vertical distribution patterns
-after accounting for stand crown closure and age effects. 
+after accounting for stand crown cover and age effects. 
 
 # Method
 
@@ -338,8 +338,8 @@ stereopsis (virtual 3D vision) from the forward and
 nadir-facing ADS–40 sensor images, the expert photo-interpreter classified
 many species by integrating information on landscape position, crown
 shapes, texture, and color. Every photo was segmented into homogenous
-stands using species, crown closure, height, and geomorphic criteria.
-Each stand was classified regarding species composition, crown closure,
+stands using species, crown cover, height, and geomorphic criteria.
+Each stand was classified regarding species composition, crown cover,
 age, height, and other ecological variables using a combination of
 photography, ground-control points and historical data as a reference.
 Stand age is estimated using ground control plots where trees were
@@ -347,7 +347,7 @@ cored, this information is then combined with available archives, height,
 and ecology to judge age from aerial photography. Forest age is
 interpreted in 7 regular: (10 [0–20], 30 [21–40], 50
 [41–60], 70 [61–80], 90 [81–100], 120 [101, ∞]), and irregular age classes.
-Crown closure is visually estimated by comparing the proportion of open
+Crown cover is visually estimated by comparing the proportion of open
 ground with the space occupied by the mature tree crowns. It is
 estimated in 9 classes: 10 [5–14], 20 [15–24], 30 [25–34], 40
 [35–44], 50 [45–54], 60 [55–64], 70 [65–74], 80 [75–84], and
@@ -357,7 +357,7 @@ response based on composite near-infrared image, green and blue
 channels, and their frequent associations in forest stands (Table \@ref(tab:species)).
 Finally, the interpretation relied on the ground-control points and the
 ecological knowledge of the photo-interpreter. We used this photo-interpreted forest map 
-as our reference data for species, crown closure, and age.
+as our reference data for species, crown cover, and age.
 
 ```{r species, echo = FALSE}
 x <- tibble::tribble(
@@ -463,7 +463,7 @@ To compare inter- and intraspecific variations in the distribution of LiDAR retu
 confounding variables, we used a nonparametric graphical test of
 significance [@myllymaki_mrkvicka19; @mrkvicka_etal19] (Figure \@ref(fig:fig-fglm-process)). 
 We modeled the vertical
-distributions of LiDAR returns as a function of dominant species, crown closure,
+distributions of LiDAR returns as a function of dominant species, crown cover,
 and age using the general linear model
 
 \begin{equation}
@@ -485,7 +485,7 @@ include("fglm", "pictures")
 where $d_i$ contains the LiDAR density distribution at scaled height $h$
 (represented by the vertical distribution histogram) for observation $i$, and
 $\beta(h)$ is the parameter vector related to each variable, $CC$ is crown
-closure, and $\varepsilon(h)$ is the error term with mean zero and finite variance $\sigma^2$. 
+cover, and $\varepsilon(h)$ is the error term with mean zero and finite variance $\sigma^2$. 
 Species as well as ​age---given that the last class was open---were regarded as
 categorical variables and thus encoded with dummy variables in $Species_i$ and
 $Age_i$, while $CC_i$ was regarded as a continuous variable.
@@ -518,7 +518,7 @@ d_i(h) = \beta_0(h)+\beta_{sp}(h)\cdot Species_i + \beta_{cc}(h) \cdot CC_i +
 We used the coefficients of the variable of interest
 (the left-out $\beta$ in Equations \@ref(eq:species)--\@ref(eq:age)) for the 
 statistical test as suggested by @mrkvicka_etal19: 
-for the continuous crown closure variable, the test statistic
+for the continuous crown cover variable, the test statistic
 was the vector $\beta_{cc}(h)$ for all $h$; for age, the test was based on the 
 values of the effect $\beta_{age,l}(h)$ of all the age groups $l$ for all $h$. 
 To inspect species differences,
@@ -568,7 +568,7 @@ data. We instead relied on the successive application of the transformation
 (Equation \@ref(eq:variance)) for each of the confounding variables. In this
 case, we found that the order in which the transformation is applied is
 important because it can reintroduce heterogeneity of variance. We
-settled on the successive transformation by crown closure, age, and species
+settled on the successive transformation by crown cover, age, and species
 which provided the best results and reduced heterogeneity. We verified
 the importance of the correlation by running Breusch-Pagan [@breusch_pagan79] test of
 heteroscedasticity using the squared residuals $(d_i(h) - \hat{d_i}(h))²$ on
@@ -586,7 +586,7 @@ Results
 
 The contrasts from the nonparametric graphical test of significance
 confirm that we can reject the null hypothesis: the differences between
-all species, after accounting for age and crown closure, were significantly
+all species, after accounting for age and crown cover, were significantly
 different ($p$ < 0.001) (Figure \@ref(fig:fig-sp)). We observed two groups of
 species where differences were significant but small: balsam fir–paper
 birch, and black spruce–white spruce. Balsam fir and paper birch differences
@@ -632,11 +632,11 @@ include("fig-sp-combined")
 ```{r include = FALSE}
 fig_cc2_caption <- 
 "Vertical distribution of LiDAR returns 
-as a function of crown closure (columns) and species (rows). Black lines
+as a function of crown cover (columns) and species (rows). Black lines
 represent the median distribution; shaded areas represent 95% and 50%
 local variation envelopes."
 fig_cc2_short_caption <- "Vertical distribution of LiDAR returns 
-as a function of crown closure and species."
+as a function of crown cover and species."
 ```
 
 
@@ -658,31 +658,31 @@ as a function of age groups and species."
 include("fig-age2")
 ```
 
-An increase in crown closure was associated with a decrease in the density of
+An increase in crown cover was associated with a decrease in the density of
 LiDAR returns below 33% of stand height, while the density of LiDAR returns
 above 38% increased (Figure \@ref(fig:fig-cc)). The largest augmentation was
 concentrated around the middle height (50%), while the inferior area (around 3%
 of height) had the largest reduction effect. Note that through the text we use
 *inferior* to identify the parts of the forest stand that are closer to the
 ground, and *superior* for the inverse. Figure \@ref(fig:fig-cc2)
-displays the effect of crown closure on each species vertical
-distribution of LiDAR returns, including the effect of age. The increase in crown closure concentrated the
+displays the effect of crown cover on each species vertical
+distribution of LiDAR returns, including the effect of age. The increase in crown cover concentrated the
 returns around the middle height, except for aspen which peak was located
 superior (around 80% of stand height) and white spruce which peak was inferior (around
-20%). Although black spruce peak was centered at 50% stand height for high values of crown closure, the observed
+20%). Although black spruce peak was centered at 50% stand height for high values of crown cover, the observed
 variability was skewed toward the inferior stand height. Some species were more 
 represented in younger or older age classes, which inflated the variation envelopes. 
 The model from Figure \@ref(fig:fig-cc) accounted for this effect.
 
 ```{r include = FALSE}
 fig_cc_caption <- 
-"Nonparametric graphical tests of significance for crown closure:
+"Nonparametric graphical tests of significance for crown cover:
 the observed coefficient (black curve), 
 and the 98% global envelope (grey band) that shows the area of acceptance of 
 the null hypothesis (no effect, $p$<0.001) obtained from the permutations of the 
 residuals of the null model (Equation \\@ref(eq:cc)). The observed curve is 
 bolder when outside the envelope."
-fig_cc_short_caption <- "Nonparametric graphical tests of significance for crown closure"
+fig_cc_short_caption <- "Nonparametric graphical tests of significance for crown cover"
 ```
 
 
@@ -742,7 +742,7 @@ between 28--40%. The highest R² was for the full model
 at 0.47 (at 10--13% of height) and 0.42 (at 49--51%). The model explicitly
 excluding the species variable (Eq. \@ref(eq:species)) displayed a difference of
 more than 0.10 with the full model R² between 72--92% stand height. Excluding
-the crown closure variable from the model (Eq. \@ref(eq:cc)) created a
+the crown cover variable from the model (Eq. \@ref(eq:cc)) created a
 difference of more than 0.10 with the full model R² between 0--21% and 46--67%
 of stand height. The model excluding the age variable (Eq. \@ref(eq:age))
 displayed a difference of more than 0.10 with the full model R² at 18--38% and
@@ -752,7 +752,7 @@ displayed a difference of more than 0.10 with the full model R² at 18--38% and
 fig_rsq_caption <- 
 "Comparison of $R²(h)$ of the full model (Eq. \\@ref(eq:full)) containing all 
 variables, and the three reduced models (Eq. \\@ref(eq:species)--\\@ref(eq:age))
-where one variable has been left out (either Species, Crown Closure, or Age)."
+where one variable has been left out (either Species, Crown Cover, or Age)."
 fig_rsq_short_caption <- "Comparison of $R²(h)$."
 ```
 
@@ -766,9 +766,9 @@ Discussion
 ========================
 
 Our objective was to study the influence of species, crown
-closure and age on the vertical distribution of LiDAR returns. We found
+cover and age on the vertical distribution of LiDAR returns. We found
 that even-aged stands exhibit species-specific patterns that evolve
-predictably with crown closure and age. We observed two groups of
+predictably with crown cover and age. We observed two groups of
 species: balsam fir and paper birch which had a more symmetrical
 vertical distribution of LiDAR returns centered between 40 and 60% of
 stand height, and white spruce and black spruce distributions
@@ -790,13 +790,13 @@ shade-tolerant conifer. Since we used the dominant species to classify
 stands, this could be the result of frequent association between balsam
 fir and paper birch in the same stand.
 
-Increased crown closure was associated with a concentration of the vertical
+Increased crown cover was associated with a concentration of the vertical
 distribution of LiDAR returns which moved points below 33% to above 38% of stand
-height. Complementarily, stands with a lower crown closure presented a vertical
+height. Complementarily, stands with a lower crown cover presented a vertical
 distribution of LiDAR returns that was more dispersed and skewed toward the
 ground, with fewer returns in the superior part of the stand. This effect was
 also apparent when comparing the variance explained by the models in Figure
-\@ref(fig:fig-rsq) where crown closure appeared to contribute to explain at
+\@ref(fig:fig-rsq) where crown cover appeared to contribute to explain at
 least 25% from the variance explained by the full model below 21% and between
 44--69% of stand height.
 
@@ -810,9 +810,9 @@ stabilize in the 70 years group. The 90 and 120 years groups displayed
 the smallest magnitude of change. While it is well established that 
 absolute stand height varies predictably with age, the changes we observed here 
 are relative to the maximal height of the stand. Age effect was akin to the 
-crown closure effect: while they increased, they were both associated to an 
+crown cover effect: while they increased, they were both associated to an 
 increased proportion of points in the superior part of the stand. The crown 
-closure variable however seemed to explain more of the distribution variations 
+cover variable however seemed to explain more of the distribution variations 
 in the lower stand (below 21%) and the middle stand (46--67%), while age 
 contribution to R² happened between 18--38%. Unlike @aber79 who observed 
 a stable distribution of foliage at the end point of the forest succession, the
@@ -831,7 +831,7 @@ height. The difference in variability explained by the species model compared to
 the full model was more important above 72% and peaked at around 80% (Figure
 \@ref(fig:fig-rsq)). One possible explanation is that the area 74--90% is
 associated to important differences between aspen and all other species, which
-were probably not explained by crown closure or age. 
+were probably not explained by crown cover or age. 
 
 The area 31--46% of stand height exhibited a sharp decline in R², where age seemed
 to explain most of the variance of the full model. While the reasons for this
@@ -853,7 +853,7 @@ linear discriminant analysis when interpretability is desired.
 ## Limitations
 
 The median stand area was 9 ha, a large area compared to other area-based
-approaches, which allowed the aggregation LiDAR returns to identify specific
+approaches, which allowed the aggregation of LiDAR returns to identify specific
 patterns. Stands are by design the most homogeneous unit of the forest landscape
 and vertical LiDAR distributions are more reliable after a sufficient number of
 aggregated returns are grouped. The exact optimal area to observe these patterns
@@ -908,7 +908,7 @@ Species classification could be performed by training a model to associate verti
 While fGLM is not particularly suited to predictions, non parametric methods, such as Deep Neural Network could be good candidates for species classification because they can handle the functional representation of the data and their non-linear relations. 
 
 Additional evidence is needed to establish if the relation between
-vertical density of LiDAR returns, and species, crown closure, and age
+vertical density of LiDAR returns, and species, crown cover, and age
 are circumstantial to our study area, or if they hold in other areas,
 with different species, and LiDAR survey parameters. Other variables, such as
 LiDAR scan angle and abiotic factors, could be included to improve the model.
@@ -921,7 +921,7 @@ Conclusion
 ========================
 
 Using light detection and ranging (LiDAR) vertical distributions can
-provide an understanding of the interplay between species, crown closure,
+provide an understanding of the interplay between species, crown cover,
 and age. The use of the functional generalised linear models combined to the 
 graphical test of significance allows
 interpreting the differences in distributions explained by multiple
@@ -930,14 +930,14 @@ to find ecosystems at multiple evolution stages to observe LiDAR
 patterns variations and eventually link them to structural and 
 functional dynamics. Our results show that species feature distinctive
 vertical distributions of LiDAR returns that concentrate with crown
-closure and rise with age. Balsam fir and paper birch had a similar
+cover and rise with age. Balsam fir and paper birch had a similar
 vertical distribution of LiDAR returns, like white spruce and black
 spruce. Aspen was the most different species with a more uniform
 distribution of LiDAR returns and a peak in the superior part of the stand. 
 Balsam fir–paper birch displayed a peak centered
 around 50% of stand height, while the white–black spruces had their
 distributions skewed below 30% of stand height. Increase in crown 
-closure concentrated the distributions around 50% by deflating the 
+cover concentrated the distributions around 50% by deflating the 
 distribution below 33%, while age affected was more diffuse across the whole 
 stand height. These results could improve our understanding of the 
 evolution of the forest structure over changing conditions and could be used 
