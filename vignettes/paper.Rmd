@@ -25,6 +25,7 @@ output:
     keep_md: true
     numbering: false
 csl: "templates/trees.csl"
+#bibliography: "`r rbbt::bbt_write_bib('biblio.json', overwrite = TRUE)`"
 bibliography: "biblio.json"
 link-citations: yes
 always_allow_html: true
@@ -867,7 +868,8 @@ distortion of the vertical distribution of LiDAR returns could be high and
 reduced as the trees approach their maximal height for the site. Using a high 
 quantile rather than the highest return could reduce this effect.
 Nonetheless, the variance explained by the model using highest--point 
-registration still proved useful.
+registration still proved useful. 
+Returns from the inferior parts of the stands are also subject to occlusion which reduces the proportion of points that can be recorded; corrections can be applied to account for occlusion [@roussel_etal17; @roussel_etal18; @wilkes_etal16].
 
 The non-parametric graphical test of significance that we used is slightly
 liberal because the Freedman-Lane permutation is approximate
