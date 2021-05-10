@@ -959,7 +959,8 @@ manuscript; Tomáš Mrkvička for helpful discussions on the transformations of
 heteroscedastic data; Anick Patry, Antoine Leboeuf, Marc-Olivier Lemonde, 
 and Jean-François Bourdon from
 Ministère des Forêts, de la Faune et des Parcs for providing data and
-support.
+support. 
+We also thank the two anonymous reviewers for their thoughtful feedback.
 
 Declarations {-}
 ================
