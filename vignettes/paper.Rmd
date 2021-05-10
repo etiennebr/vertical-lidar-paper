@@ -489,7 +489,7 @@ where $d_i$ contains the LiDAR density distribution at scaled height $h$
 (represented by the vertical distribution histogram) for observation $i$, and
 $\beta(h)$ is the parameter vector related to each variable, $CC$ is crown
 cover, and $\varepsilon(h)$ is the error term with mean zero and finite variance $\sigma^2$. 
-Species as well as ​age---given that the last class was open---were regarded as
+Species as well as age---given that the last class was open---were regarded as
 categorical variables and thus encoded with dummy variables in $Species_i$ and
 $Age_i$, while $CC_i$ was regarded as a continuous variable.
 
@@ -615,7 +615,7 @@ tests of significance for species using contrasts:
 the observed difference between the coefficients of two species (black curve), 
 where species in rows are subtracted from the species in columns (e.g. first 
 column, second row is the aspen − balsam fir contrast), and the 98% global 
-envelope (grey bands below the diagonal) that shows the area of acceptance 
+envelope (grey bands--the test is only performed once) that shows the area of acceptance 
 of the null hypothesis (no effect, $p$<0.001) obtained from the permutations 
 of the residuals of the null model (Equation \\@ref(eq:species)). The observed 
 curve is bolder when outside the envelope. Panels above the diagonal are the 
@@ -727,7 +727,7 @@ The nonparametric graphical tests of significance for age:
 the observed coefficients of the six age groups (black curves), 
 and the 98% global envelope (grey bands below the diagonal) that shows the 
 area of acceptance of the null hypothesis (no effect, $p$<0.001) obtained from 
-the permutations of the residuals of the null model (Eq. \\@ref(eq:age)). 
+the permutations of the residuals of the null model (Equation \\@ref(eq:age)). 
 The observed curve is bolder when outside the envelope.
 "
 fig_age_short_caption <- "Nonparametric graphical tests of significance for age"
@@ -743,18 +743,18 @@ The coefficient of determination of the models varied across stand height (Figur
 5--15%, and 46--54% of stand height, while all models displayed a sharp decline
 between 28--40%. The highest R² was for the full model
 at 0.47 (at 10--13% of height) and 0.42 (at 49--51%). The model explicitly
-excluding the species variable (Eq. \@ref(eq:species)) displayed a difference of
+excluding the species variable (Equation \@ref(eq:species)) displayed a difference of
 more than 0.10 with the full model R² between 72--92% stand height. Excluding
-the crown cover variable from the model (Eq. \@ref(eq:cc)) created a
+the crown cover variable from the model (Equation \@ref(eq:cc)) created a
 difference of more than 0.10 with the full model R² between 0--21% and 46--67%
-of stand height. The model excluding the age variable (Eq. \@ref(eq:age))
+of stand height. The model excluding the age variable (Equation \@ref(eq:age))
 displayed a difference of more than 0.10 with the full model R² at 18--38% and
 62--64% of stand height.
 
 ```{r include = FALSE}
 fig_rsq_caption <- 
-"Comparison of $R²(h)$ of the full model (Eq. \\@ref(eq:full)) containing all 
-variables, and the three reduced models (Eq. \\@ref(eq:species)--\\@ref(eq:age))
+"Comparison of $R²(h)$ of the full model (Equation \\@ref(eq:full)) containing all 
+variables, and the three reduced models (Equations \\@ref(eq:species)--\\@ref(eq:age))
 where one variable has been left out (either Species, Crown Cover, or Age)."
 fig_rsq_short_caption <- "Comparison of $R²(h)$."
 ```
@@ -828,7 +828,7 @@ small differences in distributions while the inferior portion displayed large
 variations. The distribution of LiDAR returns in the superior and inferior
 portions of the stand can be highly dependent on the LiDAR survey parameters
 [@roussel_etal17; @roussel_etal18], which might make them less likely to be
-stable across different surveys. Nonetheless, the full model (Eq.
+stable across different surveys. Nonetheless, the full model (Equation
 \@ref(eq:full)) still explained 20% of the variability up to 90% of stand
 height. The difference in variability explained by the species model compared to
 the full model was more important above 72% and peaked at around 80% (Figure
@@ -868,7 +868,7 @@ measures and might explain, in part, why the superior part of the canopy's R²
 was lower. In young stands, where a single mature tree might remain, the
 distortion of the vertical distribution of LiDAR returns could be high and
 reduced as the trees approach their maximal height for the site. Using a high 
-quantile rather than the highest return could reduce this effect.
+quantile rather than the highest return could reduce this effect and improve model performance.
 Nonetheless, the variance explained by the model using highest--point 
 registration still proved useful. 
 Returns from the inferior parts of the stands are also subject to occlusion which reduces the proportion of points that can be recorded; corrections can be applied to account for occlusion [@roussel_etal17; @roussel_etal18; @wilkes_etal16].
@@ -901,7 +901,7 @@ be used to improve our understanding of stand structure evolution and species
 classification with LiDAR. 
 In a review of remote sensing tree species
 classification, Fassnacht et al. -@fassnacht_etal16 noted that most studies
-pursued the optimization of classification accuracy, and provided little
+pursued the optimization of classification accuracy and provided little
 analysis of the causal understanding of species discrimination. 
 The nonparametric graphical test of significance method can help study the evolution of forest structure by allowing the association of variables to the distribution of reflective material. 
 In this paper, we applied the method to a selection of simple stands (cleat species dominance, 
