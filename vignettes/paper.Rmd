@@ -113,9 +113,12 @@ up to 47% of the variations.
 Abstract {-}
 ========
 <!-- Please provide an abstract of 150 to 250 words -->
+[note that the abstract is now 275 word, it should be 250 max]
 Tree species have different shapes and forest stand dynamics. Light detection
 and ranging (LiDAR) can measure the three dimensional position of
-reflective material by sending laser pulses through the canopy. We examined the 
+reflective material by sending laser pulses through the canopy. 
+Studying the vertical distribution of LiDAR returns across varying stand conditions is difficult because the data has many dimensions.
+We examined the 
 influence of three forest stand attributes:
 species, crown cover, and age on the vertical distribution of aerial
 LiDAR returns of forested stands. We studied over five thousand regular,
