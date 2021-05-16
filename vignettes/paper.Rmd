@@ -419,8 +419,10 @@ tbl_species %>%
 Even-aged stands are less complex to analyze from a vertical structure
 point of view than irregular stands, so we focused our analysis on
 even-aged stands with clearly dominant species representing at least 50%
-of the stand cover. The steps required to prepare LiDAR data for processing 
-are sumarised in Figure \@ref(fig:fig-lidar-process).
+of the stand cover. 
+Using a low threshold for the dominance increased the number of observations for the analysis which in turn increased the ability to detect effects, but also increased noise from other co-dominant species. 
+The steps required to prepare LiDAR data for processing 
+are summarized in Figure \@ref(fig:fig-lidar-process).
 We excluded stands with an average LiDAR sampling
 rates below 2 pt/m² or an area of less than 4 ha to ensure sufficient
 number of LiDAR returns. From these stands, we kept only those with a
@@ -884,16 +886,6 @@ under the presence of confounding variables [@winkler_etal14; @anderson_robinson
 advantage of the graphical interpretation, especially the identification of the
  area of rejection, which allowed us to interpret at which relative heights 
  and between which species the differences occurred.
-
-This study focused on stands with a dominant species composing at least 50% of the stand. 
-Using a low threshold for the dominance increases the number of observations elligble to the analysis and our ability to detect effects, but adds noise (because the rest of the stand is composed of other species). 
-In our case, 50% dominance provided a good balance between data and noise, and allowed for a sufficiently large number of stands and species. 
-We also focused our study on stands with sufficient LiDAR sampling and even-aged stands to reduce the noise that could be created by other confounding factors, such as multiple statums.
-The model could in theory support more descriptive variables, such as  multi-age or multi-stratum descriptors, but it would require a sufficiently large number of stands. 
-Practically, the number of stands is limited and adding interactions makes interpretation more difficult. 
-One way to reduce the noise associated to more complex stands, might be to reduce the area on which the distribution is computed.
-As we improve the understanding of the association between variables and vertical distribution of LiDAR returns, and isolate effects, it might be possible to add more variables to a model and include more complex stands.
-
 
 ## Future outlook
 
