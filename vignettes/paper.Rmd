@@ -177,7 +177,7 @@ More recently a multispectral LiDAR has also been used to distinguish stand spec
 
 Most studies on species classification using aerial LiDAR have focused on
 species identification based on individual tree crowns. 
-However tree crown delineation requires a large number of LiDAR returns and highly accurate registration of ground observations [@orka_etal09; @muss_etal11]. 
+However, tree crown delineation requires a large number of LiDAR returns and highly accurate registration of ground observations [@orka_etal09; @muss_etal11]. 
 Using a small observation area such as an individual tree crown causes a loss in the shape of the vertical distribution of LiDAR returns. 
 This is due to a decrease in the number of LiDAR returns, causing the distribution to become a collection of random deviates. 
 Thus, although the accuracy of species identification would be improved by  a very high point density in excess of 10 pt/m² [@fassnacht_etal16], it is  difficult to apply and validate these approaches for use over large areas and with less-dense LiDAR datasets.
@@ -359,12 +359,13 @@ tbl_species %>%
   kableExtra::footnote(number = c("Colors are based on (NIR+G+B mapped to R, G, B channels).", "Adapted from @farrar95a; @leboeuf_vaillancourt13; @leboeuf_vaillancourt13a."))
 ```
 
-## LiDAR Data Processing
-
 Even-aged stands are less complex than irregular stands when analyzed from a vertical structure point of view. 
 Therefore, we focused our analysis on even-aged stands where clearly dominant species represented at least 50% of the stand cover. 
-Using a low threshold for dominance increased the number of usable observations for the analysis. 
-This improved the ability of the analysis to detect effects, but also increased the noise from other co-dominant species. 
+Using a low threshold for species dominance increased the number of usable observations for the analysis. 
+This improved the ability of the analysis to detect effects, but also increased the noise from other co‑dominant species. 
+
+## LiDAR Data Processing
+
 The steps required to prepare LiDAR data for processing 
 are summarized in Figure \@ref(fig:fig-lidar-process).
 We excluded stands with average LiDAR sampling
@@ -403,18 +404,18 @@ ability to understand the effect of individual variables and interpret the resul
 
 To compare inter- and intraspecific variations in the distribution of LiDAR returns and the
 effect of three variables, we used a nonparametric graphical test of
-significance [@myllymaki_mrkvicka19; @mrkvicka_etal19]. 
+significance [@myllymaki_mrkvicka20; @mrkvicka_etal19]. 
 We modeled the vertical
 distributions of LiDAR returns as a function of dominant species, crown cover,
 and age using the general linear model
 
-\begin{equation}
-d(h) = \beta_0(h) +X_{sp}\cdot\beta_{sp}(h) +X_{cc}\cdot\beta_{cc}(h) +X_{age}\cdot\beta_{age}(h) +\varepsilon(h)  `r ifelse(is_docx(), "", "(\#eq:full)")`
-\end{equation}
-`r ifelse(is_docx(), "(\#eq:full)", "")`
-<!-- d(h) is a N \times 1 vector containing the observed density distributions for all $i$ -->
+`r ifelse(is_docx(), "\t$(\\#eq:full)$", "")`
 
-where, for every scaled height $h$, $d(h)$ is the $N\times1$ vector of observed LiDAR density distributions at scaled height $h$, and
+\begin{equation}
+d(h) = \beta_0(h) +X_{sp}\cdot\beta_{sp}(h) +X_{cc}\cdot\beta_{cc}(h) +X_{age}\cdot\beta_{age}(h) +\varepsilon(h) `r ifelse(is_docx(), "", "     (\\#eq:full)")`
+\end{equation}
+<!-- d(h) is a N \times 1 vector containing the observed density distributions for all $i$ -->
+where, for every scaled height $h$, $d(h)$ is the $N\times1$ vector of observed LiDAR distributions at scaled height $h$, and
 $\beta_{sp}(h)$, $\beta_{cc}(h)$, and $\beta_{age}(h)$ are the parameter vectors related to species in $X_{sp}$, crown cover in $X_{cc}$, and age in $X_{age}$; $\varepsilon(h)$ is the vector of random errors with mean zero and finite variance $\sigma^2(h)$. The crown cover was considered a continuous variable, while species and age were considered categorical variables (given that the last age class was open). This model that incorporates all three variables is referred to as the full model. 
 
 We studied the effect of each variable after accounting for the other
@@ -424,16 +425,18 @@ The $\beta$ coefficients of the discrete factors were constrained to sum to zero
 The corresponding three null models were obtained by removing the
 studied variable from the full model (Eq. \@ref(eq:full)):
 
+`r ifelse(is_docx(), "\t$(\\#eq:species)$\t$(\\#eq:cc)$\t$(\\#eq:age)$", "")`
+
 \begin{equation}
-d(h) = \beta_0(h) +X_{cc}\cdot\beta_{cc}(h) +X_{age}\cdot\beta_{age}(h) +\varepsilon(h)    (\#eq:species)
+d(h) = \beta_0(h) +X_{cc}\cdot\beta_{cc}(h) +X_{age}\cdot\beta_{age}(h) +\varepsilon(h)    `r ifelse(is_docx(), "", "     (\\#eq:species)")`
 \end{equation}
 
 \begin{equation}
-d(h) = \beta_0(h) +X_{sp}\cdot\beta_{sp}(h) +X_{age}\cdot\beta_{age}(h) +\varepsilon(h)   (\#eq:cc)
+d(h) = \beta_0(h) +X_{sp}\cdot\beta_{sp}(h) +X_{age}\cdot\beta_{age}(h) +\varepsilon(h)   `r ifelse(is_docx(), "", "     (\\#eq:cc)")`
 \end{equation}
 
 \begin{equation}
-d(h) = \beta_0(h) +X_{sp}\cdot\beta_{sp}(h) +X_{cc}\cdot\beta_{cc}(h) +\varepsilon(h)     (\#eq:age)
+d(h) = \beta_0(h) +X_{sp}\cdot\beta_{sp}(h) +X_{cc}\cdot\beta_{cc}(h) +\varepsilon(h)     `r ifelse(is_docx(), "", "     (\\#eq:age)")`
 \end{equation}
 
 We used the coefficients of the variable of interest
@@ -460,10 +463,12 @@ We observed that the variances of the model residuals were heterogeneous for all
 Following @mrkvicka_etal20, we transformed the matrix of vertical LiDAR returns distribution (Figure \@ref(fig:fig-fglm-process)) by scaling the functions $d_{i}$ of each group $j$ according to their variance dispersion. The initial $d_{i,j}$ function was
 transformed into a $S_{i,j}$ (scaled) function by
 
+`r ifelse(is_docx(), "\t$(\\#eq:variance)$", "")`
+
 \begin{equation}
 S_{i,j}(h) = \frac{d_{i,j}(h) - \bar{d_j}(h)}{\sqrt{Var(d_j(h))}} \cdot
   \sqrt{Var(d(h))} + \bar{d_j}(h)  
-(\#eq:variance)
+`r ifelse(is_docx(), "", "     (\\#eq:variance)")`
 \end{equation}
 
 where the group sample variance $Var(d_j(h))$ is used to correct for unequal
@@ -492,7 +497,7 @@ curves, the coefficient of determination was less than 4% for all variables and
 all $h$, which confirmed that no further adjustments were required.
 
 We performed the analysis using R version 3.6.3 [@rcoreteam20], the GET package
-[@myllymaki_mrkvicka19; @mrkvicka_etal19], and Lastools [@isenburg12] to correct
+[@myllymaki_mrkvicka20; @mrkvicka_etal19], and Lastools [@isenburg12] to correct
 and extract the LiDAR data.
 
 Results
@@ -698,8 +703,9 @@ The effect of age was akin to that of crown cover: as the age or crown cover inc
 Crown cover, however, seemed to explain the variation in the vertical distribution of LiDAR returns below 21% of stand height and 46--67% stand height, while age explained the variation between 18--38% and 62--64% of stand height. 
 Unlike @aber79 who observed 
 a stable distribution of foliage at the end point of forest succession, the
-vertical distribution of LiDAR returns of the 120 year group  
-displayed a small decreased concentration of returns below 33--38%.
+vertical distribution of LiDAR returns of the 120-year group  
+displayed a small concentration of returns at 33–44% of stand height and 
+a small decrease below 23% of stand height.
 
 <!-- R2 -->
 The most pronounced differences in vertical distributions of LiDAR returns occurred below 80% of stand height. 
