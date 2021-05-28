@@ -420,7 +420,7 @@ $\beta_{sp}(h)$, $\beta_{cc}(h)$, and $\beta_{age}(h)$ are the parameter vectors
 
 We studied the effect of each variable after accounting for the other
  variables (also called the nuisance factors by Freedman and Lane
--@freedman_lane83) using the methodology illustrated in Figure \@ref(fig:fig-fglm-process). We tested the effect of each three variables using the following null hypothesis: $\beta_{sp, m}(h)=0$ for all $m$ and $h$, $\beta_{cc}(h)=0$ for all $h$, and $\beta_{age, l}(h)=0$ for all $l$ and $h$, where $m$ is a vector containing each species and $l$ is a vector of each age group.
+-@freedman_lane83) using the methodology illustrated in Figure \@ref(fig:fig-fglm-process). We tested the effect of each three variables using the following null hypothesis: $\beta_{sp, m}(h)=0$ for all $m$ and $h$, $\beta_{cc}(h)=0$ for all $h$, and $\beta_{age, l}(h)=0$ for all $l$ and $h$, where $m$ and $l$ refer to the elements of the parameter vectors $\beta_{sp}(h)$ and $\beta_{age}(h)$ for each species and age groups, respectively.
 The $\beta$ coefficients of the discrete factors were constrained to sum to zero.
 The corresponding three null models were obtained by removing the
 studied variable from the full model (Eq. \@ref(eq:full)):
