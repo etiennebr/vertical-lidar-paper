@@ -113,9 +113,9 @@ We assessed even-aged stand vertical distributions of LiDAR returns and found th
 Abstract {-}
 ========
 <!-- Please provide an abstract of 150 to 250 words -->
-Light detection and ranging (LiDAR) provides information on the vertical structure of forest stands enabling detailed and extensive ecosystem study.
+Light detection and ranging (LiDAR) provides information on the vertical structure of forest stands enabling detailed and extensive ecosystem study. 
 The vertical structure is often summarized by scalar features and dimension-reduction techniques that limit the interpretation of results. 
-Instead, we quantified the influence of three variables, species, crown cover, and age, on the vertical distribution of airborne LiDAR returns from forest stands. 
+Instead, we quantified the influence of three variables, species, crown cover, and age, on the vertical distribution of airborne LiDAR returns from forest stands.
 We studied 5,428 regular, even-aged stands in Quebec (Canada) with five dominant species: balsam fir (*Abies balsamea* (L.) Mill.), paper birch (*Betula papyrifera* Marsh), black spruce (*Picea mariana* (Mill.) BSP), white spruce (*Picea glauca* Moench) and aspen (*Populus tremuloides* Michx.). 
 We modeled the vertical distribution against the three variables using a functional general linear model and a novel nonparametric graphical test of significance.
 Results indicate that LiDAR returns from aspen stands had the most uniform vertical distribution. 
@@ -300,7 +300,7 @@ Stand age was estimated using ground control plots where trees were
 cored. This information was then combined with available archives, height,
 and ecology to estimate age from aerial photography. Stand age was
 divided in six regular classes: 10 (0–20), 30 (21–40), 50
-(41–60), 70 (61–80), 90 (81–100), and 120 (101, ∞), and one irregular age class (such as uneven-aged and multi-stratum stands).
+(41–60), 70 (61–80), 90 (81–100), and 120 (101, ∞), and irregular age classes (such as uneven-aged and multi-stratum stands).
 Crown cover was also estimated by visually comparing the proportion of open
 ground with the space occupied by the mature tree crowns. Crown covert was categorized in 9 classes: 10 (5–14), 20 (15–24), 30 (25–34), 40
 (35–44), 50 (45–54), 60 (55–64), 70 (65–74), 80 (75–84), and
@@ -695,17 +695,15 @@ The gradual displacement of LiDAR returns from below 33% to above 38% associated
 
 <!-- age -->
 Increased age was associated with the vertical distribution of LiDAR returns being displace higher in the stand for up to 70 years, followed by a plateau or decline in the 90- and 120-year-old groups. 
-The rate of change between age groups decreased as the age increased.  Vertical distribution of LiDAR returns from younger stands appeared to undergo a rapid transformation in the 10-year group, which gradually decelerated and stabilized in the 70-year old group. 
+The rate of change between age groups decreased as the age increased.  Vertical distribution of LiDAR returns from younger stands appeared to undergo a rapid transformation in the 10-year group, which gradually decelerated and stabilized in the 70-year-old group. 
 The 90- and 120-year-old groups displayed the least amount of change. 
 While it is well established that absolute stand height varies predictably with age, the changes we observed here are relative to the maximal height of the stand. 
 
 The effect of age was akin to that of crown cover: as the age or crown cover increased, there was an increased concentration of points in the upper part of the stand. 
-Crown cover, however, seemed to explain the variation in the vertical distribution of LiDAR returns below 21% of stand height and 46--67% stand height, while age explained the variation between 18--38% and 62--64% of stand height. 
+However, age explained the variation slightly higher in the stand than crown cover (between 18–38% and 62–64% of stand height). 
 Unlike @aber79 who observed 
 a stable distribution of foliage at the end point of forest succession, the
-vertical distribution of LiDAR returns of the 120-year group  
-displayed a small concentration of returns at 33–44% of stand height and 
-a small decrease below 23% of stand height.
+vertical distribution of LiDAR returns of the 120-year group displayed a small concentration of returns at 33–44% of stand height and a small decrease below 23% of stand height.
 
 <!-- R2 -->
 The most pronounced differences in vertical distributions of LiDAR returns occurred below 80% of stand height. 
@@ -724,8 +722,9 @@ However, this registration makes the distributions potentially more affected by 
 <!-- For example, there might be an increase in LiDAR returns from the top of mature spruces dur to increased reflection caused by large crown tops that are filled with cones. This would raise the height of the highest stand return, and in turn create an accumulation of points in the lower part of the stand due to the registration.  -->
 For example, in young stands where there might only be a single remaining mature tree, the vertical distribution of LiDAR returns could be compressed.
 Using a height quantile as a registration point, such as 95% height rather than the highest return, could reduce the chances of compression and improve the vertical distributions.
-In addition to compression, the vertical distribution can be distorted by topography and occlusion of lower stand sections. 
-These effects are increasingly documented and can be mitigated by accounting for LiDAR survey parameters and topography [@roussel_etal17; @roussel_etal18; @wilkes_etal16; @liu_etal17]. 
+In addition to compression, the vertical distribution of LiDAR returns can be distorted by strong slopes [@liu_etal17]. 
+Furthermore, the occlusion of vegetation in lower stand parts overestimates the density of vegetation [@roussel_etal17; @roussel_etal18]. 
+Some of the noise in the vertical distribution could be reduced by using correction methods accounting for laser incidence angle, footprint size and pulse density [@roussel_etal17; @roussel_etal18; @wilkes_etal16]. 
 
 There was a decline in R² between 31% and 46% of the stand height, where age explained most of the variance of the full model (Figure \@ref(fig:fig-rsq)). 
 While the reasons for the decline are unknown, this section of stand height is associated with an increase in LiDAR returns in the 120-year-old group.
