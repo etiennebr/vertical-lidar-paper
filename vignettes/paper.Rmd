@@ -409,12 +409,20 @@ We modeled the vertical
 distributions of LiDAR returns as a function of dominant species, crown cover,
 and age using the general linear model
 
-`r ifelse(is_docx(), "\t$(\\#eq:full)$", "")`
+```{r include = FALSE}
+eqs <- 
+"\\begin{equation}
+  X (\\#eq:full)
+\\end{equation}"
+```
+`r ifelse(is_docx(), eqs, "")`
 
 \begin{equation}
 d(h) = \beta_0(h) +X_{sp}\cdot\beta_{sp}(h) +X_{cc}\cdot\beta_{cc}(h) +X_{age}\cdot\beta_{age}(h) +\varepsilon(h) `r ifelse(is_docx(), "", "     (\\#eq:full)")`
 \end{equation}
 <!-- d(h) is a N \times 1 vector containing the observed density distributions for all $i$ -->
+`r ifelse(is_docx(), "Eq. \\@ref(eq:full)", "")`
+
 where, for every scaled height $h$, $d(h)$ is the $N\times1$ vector of observed LiDAR distributions at scaled height $h$, and
 $\beta_{sp}(h)$, $\beta_{cc}(h)$, and $\beta_{age}(h)$ are the parameter vectors related to species in $X_{sp}$, crown cover in $X_{cc}$, and age in $X_{age}$; $\varepsilon(h)$ is the vector of random errors with mean zero and finite variance $\sigma^2(h)$. The crown cover was considered a continuous variable, while species and age were considered categorical variables (given that the last age class was open). This model that incorporates all three variables is referred to as the full model. 
 
@@ -425,19 +433,30 @@ The $\beta$ coefficients of the discrete factors were constrained to sum to zero
 The corresponding three null models were obtained by removing the
 studied variable from the full model (Eq. \@ref(eq:full)):
 
-`r ifelse(is_docx(), "\t$(\\#eq:species)$\t$(\\#eq:cc)$\t$(\\#eq:age)$", "")`
+```{r include = FALSE}
+eqs <- 
+"\\begin{equation}
+  X (\\#eq:species)\\
+  Y (\\#eq:cc)\\ 
+  Z (\\#eq:age)
+\\end{equation}"
+```
+`r ifelse(is_docx(), eqs, "")`
 
 \begin{equation}
-d(h) = \beta_0(h) +X_{cc}\cdot\beta_{cc}(h) +X_{age}\cdot\beta_{age}(h) +\varepsilon(h)    `r ifelse(is_docx(), "", "     (\\#eq:species)")`
+d(h) = \beta_0(h) +X_{cc}\cdot\beta_{cc}(h) +X_{age}\cdot\beta_{age}(h) +\varepsilon(h) `r ifelse(is_docx(), "", "(\\#eq:species)")`
 \end{equation}
+`r ifelse(is_docx(), "Eq. \\@ref(eq:species)", "")`
 
 \begin{equation}
-d(h) = \beta_0(h) +X_{sp}\cdot\beta_{sp}(h) +X_{age}\cdot\beta_{age}(h) +\varepsilon(h)   `r ifelse(is_docx(), "", "     (\\#eq:cc)")`
+d(h) = \beta_0(h) +X_{sp}\cdot\beta_{sp}(h) +X_{age}\cdot\beta_{age}(h) +\varepsilon(h)   `r ifelse(is_docx(), "", "(\\#eq:cc)")`
 \end{equation}
+`r ifelse(is_docx(), "Eq. \\@ref(eq:cc)", "")`
 
 \begin{equation}
-d(h) = \beta_0(h) +X_{sp}\cdot\beta_{sp}(h) +X_{cc}\cdot\beta_{cc}(h) +\varepsilon(h)     `r ifelse(is_docx(), "", "     (\\#eq:age)")`
+d(h) = \beta_0(h) +X_{sp}\cdot\beta_{sp}(h) +X_{cc}\cdot\beta_{cc}(h) +\varepsilon(h)     `r ifelse(is_docx(), "", "(\\#eq:age)")`
 \end{equation}
+`r ifelse(is_docx(), "Eq. \\@ref(eq:age)", "")`
 
 We used the coefficients of the variable of interest
 (the left-out $\beta$ in Equations \@ref(eq:species)--\@ref(eq:age)) for the 
@@ -463,13 +482,18 @@ We observed that the variances of the model residuals were heterogeneous for all
 Following @mrkvicka_etal20, we transformed the matrix of vertical LiDAR returns distribution (Figure \@ref(fig:fig-fglm-process)) by scaling the functions $d_{i}$ of each group $j$ according to their variance dispersion. The initial $d_{i,j}$ function was
 transformed into a $S_{i,j}$ (scaled) function by
 
-`r ifelse(is_docx(), "\t$(\\#eq:variance)$", "")`
+```{r include = FALSE}
+eqs <- 
+"\\begin{equation}
+  X (\\#eq:variance)
+\\end{equation}"
+```
+`r ifelse(is_docx(), eqs, "")`
 
 \begin{equation}
-S_{i,j}(h) = \frac{d_{i,j}(h) - \bar{d_j}(h)}{\sqrt{Var(d_j(h))}} \cdot
-  \sqrt{Var(d(h))} + \bar{d_j}(h)  
-`r ifelse(is_docx(), "", "     (\\#eq:variance)")`
+S_{i,j}(h) = \frac{d_{i,j}(h) - \bar{d_j}(h)}{\sqrt{Var(d_j(h))}} \cdot\sqrt{Var(d(h))} + \bar{d_j}(h)  `r ifelse(is_docx(), "", "     (\\#eq:variance)")`
 \end{equation}
+`r ifelse(is_docx(), "Eq. \\@ref(eq:variance)", "")`
 
 where the group sample variance $Var(d_j(h))$ is used to correct for unequal
 variance among groups. The group sample mean $\bar{d_j}(h)$ and overall variance $Var(d(h))$
