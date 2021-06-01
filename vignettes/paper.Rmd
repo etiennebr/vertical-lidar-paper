@@ -114,15 +114,14 @@ Abstract {-}
 ========
 <!-- Please provide an abstract of 150 to 250 words -->
 Light detection and ranging (LiDAR) provides information on the vertical structure of forest stands enabling detailed and extensive ecosystem study. 
-The vertical structure is often summarized by scalar features and dimension-reduction techniques that limit the interpretation of results. 
+The vertical structure is often summarized by scalar features and data-reduction techniques that limit the interpretation of results. 
 Instead, we quantified the influence of three variables, species, crown cover, and age, on the vertical distribution of airborne LiDAR returns from forest stands.
 We studied 5,428 regular, even-aged stands in Quebec (Canada) with five dominant species: balsam fir (*Abies balsamea* (L.) Mill.), paper birch (*Betula papyrifera* Marsh), black spruce (*Picea mariana* (Mill.) BSP), white spruce (*Picea glauca* Moench) and aspen (*Populus tremuloides* Michx.). 
 We modeled the vertical distribution against the three variables using a functional general linear model and a novel nonparametric graphical test of significance.
 Results indicate that LiDAR returns from aspen stands had the most uniform vertical distribution. 
 Balsam fir and white birch distributions were similar and centered at around 50% of the stand height, and black spruce and white spruce distributions were skewed to below 30% of stand height ($p$<0.001). 
 Increased crown cover concentrated the distributions around 50% of stand height.
-Increasing age gradually shifted the distributions higher in the stand for stands below the 70-year groups, before plateauing and slowly declining at 90–120 years. 
-The full model maximal R² was 0.47 at around 10% of the stand height. 
+Increasing age gradually shifted the distributions higher in the stand for stands younger than 70-years, before plateauing and slowly declining at 90–120 years.
 Results suggest that the vertical distributions of LiDAR returns depend on the three variables studied.
 
 # Introduction
@@ -167,11 +166,11 @@ age, crown cover, and basal area [@korhonen_etal11; @white_etal13;
 @racine_etal14; @karna_etal19]. 
 Airborne LiDAR is an important tool for biomass quantification, and offers the opportunity to explore large-scale phenomena that could only be observed on the field [@vierling_etal08; @vierling_etal10; @seavy_etal09; @karna_etal20].
 
-One limitation of the small-footprint LiDAR sensor is its inability to distinguish differences in foliage condition or in species spectral variation. 
+One limitation of the airborne LiDAR data is its inability to distinguish differences in foliage condition or in species spectral variation. 
 This is because it lacks the spectral information commonly used to classify species such as
-variations in color or near-infrared. 
-In response, the most common strategy for distinguishing species using LiDAR has been to differentiate individual tree shapes and texture [@holmgren_persson04; @kim_etal11; @fassnacht_etal16], and add spectral information from spectral imagery. 
-More recently a multispectral LiDAR has also been used to distinguish stand species [@budei_etal18; @budei_st-onge18].
+variations in red, green, and blue or near-infrared multispectral imagery. 
+In response, the most common strategy for distinguishing species using LiDAR has been to differentiate individual tree shapes and texture [@holmgren_persson04; @kim_etal11; @fassnacht_etal16], and add spectral information from multispectral imagery. 
+More recently multispectral LiDAR has also been used to distinguish stand species [@budei_etal18; @budei_st-onge18].
 
 <!-- ## Individual tree-crown vs area-based methods -->
 
@@ -179,14 +178,14 @@ Most studies on species classification using aerial LiDAR have focused on
 species identification based on individual tree crowns. 
 However, tree crown delineation requires a large number of LiDAR returns and highly accurate registration of ground observations [@orka_etal09; @muss_etal11]. 
 Using a small observation area such as an individual tree crown causes a loss in the shape of the vertical distribution of LiDAR returns. 
-This is due to a decrease in the number of LiDAR returns, causing the distribution to become a collection of random deviates. 
+This is due to a decrease in the number of LiDAR returns, causing the distribution to become a collection of random variates. 
 Thus, although the accuracy of species identification would be improved by  a very high point density in excess of 10 pt/m² [@fassnacht_etal16], it is  difficult to apply and validate these approaches for use over large areas and with less-dense LiDAR datasets.
 
 An alternative to individual tree-crown extraction approaches is the application of
 area-based approaches (see e.g. @white_etal13). 
 This approach generally uses a pixel or a stand on
 which LiDAR returns are aggregated and predictors are derived before being  used in a model to predict forest attributes. 
-LiDAR metrics often derive predictors from the vertical distribution of LiDAR returns: the number of LiDAR returns per height slice. 
+Predictors are often derived from the vertical distribution of LiDAR returns: the number of LiDAR returns per height slice. 
 The vertical distribution of LiDAR returns is often
 presented as quantiles, projections of quantiles (such as principal component analysis), or parametric functions (such as a Fourier, beta or Weibull
 functions), which are used to predict stand attributes [@magnussen_etal99;
@@ -703,11 +702,11 @@ This observation is consistent with previous field observations that were conduc
 However, we expected clearer vertical distribution patterns along shade-tolerance gradients or between conifer and deciduous trees; we found that patterns of paper birch were more similar to those of balsam fir (a shade-tolerant) than aspen, another shade-intolerant deciduous.
 Since we used the dominant species to classify each stand, the similar vertical distribution patterns could be the result of frequent occurrence of balsam fir and paper birch within the same stand. 
 The effect of species associations could be controlled by using a higher dominance threshold than the 50% we used. 
-However, we found that using a 60% dominance made little difference to the conclusions, and a higher threshold removed too much data for some species.
+However, we found that using a 60% dominance made little difference to the conclusions, whereas a higher threshold removed too much data for some species.
 
-Vertical LiDAR return distribution can be useful for species classification. A model could be trained to associate vertical LiDAR return distributions to species, essentially inverting the process used in this paper. 
-Many studies performing species classification with LiDAR use the vertical distribution of LiDAR returns, at least partially but rarely completely  [@fassnacht_etal16].
-While the functional GLM considered here is not suited for predicting tree species, methods such as Deep Neural Network could be good candidates for species classification using LiDAR distributions because they can handle the functional representation of the data and their non-linear relations. 
+The results in this paper demonstrate that vertical LiDAR return distribution can be useful for species classification.
+Based on these findings, models could be trained to link these vertical distributions to species and then used to estimate species occurrence over the landscape.
+Many studies performing species classification with LiDAR use the vertical distribution of LiDAR returns [@fassnacht_etal16], however the approach developed here allows the drivers of cover and age to also be integrated into the estimation, thereby making the species prediction more robust when applied more broadly.
 
 Additional evidence is required in order to establish whether the relationships between vertical density of LiDAR returns and the species, crown cover, and age are specific to our study area.
 Including other variables, such as LiDAR scan angle and abiotic factors, might improve the model, making it more applicable to other study areas or  complex stand structures.
@@ -715,7 +714,7 @@ Including other variables, such as LiDAR scan angle and abiotic factors, might i
 <!-- cc -->
 Increased crown cover led to an increased concentration of the vertical distribution of LiDAR returns to higher in the stand. 
 In turn, stands with decreased crown cover exhibited a vertical distribution of LiDAR returns that was more dispersed and lower to the ground, with fewer returns higher in the stand. 
-The gradual displacement of LiDAR returns from below 33% to above 38% associated to crown cover was also apparent when we compared the variance explained by the models in Figure \@ref(fig:fig-rsq) where crown cover appeared to explain at least 25% of the variance of the full model below 21% and between 44--69% of stand height.
+The gradual displacement of LiDAR returns from below 33% to above 38% associated to crown cover was also apparent when we compared the variance explained by the models in Figure \@ref(fig:fig-rsq) where crown cover appeared to explain at least 25% of the variance of the full model below 21% and between 46--67% of stand height.
 
 <!-- age -->
 Increased age was associated with the vertical distribution of LiDAR returns being displace higher in the stand for up to 70 years, followed by a plateau or decline in the 90- and 120-year-old groups. 
@@ -747,8 +746,8 @@ However, this registration makes the distributions potentially more affected by 
 For example, in young stands where there might only be a single remaining mature tree, the vertical distribution of LiDAR returns could be compressed.
 Using a height quantile as a registration point, such as 95% height rather than the highest return, could reduce the chances of compression and improve the vertical distributions.
 In addition to compression, the vertical distribution of LiDAR returns can be distorted by strong slopes [@liu_etal17]. 
-Furthermore, the occlusion of vegetation in lower stand parts overestimates the density of vegetation [@roussel_etal17; @roussel_etal18]. 
-Some of the noise in the vertical distribution could be reduced by using correction methods accounting for laser incidence angle, footprint size and pulse density [@roussel_etal17; @roussel_etal18; @wilkes_etal16]. 
+Furthermore, the occlusion of vegetation in lower stand parts underestimates the density of vegetation. 
+Some of the noise in the vertical distribution can be mitigated by using correction methods such as voxels, or partly accounting for laser incidence angle, footprint size and pulse density [@roussel_etal17; @roussel_etal18; @wilkes_etal16]. 
 
 There was a decline in R² between 31% and 46% of the stand height, where age explained most of the variance of the full model (Figure \@ref(fig:fig-rsq)). 
 While the reasons for the decline are unknown, this section of stand height is associated with an increase in LiDAR returns in the 120-year-old group.
