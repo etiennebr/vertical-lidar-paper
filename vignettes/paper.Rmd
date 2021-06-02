@@ -29,6 +29,8 @@ csl: "templates/trees.csl"
 bibliography: "biblio.json"
 link-citations: yes
 always_allow_html: true
+nocite: |
+  @farrar95a, @leboeuf_vaillancourt13, @leboeuf_vaillancourt13a
 ---
 
 ```{r setup, include = FALSE}
@@ -311,7 +313,7 @@ as our reference data for species, crown cover, and age.
 
 ```{r species, echo = FALSE}
 x <- tibble::tribble(
-    ~Species, ~Silhouette, ~"Description\\textsuperscript{1, 2}", ~"Associated species\\textsuperscript{1}",
+    ~Species, ~Silhouette, ~"Description\\textsuperscript{1, 2}", ~"Associated species\\textsuperscript{2}",
     
     "*Abies balsamea*", 
     "![](pictures/abies_balsamea.png){width='1.469cm' height='4.001cm'}", 
@@ -355,7 +357,7 @@ tbl_species %>%
   # kableExtra::column_spec(2, image = kableExtra::spec_image(here::here(tbl_species$Silhouette), 100*3, 100*3)) 
   kableExtra::column_spec(1, italic = TRUE) %>% 
   kableExtra::collapse_rows(1, latex_hline = "full") %>% 
-  kableExtra::footnote(number = c("Colors are based on (NIR+G+B mapped to R, G, B channels).", "Adapted from @farrar95a; @leboeuf_vaillancourt13; @leboeuf_vaillancourt13a."))
+  kableExtra::footnote(number = c("Colors are based on (NIR+G+B mapped to R, G, B channels).", "Adapted from Farrar (1995); Leboeuf and Vaillancourt (2013a, 2013b)"))
 ```
 
 Even-aged stands are less complex than irregular stands when analyzed from a vertical structure point of view. 
@@ -854,10 +856,6 @@ read and approved this version of the manuscript.
 # References {-}
 <div id="refs" class="references"></div>
 '`
-<!-- references added in case they are not caught in the table  -->
-\nocite{@farrar95a}
-\nocite{@leboeuf_vaillancourt13}
-\nocite{@leboeuf_vaillancourt13a}
 `r if (knitr::is_latex_output()) '
 \\section*{References}
 '`
