@@ -1,34 +1,21 @@
 
-# Species, crown closure, and age as determinants of the vertical distribution of airborne LiDAR returns
+# Tree species, crown cover, and age as determinants of the vertical distribution of airborne LiDAR returns
 
-This repos contains the code and data for the manuscript on vertical 
-distribution of lidar returns
+This repos contains the code and data of the manuscript
 
 
-## Summary 
+## Abstract 
 
-Tree species have different shapes and forest stand dynamics. Light detection
-and ranging (LiDAR) can measure the three dimensional position of
-reflective material by sending laser pulses through the canopy. We examined the 
-influence of three forest stand attributes:
-species, crown closure, and age on the vertical distribution of aerial
-LiDAR returns of forested stands. We studied over five thousand regular,
-even-aged stands in Quebec (Canada) with five dominant species: balsam
-fir (*Abies balsamea* (L.) Mill.), paper birch (*Betula papyrifera*
-Marsh), black spruce (*Picea mariana* (Mill.) BSP), white spruce (*Picea glauca* 
-Moench) and aspen (*Populus tremuloides* Michx.). We modeled vertical distribution of LiDAR 
-returns against the three attributes using a functional glm and a novel nonparametric graphical test of significance.
-Results indicate that aspen stands had the most uniform vertical distribution of LiDAR returns; balsam fir and
-white birch distributions were similar and centered around 50% of the
-stand height; black spruce and white spruce distributions were
-skewed below 30% of stand height ($p$<0.001). An increase in crown closure
-concentrated the distributions around 50% height. Increasing age
-gradually shifted the distributions higher in the stand until 50–70
-years, where it plateaued and slowly declined at 90–120 years. The full model maximal R²
-was 0.47 around 10% of stand height. Results suggest that the stands
-vertical distributions of LiDAR returns depend on the three variables studied.
-This understanding can be used for stand-level species classification and to study 
-the evolution of the forest structure over changing conditions.
+Light detection and ranging (LiDAR) provides information on the vertical structure of forest stands enabling detailed and extensive ecosystem study. 
+The vertical structure is often summarized by scalar features and data-reduction techniques that limit the interpretation of results. 
+Instead, we quantified the influence of three variables, species, crown cover, and age, on the vertical distribution of airborne LiDAR returns from forest stands.
+We studied 5,428 regular, even-aged stands in Quebec (Canada) with five dominant species: balsam fir (*Abies balsamea* (L.) Mill.), paper birch (*Betula papyrifera* Marsh), black spruce (*Picea mariana* (Mill.) BSP), white spruce (*Picea glauca* Moench) and aspen (*Populus tremuloides* Michx.). 
+We modeled the vertical distribution against the three variables using a functional general linear model and a novel nonparametric graphical test of significance.
+Results indicate that LiDAR returns from aspen stands had the most uniform vertical distribution. 
+Balsam fir and white birch distributions were similar and centered at around 50% of the stand height, and black spruce and white spruce distributions were skewed to below 30% of stand height ($p$<0.001). 
+Increased crown cover concentrated the distributions around 50% of stand height.
+Increasing age gradually shifted the distributions higher in the stand for stands younger than 70-years, before plateauing and slowly declining at 90–120 years.
+Results suggest that the vertical distributions of LiDAR returns depend on the three variables studied.
 
 ## Installation
 
@@ -37,7 +24,7 @@ You can install the dependencies needed to build the paper with R.
 ``` r
 install.packages(c("devtools", usethis))
 create_from_github("etiennebr/vertical-lidar-paper", fork = TRUE) 
-devtools::install_dev_deps()
+renv::restore()
 ```
 
 ## Example
@@ -50,5 +37,4 @@ usethis::edit_file("vignettes/contrasts.Rmd")
 
 # Preprint
 
-A pdf version of the preprint of the manuscript is available in 
-[`vignettes/paper.pdf`](vignettes/paper.pdf).
+A pdf version of the preprint of the manuscript is available at https://arxiv.org/abs/2104.05057 or in [`vignettes/paper.pdf`](vignettes/paper.pdf).
