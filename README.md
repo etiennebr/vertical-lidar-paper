@@ -1,7 +1,7 @@
 
 # Tree species, crown cover, and age as determinants of the vertical distribution of airborne LiDAR returns
 
-This repos contains the code and data of the manuscript
+This repo contains the data and the code used in the manuscript ([DOI:10.1007/s00468-021-02155-2](https://doi.org/10.1007/s00468-021-02155-2), [arXiv](https://arxiv.org/abs/2104.05057))
 
 
 ## Abstract 
